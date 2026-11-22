@@ -4,9 +4,15 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.OnScreen;
+using UnityEngine.InputSystem.UI;
+using UnityEngine.UI;
+using Unity.Cinemachine;
+using Unity.Cinemachine.TargetTracking;
 
 /// <summary>
-/// Script de Editor da etapa 0: configura o projeto para WebGL e monta a cena Prototype.
+/// Script de Editor: configura o projeto para WebGL e monta a cena Prototype (etapas 0 e 1).
 /// Pode ser rodado de novo pelo menu "JogoJapones > Setup > ..." sem quebrar nada.
 /// </summary>
 public static class ProjectSetup
@@ -18,7 +24,7 @@ public static class ProjectSetup
     {
         "Scenes", "Scripts/Core", "Scripts/Player", "Scripts/Enemies", "Scripts/Combat",
         "Scripts/Progression", "Scripts/World", "Scripts/UI", "Scripts/Utils",
-        "Sprites", "Prefabs", "Materials", "ScriptableObjects", "Audio"
+        "Sprites", "Prefabs", "Materials", "ScriptableObjects", "ScriptableObjects/Player", "Audio"
     };
 
     // Chamado pela linha de comando: roda tudo de uma vez
@@ -29,7 +35,7 @@ public static class ProjectSetup
         CreatePrototypeScene();
         RemoveSampleScene();
         AssetDatabase.SaveAssets();
-        Debug.Log("[ProjectSetup] Etapa 0 concluída.");
+        Debug.Log("[ProjectSetup] Setup concluído.");
     }
 
     [MenuItem("JogoJapones/Setup/Criar pastas")]
@@ -108,18 +114,39 @@ public static class ProjectSetup
         RenderSettings.ambientMode = AmbientMode.Flat;
         RenderSettings.ambientLight = new Color(0.45f, 0.47f, 0.55f);
 
-        // Personagem provisório (sprite com Billboard)
+        // Degrau baixo e rampa para testar subida (etapa 1)
+        GameObject step = CreateBlock(blocks.transform, new Vector3(-3f, 0f, 3f), new Vector3(2f, 0.3f, 2f), blockMat);
+        step.name = "LowStep";
+        GameObject ramp = CreateBlock(blocks.transform, new Vector3(2f, 0f, 4f), new Vector3(4.12f, 0.2f, 3f), blockMat);
+        ramp.name = "Ramp";
+        ramp.transform.position = new Vector3(2f, 0.45f, 4f);
+        ramp.transform.rotation = Quaternion.Euler(0f, 0f, 14f); // sobe até o bloco de 1 m
+
+        // Jogador: CharacterController + movimento + sprite com Billboard
         Sprite playerSprite = CreatePlayerSprite();
-        GameObject player = new GameObject("PlayerPlaceholder");
+        GameObject player = new GameObject("Player");
         player.transform.position = Vector3.zero;
+        CharacterController cc = player.AddComponent<CharacterController>();
+        cc.height = 1.6f;
+        cc.radius = 0.35f;
+        cc.center = new Vector3(0f, 0.8f, 0f);
+        cc.skinWidth = 0.05f;
+        cc.minMoveDistance = 0f; // evita ignorar passos pequenos em FPS alto
+
         GameObject visual = new GameObject("Sprite");
         visual.transform.SetParent(player.transform, false);
-        visual.transform.localPosition = new Vector3(0f, 0.75f, 0f);
+        visual.transform.localPosition = new Vector3(0f, 0.8f, 0f);
         SpriteRenderer sr = visual.AddComponent<SpriteRenderer>();
         sr.sprite = playerSprite;
         visual.AddComponent<Billboard>();
 
-        // Câmera de cima, inclinada, em perspectiva
+        PlayerMovement movement = player.AddComponent<PlayerMovement>();
+        SerializedObject so = new SerializedObject(movement);
+        so.FindProperty("settings").objectReferenceValue = GetOrCreateMovementSettings();
+        so.FindProperty("spriteRenderer").objectReferenceValue = sr;
+        so.ApplyModifiedPropertiesWithoutUndo();
+
+        // Câmera principal (quem move é o Cinemachine)
         GameObject camGo = new GameObject("Main Camera");
         camGo.tag = "MainCamera";
         Camera cam = camGo.AddComponent<Camera>();
@@ -127,8 +154,23 @@ public static class ProjectSetup
         cam.clearFlags = CameraClearFlags.SolidColor;
         cam.backgroundColor = new Color32(20, 18, 24, 255);
         camGo.AddComponent<AudioListener>();
+        camGo.AddComponent<CinemachineBrain>();
         camGo.transform.position = new Vector3(0f, 14f, -12f);
         camGo.transform.rotation = Quaternion.Euler(50f, 0f, 0f);
+
+        // Câmera virtual do Cinemachine: segue o jogador de cima, inclinada, sem girar
+        GameObject cmGo = new GameObject("CM FollowCamera");
+        cmGo.transform.position = new Vector3(0f, 14f, -12f);
+        cmGo.transform.rotation = Quaternion.Euler(50f, 0f, 0f);
+        CinemachineCamera cmCam = cmGo.AddComponent<CinemachineCamera>();
+        cmCam.Follow = player.transform;
+        cmCam.Lens.FieldOfView = 40f;
+        CinemachineFollow follow = cmGo.AddComponent<CinemachineFollow>();
+        follow.FollowOffset = new Vector3(0f, 14f, -12f);
+        follow.TrackerSettings.BindingMode = BindingMode.WorldSpace;
+        follow.TrackerSettings.PositionDamping = new Vector3(0.4f, 0.4f, 0.4f);
+
+        CreateMobileJoystick();
 
         EditorSceneManager.SaveScene(scene, ScenePath);
         EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(ScenePath, true) };
@@ -151,6 +193,90 @@ public static class ProjectSetup
         string path = System.Environment.GetEnvironmentVariable("SCREENSHOT_PATH") ?? "Temp/prototype.png";
         File.WriteAllBytes(path, shot.EncodeToPNG());
         Debug.Log("[ProjectSetup] Screenshot salvo em " + path);
+    }
+
+    private static PlayerMovementSettings GetOrCreateMovementSettings()
+    {
+        string path = Root + "/ScriptableObjects/Player/PlayerMovementSettings.asset";
+        PlayerMovementSettings settings = AssetDatabase.LoadAssetAtPath<PlayerMovementSettings>(path);
+        if (settings == null)
+        {
+            Directory.CreateDirectory(Root + "/ScriptableObjects/Player");
+            settings = ScriptableObject.CreateInstance<PlayerMovementSettings>();
+            AssetDatabase.CreateAsset(settings, path);
+        }
+        return settings;
+    }
+
+    // Canvas com joystick virtual (Input System OnScreenStick) no canto inferior esquerdo
+    private static void CreateMobileJoystick()
+    {
+        Sprite circle = CreateCircleSprite();
+
+        GameObject canvasGo = new GameObject("HUD Canvas");
+        Canvas canvas = canvasGo.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        CanvasScaler scaler = canvasGo.AddComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1920f, 1080f);
+        scaler.matchWidthOrHeight = 0.5f;
+        canvasGo.AddComponent<GraphicRaycaster>();
+
+        GameObject eventSystem = new GameObject("EventSystem");
+        eventSystem.AddComponent<EventSystem>();
+        eventSystem.AddComponent<InputSystemUIInputModule>();
+
+        GameObject joyRoot = new GameObject("MobileJoystick", typeof(RectTransform));
+        joyRoot.transform.SetParent(canvasGo.transform, false);
+        RectTransform rootRt = (RectTransform)joyRoot.transform;
+        rootRt.anchorMin = Vector2.zero;
+        rootRt.anchorMax = Vector2.zero;
+        rootRt.pivot = new Vector2(0.5f, 0.5f);
+        rootRt.anchoredPosition = new Vector2(240f, 240f);
+        rootRt.sizeDelta = new Vector2(280f, 280f);
+        Image bg = joyRoot.AddComponent<Image>();
+        bg.sprite = circle;
+        bg.color = new Color(1f, 1f, 1f, 0.25f);
+        bg.raycastTarget = false;
+        joyRoot.AddComponent<MobileJoystickVisibility>();
+
+        GameObject knob = new GameObject("Knob", typeof(RectTransform));
+        knob.transform.SetParent(joyRoot.transform, false);
+        RectTransform knobRt = (RectTransform)knob.transform;
+        knobRt.sizeDelta = new Vector2(120f, 120f);
+        Image knobImg = knob.AddComponent<Image>();
+        knobImg.sprite = circle;
+        knobImg.color = new Color(1f, 1f, 1f, 0.7f);
+        OnScreenStick stick = knob.AddComponent<OnScreenStick>();
+        stick.controlPath = "<Gamepad>/leftStick";
+        stick.movementRange = 100f;
+    }
+
+    // Círculo branco 128x128 para o joystick
+    private static Sprite CreateCircleSprite()
+    {
+        string path = Root + "/Sprites/UI_Circle.png";
+        const int size = 128;
+        Texture2D tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
+        float r = size * 0.5f - 1f;
+        Vector2 center = new Vector2(size * 0.5f, size * 0.5f);
+        for (int y = 0; y < size; y++)
+        {
+            for (int x = 0; x < size; x++)
+            {
+                float d = Vector2.Distance(new Vector2(x + 0.5f, y + 0.5f), center);
+                float a = Mathf.Clamp01(r - d + 0.5f);
+                tex.SetPixel(x, y, new Color(1f, 1f, 1f, a));
+            }
+        }
+        File.WriteAllBytes(path, tex.EncodeToPNG());
+        Object.DestroyImmediate(tex);
+        AssetDatabase.ImportAsset(path);
+        TextureImporter importer = (TextureImporter)AssetImporter.GetAtPath(path);
+        importer.textureType = TextureImporterType.Sprite;
+        importer.mipmapEnabled = false;
+        importer.SaveAndReimport();
+        return AssetDatabase.LoadAssetAtPath<Sprite>(path);
     }
 
     private static void RemoveSampleScene()
