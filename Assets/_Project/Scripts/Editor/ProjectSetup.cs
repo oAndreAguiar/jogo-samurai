@@ -12,7 +12,7 @@ using Unity.Cinemachine;
 using Unity.Cinemachine.TargetTracking;
 
 /// <summary>
-/// Script de Editor: configura o projeto para WebGL e monta a cena Prototype (etapas 0 e 1).
+/// Script de Editor: configura o projeto para WebGL e monta a cena Prototype (etapas 0, 1 e 2).
 /// Pode ser rodado de novo pelo menu "JogoJapones > Setup > ..." sem quebrar nada.
 /// </summary>
 public static class ProjectSetup
@@ -24,7 +24,7 @@ public static class ProjectSetup
     {
         "Scenes", "Scripts/Core", "Scripts/Player", "Scripts/Enemies", "Scripts/Combat",
         "Scripts/Progression", "Scripts/World", "Scripts/UI", "Scripts/Utils",
-        "Sprites", "Prefabs", "Materials", "ScriptableObjects", "ScriptableObjects/Player", "Audio"
+        "Sprites", "Prefabs", "Materials", "ScriptableObjects", "ScriptableObjects/Player", "ScriptableObjects/Enemies", "ScriptableObjects/World", "Audio"
     };
 
     // Chamado pela linha de comando: roda tudo de uma vez
@@ -170,7 +170,8 @@ public static class ProjectSetup
         follow.TrackerSettings.BindingMode = BindingMode.WorldSpace;
         follow.TrackerSettings.PositionDamping = new Vector3(0.4f, 0.4f, 0.4f);
 
-        CreateMobileJoystick();
+        GameObject canvasGo = CreateMobileJoystick();
+        CreateHorde(player.transform, canvasGo);
 
         EditorSceneManager.SaveScene(scene, ScenePath);
         EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(ScenePath, true) };
@@ -209,7 +210,7 @@ public static class ProjectSetup
     }
 
     // Canvas com joystick virtual (Input System OnScreenStick) no canto inferior esquerdo
-    private static void CreateMobileJoystick()
+    private static GameObject CreateMobileJoystick()
     {
         Sprite circle = CreateCircleSprite();
 
@@ -250,6 +251,158 @@ public static class ProjectSetup
         OnScreenStick stick = knob.AddComponent<OnScreenStick>();
         stick.controlPath = "<Gamepad>/leftStick";
         stick.movementRange = 100f;
+        return canvasGo;
+    }
+
+    // Horda (etapa 2): dados dos inimigos, spawner, movimento e texto de debug
+    private static void CreateHorde(Transform player, GameObject canvasGo)
+    {
+        Directory.CreateDirectory(Root + "/ScriptableObjects/Enemies");
+        Directory.CreateDirectory(Root + "/ScriptableObjects/World");
+
+        Sprite oniSprite = CreateEnemySprite("Enemy_Oni", new Color32(150, 60, 170, 255), false);
+        Sprite flameSprite = CreateEnemySprite("Enemy_Hitodama", new Color32(80, 170, 255, 255), true);
+        EnemyData oni = GetOrCreateEnemy("Enemy_Oni", "Oni", oniSprite, 2.5f, 3f, 0.6f);
+        EnemyData flame = GetOrCreateEnemy("Enemy_Hitodama", "Hitodama", flameSprite, 4f, 1f, 0.7f);
+
+        string hordePath = Root + "/ScriptableObjects/World/HordeSettings.asset";
+        HordeSettings horde = AssetDatabase.LoadAssetAtPath<HordeSettings>(hordePath);
+        if (horde == null)
+        {
+            horde = ScriptableObject.CreateInstance<HordeSettings>();
+            horde.enemyTypes.Add(oni);
+            horde.enemyTypes.Add(flame);
+            AssetDatabase.CreateAsset(horde, hordePath);
+        }
+
+        GameObject hordeGo = new GameObject("Horde");
+        HordeSpawner spawner = hordeGo.AddComponent<HordeSpawner>();
+        SerializedObject spawnerSo = new SerializedObject(spawner);
+        spawnerSo.FindProperty("settings").objectReferenceValue = horde;
+        spawnerSo.FindProperty("player").objectReferenceValue = player;
+        spawnerSo.ApplyModifiedPropertiesWithoutUndo();
+
+        EnemyMovementSystem movement = hordeGo.AddComponent<EnemyMovementSystem>();
+        SerializedObject movementSo = new SerializedObject(movement);
+        movementSo.FindProperty("spawner").objectReferenceValue = spawner;
+        movementSo.ApplyModifiedPropertiesWithoutUndo();
+
+        // Texto de debug no topo esquerdo
+        GameObject textGo = new GameObject("HordeDebugText", typeof(RectTransform));
+        textGo.transform.SetParent(canvasGo.transform, false);
+        RectTransform rt = (RectTransform)textGo.transform;
+        rt.anchorMin = new Vector2(0f, 1f);
+        rt.anchorMax = new Vector2(0f, 1f);
+        rt.pivot = new Vector2(0f, 1f);
+        rt.anchoredPosition = new Vector2(24f, -20f);
+        rt.sizeDelta = new Vector2(1200f, 60f);
+        Text text = textGo.AddComponent<Text>();
+        text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        text.fontSize = 36;
+        text.color = Color.white;
+        text.raycastTarget = false;
+        text.text = "00:00";
+        Outline outline = textGo.AddComponent<Outline>();
+        outline.effectColor = Color.black;
+
+        HordeDebugHUD hud = textGo.AddComponent<HordeDebugHUD>();
+        SerializedObject hudSo = new SerializedObject(hud);
+        hudSo.FindProperty("spawner").objectReferenceValue = spawner;
+        hudSo.FindProperty("label").objectReferenceValue = text;
+        hudSo.ApplyModifiedPropertiesWithoutUndo();
+    }
+
+    private static EnemyData GetOrCreateEnemy(string assetName, string displayName, Sprite sprite, float speed, float weight, float height)
+    {
+        string path = Root + "/ScriptableObjects/Enemies/" + assetName + ".asset";
+        EnemyData data = AssetDatabase.LoadAssetAtPath<EnemyData>(path);
+        if (data == null)
+        {
+            data = ScriptableObject.CreateInstance<EnemyData>();
+            data.displayName = displayName;
+            data.moveSpeed = speed;
+            data.spawnWeight = weight;
+            data.spriteHeight = height;
+            AssetDatabase.CreateAsset(data, path);
+        }
+        data.sprite = sprite;
+        EditorUtility.SetDirty(data);
+        return data;
+    }
+
+    // Sprite provisório 24x24 de inimigo: fantasma (oni) ou chama flutuante (hitodama)
+    private static Sprite CreateEnemySprite(string name, Color32 body, bool flame)
+    {
+        string path = Root + "/Sprites/" + name + ".png";
+        const int size = 24;
+        Color32 clear = new Color32(0, 0, 0, 0);
+        Color32 outline = new Color32(16, 12, 16, 255);
+        Color32 eye = new Color32(255, 230, 80, 255);
+        Color32 light = new Color32(
+            (byte)Mathf.Min(255, body.r + 60), (byte)Mathf.Min(255, body.g + 60), (byte)Mathf.Min(255, body.b + 60), 255);
+
+        Texture2D tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
+        for (int y = 0; y < size; y++)
+        {
+            for (int x = 0; x < size; x++)
+            {
+                Color32 c = clear;
+                float dx = x - 11.5f;
+                if (flame)
+                {
+                    // Gota de fogo: larga embaixo, ponta em cima
+                    float halfWidth = y < 10 ? Mathf.Sqrt(Mathf.Max(0f, 49f - (y - 8) * (y - 8))) : 7f * (1f - (y - 10) / 12f);
+                    if (y >= 2 && y <= 21 && Mathf.Abs(dx) <= halfWidth) c = Mathf.Abs(dx) < halfWidth * 0.45f && y < 14 ? light : body;
+                    if ((x == 9 || x == 14) && (y == 8 || y == 9)) c = outline;
+                }
+                else
+                {
+                    // Fantasma com chifres: cabeça redonda, barra ondulada embaixo
+                    bool head = dx * dx + (y - 13) * (y - 13) <= 64;
+                    bool skirt = y >= 3 && y < 13 && Mathf.Abs(dx) <= 8 && !(y < 5 && (x % 4 == 0));
+                    bool horn = (y >= 20 && y <= 22) && (x == 7 + (y - 20) / 2 || x == 16 - (y - 20) / 2);
+                    if (head || skirt) c = body;
+                    if (horn) c = eye;
+                    if ((x == 9 || x == 14) && (y == 13 || y == 14)) c = eye;
+                    if (y == 9 && x >= 10 && x <= 13) c = outline;
+                }
+                tex.SetPixel(x, y, c);
+            }
+        }
+
+        // Contorno escuro para destacar na horda
+        Color32[] src = tex.GetPixels32();
+        for (int y = 0; y < size; y++)
+        {
+            for (int x = 0; x < size; x++)
+            {
+                if (src[y * size + x].a != 0) continue;
+                bool near = false;
+                for (int oy = -1; oy <= 1 && !near; oy++)
+                {
+                    for (int ox = -1; ox <= 1; ox++)
+                    {
+                        int nx = x + ox, ny = y + oy;
+                        if (nx < 0 || ny < 0 || nx >= size || ny >= size) continue;
+                        if (src[ny * size + nx].a != 0) { near = true; break; }
+                    }
+                }
+                if (near) tex.SetPixel(x, y, outline);
+            }
+        }
+
+        File.WriteAllBytes(path, tex.EncodeToPNG());
+        Object.DestroyImmediate(tex);
+        AssetDatabase.ImportAsset(path);
+        TextureImporter importer = (TextureImporter)AssetImporter.GetAtPath(path);
+        importer.textureType = TextureImporterType.Sprite;
+        importer.spriteImportMode = SpriteImportMode.Single;
+        importer.spritePixelsPerUnit = 20f;
+        importer.filterMode = FilterMode.Point;
+        importer.mipmapEnabled = false;
+        importer.textureCompression = TextureImporterCompression.Uncompressed;
+        importer.SaveAndReimport();
+        return AssetDatabase.LoadAssetAtPath<Sprite>(path);
     }
 
     // Círculo branco 128x128 para o joystick
