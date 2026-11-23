@@ -128,6 +128,8 @@ Inspirado na tela de seleção do Pokébonk:
 - Código: Claude Code / Codex na pasta do projeto; editor VS Code ou Rider.
 - Versionamento: Git + GitHub, com **Git LFS** para imagens, áudio e modelos.
 - Builds: só WebGL, com compressão Gzip e fallback de descompressão (funciona em qualquer servidor), hospedado no itch.io.
+  - Gerar: menu **JogoJapones > Build > WebGL** no editor, ou `Unity.exe -batchmode -quit -projectPath . -buildTarget WebGL -executeMethod BuildWebGL.Build`. Sai em `Builds/WebGL` (fora do Git). O script ajusta o `index.html` para ocupar a janela toda no PC e no celular.
+  - Testar local: `python -m http.server 8080` dentro de `Builds/WebGL` e abrir `http://localhost:8080` (no celular, mesma rede Wi-Fi, `http://IP-do-PC:8080`).
 
 ## 9. Arquitetura e convenções
 

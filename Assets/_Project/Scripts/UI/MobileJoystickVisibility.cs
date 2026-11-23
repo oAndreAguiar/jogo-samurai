@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 /// <summary>
 /// Mostra o joystick virtual só em aparelhos com tela de toque (celular e tablet).
@@ -12,7 +11,8 @@ public class MobileJoystickVisibility : MonoBehaviour
 
     private void Start()
     {
-        bool isTouchDevice = Application.isMobilePlatform || Touchscreen.current != null;
+        // No navegador, o Touchscreen existe até no PC; isMobilePlatform diz se é celular/tablet de verdade
+        bool isTouchDevice = Application.isMobilePlatform;
         bool show = isTouchDevice || (Application.isEditor && showInEditor);
         gameObject.SetActive(show);
     }

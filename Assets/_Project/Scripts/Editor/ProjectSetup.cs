@@ -65,6 +65,8 @@ public static class ProjectSetup
         PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Gzip;
         PlayerSettings.WebGL.decompressionFallback = true;
         PlayerSettings.WebGL.dataCaching = true;
+        PlayerSettings.defaultWebScreenWidth = 1280;
+        PlayerSettings.defaultWebScreenHeight = 720;
 
         if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.WebGL)
         {
@@ -384,6 +386,7 @@ public static class ProjectSetup
             ("sanctuary", Object.FindFirstObjectByType<SanctuaryController>()), ("clock", Object.FindFirstObjectByType<RunClock>()));
         // Tela de derrota por cima de tudo
         panel.transform.SetAsLastSibling();
+        CreateOrientationHint(canvasGo.transform);
     }
 
     // Progressão (etapa 4): XP, joias, habilidades, passivas e tela de level-up
@@ -1192,6 +1195,25 @@ public static class ProjectSetup
             ("playerHealth", health));
     }
 
+    // Aviso "gire o celular" quando a tela está em pé (o HUD é para paisagem)
+    private static void CreateOrientationHint(Transform canvas)
+    {
+        GameObject hint = new GameObject("RotateHint", typeof(RectTransform));
+        Stretch(hint, canvas);
+        hint.AddComponent<Image>().color = new Color(0.04f, 0.03f, 0.06f, 1f);
+        Text text = CreateText(hint.transform, "Text", "Gire o celular\n<size=60>O jogo é jogado com a tela deitada</size>", 110,
+            new Color(1f, 0.85f, 0.3f), Vector2.zero);
+        ((RectTransform)text.transform).sizeDelta = new Vector2(1800f, 600f);
+        text.supportRichText = true;
+        hint.SetActive(false);
+        hint.transform.SetAsLastSibling();
+
+        GameObject watcher = new GameObject("OrientationWatcher");
+        watcher.transform.SetParent(canvas, false);
+        OrientationHint orientation = watcher.AddComponent<OrientationHint>();
+        SetRefs(orientation, ("hint", hint));
+    }
+
     private static Image CreateIconBox(Transform parent, string name, Vector2 position, Color border)
     {
         GameObject box = CreatePanel(parent, name, new Vector2(0.5f, 0.5f), position, new Vector2(170f, 170f),
@@ -1265,6 +1287,7 @@ public static class ProjectSetup
         CollectionPage upgradesPage = CreateCollectionPage(root, "UpgradesPage", "Habilidades", CollectionPage.Mode.Upgrades, catalog);
         CollectionPage recipesPage = CreateCollectionPage(root, "RecipesPage", "Fusões", CollectionPage.Mode.Recipes, catalog);
 
+        CreateOrientationHint(root);
         MainMenu menu = canvasGo.AddComponent<MainMenu>();
         SetRefs(menu, ("mainPanel", main), ("creaturesPage", creaturesPage), ("upgradesPage", upgradesPage),
             ("playButton", play), ("creaturesButton", creatures), ("upgradesButton", upgrades), ("profileText", profile),
