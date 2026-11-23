@@ -9,6 +9,13 @@ public class RunClock : MonoBehaviour
     public float TotalTime { get; private set; }
     public bool IsRunning { get; private set; } = true;
 
+    private void Awake()
+    {
+        // No editor, o Time.timeScale = 0 de uma pausa (level-up, derrota) continua valendo
+        // se o Play for interrompido ali. Toda partida começa com o tempo andando.
+        Time.timeScale = 1f;
+    }
+
     private void Update()
     {
         if (IsRunning)
