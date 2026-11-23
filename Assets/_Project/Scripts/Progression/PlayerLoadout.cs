@@ -24,11 +24,17 @@ public class PlayerLoadout : MonoBehaviour
     private readonly List<OwnedUpgrade> owned = new List<OwnedUpgrade>();
     private readonly List<UpgradeOffer> candidates = new List<UpgradeOffer>();
 
+    // Habilidades gastas numa fusão: não voltam mais nas cartas desta partida
+    private readonly HashSet<UpgradeDefinition> consumed = new HashSet<UpgradeDefinition>();
+
     // Avisa quando algo foi ganho ou subiu de nível: (upgrade, novo nível)
     public event Action<UpgradeDefinition, int> UpgradeApplied;
 
     // Cartas sorteadas para um level-up (para registrar o que o jogador já viu)
     public event Action<List<UpgradeOffer>> OffersBuilt;
+
+    // Fusão feita no altar
+    public event Action<FusionRecipe> FusionPerformed;
 
     public PlayerModifiers Modifiers { get; } = new PlayerModifiers();
     public HordeSpawner Spawner => spawner;
@@ -86,6 +92,10 @@ public class PlayerLoadout : MonoBehaviour
 
         foreach (UpgradeDefinition def in settings.upgradePool)
         {
+            if (consumed.Contains(def))
+            {
+                continue; // virou parte de uma fusão
+            }
             int level = GetLevel(def);
             if (level >= def.MaxLevel)
             {
@@ -147,6 +157,62 @@ public class PlayerLoadout : MonoBehaviour
         }
 
         UpgradeApplied?.Invoke(def, item.Level);
+    }
+
+    /// <summary>
+    /// Primeira receita que o jogador pode fazer agora: os dois ingredientes no nível máximo.
+    /// Devolve null se nenhuma estiver pronta.
+    /// </summary>
+    public FusionRecipe FindAvailableFusion()
+    {
+        foreach (FusionRecipe recipe in settings.fusionRecipes)
+        {
+            if (recipe == null || Find(recipe.result) != null)
+            {
+                continue;
+            }
+            bool aReady = GetLevel(recipe.ingredientA) >= recipe.ingredientA.MaxLevel;
+            bool bReady = GetLevel(recipe.ingredientB) >= recipe.ingredientB.MaxLevel;
+            if (aReady && bReady)
+            {
+                return recipe;
+            }
+        }
+        return null;
+    }
+
+    /// <summary>Faz a fusão: tira os dois ingredientes e ganha o resultado no nível 1.</summary>
+    public bool Fuse(FusionRecipe recipe)
+    {
+        if (recipe == null || FindAvailableFusion() != recipe)
+        {
+            return false;
+        }
+        Remove(recipe.ingredientA);
+        Remove(recipe.ingredientB);
+        consumed.Add(recipe.ingredientA);
+        consumed.Add(recipe.ingredientB);
+        Apply(new UpgradeOffer { Definition = recipe.result, NextLevel = 1 });
+        FusionPerformed?.Invoke(recipe);
+        return true;
+    }
+
+    private void Remove(UpgradeDefinition definition)
+    {
+        OwnedUpgrade item = Find(definition);
+        if (item == null)
+        {
+            return;
+        }
+        if (item.Ability != null)
+        {
+            Destroy(item.Ability); // o componente limpa o que criou (ver OnDestroy das habilidades)
+        }
+        owned.Remove(item);
+        if (definition.Kind == UpgradeKind.Passive)
+        {
+            RecalculateModifiers();
+        }
     }
 
     private AbilityBehaviour CreateAbility(UpgradeDefinition def)

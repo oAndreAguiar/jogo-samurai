@@ -37,6 +37,18 @@ public class OrbitAbility : AbilityBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        // Some com os talismãs junto com a habilidade (ex.: depois de uma fusão)
+        foreach (Transform orbiter in orbiters)
+        {
+            if (orbiter != null)
+            {
+                Destroy(orbiter.gameObject);
+            }
+        }
+    }
+
     private void Update()
     {
         OrbitAbilityDefinition.Level stats = data.levels[Level - 1];

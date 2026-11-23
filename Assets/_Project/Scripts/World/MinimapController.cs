@@ -51,6 +51,21 @@ public class MinimapController : MonoBehaviour
         spawner.EnemyDespawned -= HandleDespawned;
     }
 
+    /// <summary>
+    /// Marcador fixo para um ponto de interesse (ex.: Altar de Fusão). Quem chamou move/esconde o marcador.
+    /// </summary>
+    public SpriteRenderer AddPointOfInterest(Color color, float size)
+    {
+        SpriteRenderer marker = CreateMarker();
+        marker.color = color;
+        marker.transform.localScale = Vector3.one * size;
+        marker.gameObject.SetActive(true);
+        return marker;
+    }
+
+    /// <summary>Altura em que os marcadores ficam (acima do cenário, abaixo da câmera).</summary>
+    public static float MarkerY(float groundY) => groundY + MarkerHeight;
+
     private void HandleSpawned(Enemy enemy)
     {
         if (enemy.Data.rank == EnemyRank.Common || activeMarkers.ContainsKey(enemy))

@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b987aa94b4d444479e36605c0b38a05, type: 3}
+  m_Name: Fusion_ShurikenOfuda
+  m_EditorClassIdentifier: Assembly-CSharp::FusionRecipe
+  ingredientA: {fileID: 11400000, guid: 824c58eec2194e24ebb0c10bf5131210, type: 2}
+  ingredientB: {fileID: 11400000, guid: 3b54e62e945e53f4da5669bca8075bec, type: 2}
+  result: {fileID: 11400000, guid: 0a88502f24a24b64ca8694ad7fede02f, type: 2}
+  description: "O selo de uma ofuda torna a shuriken implac\xE1vel."

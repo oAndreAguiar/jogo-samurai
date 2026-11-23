@@ -24,6 +24,7 @@ public class DiscoveryTracker : MonoBehaviour
         spawner.EnemyKilled += HandleEnemyKilled;
         loadout.OffersBuilt += HandleOffersBuilt;
         loadout.UpgradeApplied += HandleUpgradeApplied;
+        loadout.FusionPerformed += HandleFusion;
         playerHealth.Died += Flush;
         sanctuary.Victory += Flush;
     }
@@ -34,6 +35,7 @@ public class DiscoveryTracker : MonoBehaviour
         spawner.EnemyKilled -= HandleEnemyKilled;
         loadout.OffersBuilt -= HandleOffersBuilt;
         loadout.UpgradeApplied -= HandleUpgradeApplied;
+        loadout.FusionPerformed -= HandleFusion;
         playerHealth.Died -= Flush;
         sanctuary.Victory -= Flush;
     }
@@ -67,6 +69,11 @@ public class DiscoveryTracker : MonoBehaviour
     private void HandleUpgradeApplied(UpgradeDefinition definition, int level)
     {
         PlayerProfile.DiscoverUpgrade(definition.name);
+    }
+
+    private void HandleFusion(FusionRecipe recipe)
+    {
+        PlayerProfile.DiscoverRecipe(recipe.name);
     }
 
     private void OnApplicationQuit()

@@ -36,6 +36,7 @@ public class ProfileData
     // Coleções (Manual de Criaturas e Habilidades): o que já foi encontrado
     public List<CreatureRecord> creatures = new List<CreatureRecord>();
     public List<string> discoveredUpgrades = new List<string>();
+    public List<string> discoveredRecipes = new List<string>();
 }
 
 /// <summary>
@@ -153,6 +154,23 @@ public static class PlayerProfile
         return true;
     }
 
+    public static bool IsRecipeDiscovered(string recipeId)
+    {
+        return Data.discoveredRecipes.Contains(recipeId);
+    }
+
+    /// <summary>Registra uma receita de fusão feita pelo jogador (fica na coleção Fusões).</summary>
+    public static bool DiscoverRecipe(string recipeId)
+    {
+        if (IsRecipeDiscovered(recipeId))
+        {
+            return false;
+        }
+        Data.discoveredRecipes.Add(recipeId);
+        Save();
+        return true;
+    }
+
     public static void Save()
     {
         PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(Data));
@@ -166,6 +184,7 @@ public static class PlayerProfile
         // Perfis salvos por versões antigas podem não ter as listas novas
         if (data.creatures == null) data.creatures = new List<CreatureRecord>();
         if (data.discoveredUpgrades == null) data.discoveredUpgrades = new List<string>();
+        if (data.discoveredRecipes == null) data.discoveredRecipes = new List<string>();
         if (data.records == null) data.records = new List<RegionRecord>();
         if (data.unlockedItems == null) data.unlockedItems = new List<string>();
 

@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// Volta para o menu principal: pelo botão ou pela tecla M.
+/// Volta para o menu principal: pelo botão ou pela tecla Esc (o M é o mapa).
 /// Fica nos painéis de vitória e derrota, então só funciona quando eles estão visíveis.
 /// </summary>
 public class ReturnToMenu : MonoBehaviour
@@ -19,7 +19,7 @@ public class ReturnToMenu : MonoBehaviour
 
     private void Update()
     {
-        if (Keyboard.current != null && Keyboard.current.mKey.wasPressedThisFrame)
+        if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             Go();
         }

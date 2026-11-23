@@ -10,4 +10,5 @@ public class GameCatalog : ScriptableObject
 {
     public List<EnemyData> creatures = new List<EnemyData>();
     public List<UpgradeDefinition> upgrades = new List<UpgradeDefinition>();
+    public List<FusionRecipe> recipes = new List<FusionRecipe>();
 }

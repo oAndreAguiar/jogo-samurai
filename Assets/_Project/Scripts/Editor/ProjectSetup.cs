@@ -965,6 +965,8 @@ public static class ProjectSetup
         CreateSkillButton(canvas, "UltimateButton", "C", ult, circle, ring, new Vector2(-40f, 40f), 170f, new Color(1f, 0.6f, 0.8f));
         CreateSkillButton(canvas, "ActiveButton", "R", dash, circle, ring, new Vector2(-240f, 40f), 140f, new Color(0.6f, 0.8f, 1f));
 
+        CreateFusionAndMap(player, health, zones, sanctuary, minimap, canvas, mapRoot, border);
+
         // Painéis de level-up, derrota e vitória ficam por cima do HUD novo
         canvas.Find("LevelUpPanel").SetAsLastSibling();
         canvas.Find("VictoryPanel").SetAsLastSibling();
@@ -975,7 +977,7 @@ public static class ProjectSetup
         Button again = CreateMenuButton(panel, "PlayAgainButton", "Jogar de novo (R)", new Vector2(-250f, -340f), new Vector2(440f, 100f),
             new Color(0.55f, 0.1f, 0.1f, 1f));
         UnityEditor.Events.UnityEventTools.AddPersistentListener(again.onClick, restart);
-        Button menu = CreateMenuButton(panel, "MenuButton", "Menu (M)", new Vector2(250f, -340f), new Vector2(440f, 100f),
+        Button menu = CreateMenuButton(panel, "MenuButton", "Menu (Esc)", new Vector2(250f, -340f), new Vector2(440f, 100f),
             new Color(0.12f, 0.09f, 0.14f, 1f));
         ReturnToMenu back = menu.gameObject.AddComponent<ReturnToMenu>();
         SetRefs(back, ("button", menu));
@@ -1003,6 +1005,201 @@ public static class ProjectSetup
         ((RectTransform)text.transform).sizeDelta = size;
         text.fontStyle = FontStyle.Bold;
         return button;
+    }
+
+    // ---------------- Etapa 8: fusão no altar e mapa (M) ----------------
+
+    private static void CreateFusionAndMap(GameObject player, PlayerHealth health, ZoneController zones, SanctuaryController sanctuary,
+        MinimapController minimap, Transform canvas, GameObject minimapRoot, Image minimapBorder)
+    {
+        const int minimapLayer = 8;
+        Color cyan = new Color(0.4f, 0.95f, 1f);
+        Color gold = new Color(0.87f, 0.7f, 0.25f);
+        string upgradesDir = Root + "/ScriptableObjects/Upgrades";
+
+        // ---- Receita: Shuriken + Ofuda = Shuriken Selada ----
+        Sprite sealedSprite = PaintSprite("Shuriken_Sealed", 15, 15, 18f, (x, y) =>
+        {
+            int dx = Mathf.Abs(x - 7), dy = Mathf.Abs(y - 7);
+            bool blade = (dx <= 1 && dy <= 7 - dx * 3) || (dy <= 1 && dx <= 7 - dy * 3) || (dx + dy <= 4);
+            if (!blade) return null;
+            if (dx + dy <= 2) return new Color32(210, 30, 30, 255); // selo vermelho no centro
+            return dx + dy <= 4 ? new Color32(245, 235, 200, 255) : new Color32(200, 206, 220, 255);
+        });
+        var result = GetOrCreateAsset<ProjectileAbilityDefinition>(upgradesDir + "/Ability_SealedShuriken.asset");
+        result.displayName = "Shuriken Selada";
+        result.icon = sealedSprite;
+        result.projectileSprite = sealedSprite;
+        if (result.levels == null || result.levels.Length == 0)
+        {
+            result.targetRange = 16f;
+            result.spreadAngle = 14f;
+            result.projectileSpeed = 16f;
+            result.levels = new[]
+            {
+                new ProjectileAbilityDefinition.Level { description = "Seis shurikens seladas por disparo: fortes e atravessam quase tudo.",
+                    damage = 32, cooldown = 0.4f, projectiles = 6, pierce = 6 },
+            };
+        }
+        EditorUtility.SetDirty(result);
+
+        var shuriken = AssetDatabase.LoadAssetAtPath<UpgradeDefinition>(upgradesDir + "/Ability_Shuriken.asset");
+        var ofuda = AssetDatabase.LoadAssetAtPath<UpgradeDefinition>(upgradesDir + "/Ability_Ofuda.asset");
+        var recipe = GetOrCreateAsset<FusionRecipe>(Root + "/ScriptableObjects/Upgrades/Fusion_ShurikenOfuda.asset");
+        recipe.ingredientA = shuriken;
+        recipe.ingredientB = ofuda;
+        recipe.result = result;
+        if (string.IsNullOrEmpty(recipe.description))
+        {
+            recipe.description = "O selo de uma ofuda torna a shuriken implacável.";
+        }
+        EditorUtility.SetDirty(recipe);
+
+        PlayerLoadout loadout = player.GetComponent<PlayerLoadout>();
+        ProgressionSettings progression = AssetDatabase.LoadAssetAtPath<ProgressionSettings>(Root + "/ScriptableObjects/Progression/ProgressionSettings.asset");
+        if (!progression.fusionRecipes.Contains(recipe))
+        {
+            progression.fusionRecipes.Add(recipe);
+            EditorUtility.SetDirty(progression);
+        }
+
+        // ---- Altar de Fusão (um objeto, reposicionado a cada zona) ----
+        GameObject altarGo = new GameObject("FusionAltar");
+        GameObject pedestal = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        pedestal.name = "Pedestal";
+        pedestal.transform.SetParent(altarGo.transform, false);
+        pedestal.transform.localPosition = new Vector3(0f, 0.4f, 0f);
+        pedestal.transform.localScale = new Vector3(1.6f, 0.8f, 1.6f);
+        pedestal.GetComponent<MeshRenderer>().sharedMaterial = AssetDatabase.LoadAssetAtPath<Material>(Root + "/Materials/M_Block.mat");
+
+        Sprite flame = CreateEnemySprite("FX_AltarFlame", new Color32(90, 230, 255, 255), true);
+        SpriteRenderer glow = new GameObject("Glow").AddComponent<SpriteRenderer>();
+        glow.transform.SetParent(altarGo.transform, false);
+        glow.transform.localPosition = new Vector3(0f, 1.6f, 0f);
+        glow.transform.localScale = Vector3.one * 1.4f;
+        glow.sprite = flame;
+        glow.sortingOrder = 20;
+        glow.gameObject.AddComponent<Billboard>();
+
+        SpriteRenderer ring = new GameObject("Ring").AddComponent<SpriteRenderer>();
+        ring.transform.SetParent(altarGo.transform, false);
+        ring.transform.localPosition = new Vector3(0f, 0.06f, 0f);
+        ring.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+        ring.transform.localScale = Vector3.one * 2.4f; // anel de ~4,8 m
+        ring.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(Root + "/Sprites/FX_Ring.png");
+        ring.sortingOrder = 15;
+
+        FusionAltar altar = altarGo.AddComponent<FusionAltar>();
+        SetRefs(altar, ("player", player.transform), ("zones", zones), ("sanctuary", sanctuary), ("minimap", minimap),
+            ("glow", glow), ("ring", ring));
+
+        // ---- Tela de fusão ----
+        GameObject panel = new GameObject("FusionPanel", typeof(RectTransform));
+        panel.transform.SetParent(canvas, false);
+        Stretch(panel, canvas);
+        panel.AddComponent<Image>().color = new Color(0.02f, 0.04f, 0.06f, 0.95f);
+        Text title = CreateText(panel.transform, "Title", "Altar de Fusão", 84, cyan, new Vector2(0f, 360f));
+        title.fontStyle = FontStyle.Bold;
+
+        GameObject group = new GameObject("Recipe", typeof(RectTransform));
+        group.transform.SetParent(panel.transform, false);
+        Image iconA = CreateIconBox(group.transform, "IconA", new Vector2(-420f, 140f), gold);
+        CreateText(group.transform, "Plus", "+", 110, Color.white, new Vector2(-210f, 140f));
+        Image iconB = CreateIconBox(group.transform, "IconB", new Vector2(0f, 140f), gold);
+        CreateText(group.transform, "Equals", "=", 110, Color.white, new Vector2(210f, 140f));
+        Image iconC = CreateIconBox(group.transform, "IconResult", new Vector2(420f, 140f), cyan);
+        Text recipeText = CreateText(group.transform, "RecipeText", "", 44, Color.white, new Vector2(0f, -10f));
+        recipeText.fontStyle = FontStyle.Bold;
+        Text message = CreateText(panel.transform, "Message", "", 34, new Color(0.88f, 0.92f, 0.95f), new Vector2(0f, -150f));
+        ((RectTransform)message.transform).sizeDelta = new Vector2(1300f, 200f);
+
+        Button fuse = CreateMenuButton(panel.transform, "FuseButton", "Fundir (F)", new Vector2(-250f, -350f), new Vector2(440f, 100f),
+            new Color(0.05f, 0.4f, 0.5f, 1f));
+        Button close = CreateMenuButton(panel.transform, "CloseButton", "Agora não (Esc)", new Vector2(250f, -350f), new Vector2(440f, 100f),
+            new Color(0.12f, 0.09f, 0.14f, 1f));
+
+        GameObject fusionGo = new GameObject("FusionScreen");
+        FusionScreen fusion = fusionGo.AddComponent<FusionScreen>();
+        SetRefs(fusion, ("altar", altar), ("loadout", loadout), ("playerHealth", health), ("panel", panel), ("recipeGroup", group),
+            ("iconA", iconA), ("iconB", iconB), ("iconResult", iconC), ("recipeText", recipeText), ("messageText", message),
+            ("fuseButton", fuse), ("closeButton", close));
+
+        // ---- Mapa da fase (M) ----
+        RenderTexture mapRt = AssetDatabase.LoadAssetAtPath<RenderTexture>(Root + "/Materials/RT_Map.renderTexture");
+        if (mapRt == null)
+        {
+            mapRt = new RenderTexture(768, 768, 16) { name = "RT_Map" };
+            AssetDatabase.CreateAsset(mapRt, Root + "/Materials/RT_Map.renderTexture");
+        }
+        GameObject mapCamGo = new GameObject("MapCamera");
+        Camera mapCam = mapCamGo.AddComponent<Camera>();
+        mapCam.orthographic = true;
+        mapCam.orthographicSize = 51f;
+        mapCam.clearFlags = CameraClearFlags.SolidColor;
+        mapCam.backgroundColor = new Color(0.05f, 0.06f, 0.05f);
+        mapCam.cullingMask = (1 << 0) | (1 << minimapLayer);
+        mapCam.targetTexture = mapRt;
+        mapCam.nearClipPlane = 1f;
+        mapCam.farClipPlane = 120f;
+        mapCam.enabled = false;
+
+        GameObject mapPanel = new GameObject("MapPanel", typeof(RectTransform));
+        mapPanel.transform.SetParent(canvas, false);
+        Stretch(mapPanel, canvas);
+        mapPanel.AddComponent<Image>().color = new Color(0.02f, 0.02f, 0.04f, 0.96f);
+        Text mapTitle = CreateText(mapPanel.transform, "Title", "Mapa  ·  " + AssetDatabase.LoadAssetAtPath<RegionData>(Root + "/ScriptableObjects/World/Region_BambooForest.asset").displayName,
+            54, gold, new Vector2(0f, 480f));
+        mapTitle.fontStyle = FontStyle.Bold;
+        GameObject frame = CreatePanel(mapPanel.transform, "Frame", new Vector2(0.5f, 0.5f), new Vector2(-150f, -20f), new Vector2(860f, 860f),
+            new Color(0.07f, 0.05f, 0.09f, 1f), gold);
+        ((RectTransform)frame.transform).pivot = new Vector2(0.5f, 0.5f);
+        GameObject rawGo = new GameObject("Map", typeof(RectTransform));
+        rawGo.transform.SetParent(frame.transform, false);
+        ((RectTransform)rawGo.transform).sizeDelta = new Vector2(840f, 840f);
+        RawImage raw = rawGo.AddComponent<RawImage>();
+        raw.texture = mapRt;
+        raw.raycastTarget = false;
+
+        // Legenda
+        (string label, Color color)[] legend =
+        {
+            ("Você", Color.white),
+            ("Altar de Fusão", cyan),
+            ("Elite", new Color(1f, 0.75f, 0.2f)),
+            ("Guardião", new Color(1f, 0.25f, 0.25f)),
+            ("Chefe", new Color(0.8f, 0.2f, 1f)),
+        };
+        Sprite circle = AssetDatabase.LoadAssetAtPath<Sprite>(Root + "/Sprites/UI_Circle.png");
+        for (int i = 0; i < legend.Length; i++)
+        {
+            float y = 200f - i * 70f;
+            Image dot = CreateImage(mapPanel.transform, "Dot" + i, circle, new Vector2(34f, 34f));
+            dot.color = legend[i].color;
+            ((RectTransform)dot.transform).anchoredPosition = new Vector2(370f, y);
+            Text t = CreateText(mapPanel.transform, "Legend" + i, legend[i].label, 34, Color.white, new Vector2(560f, y));
+            ((RectTransform)t.transform).sizeDelta = new Vector2(320f, 50f);
+            t.alignment = TextAnchor.MiddleLeft;
+        }
+        Button mapClose = CreateMenuButton(mapPanel.transform, "CloseButton", "Fechar (M)", new Vector2(560f, -380f), new Vector2(360f, 90f),
+            new Color(0.12f, 0.09f, 0.14f, 1f));
+
+        // Tocar no minimapa abre o mapa (celular)
+        minimapBorder.raycastTarget = true;
+        Button minimapButton = minimapRoot.AddComponent<Button>();
+
+        MapScreen mapScreen = mapCamGo.AddComponent<MapScreen>();
+        SetRefs(mapScreen, ("mapCamera", mapCam), ("panel", mapPanel), ("minimapButton", minimapButton), ("closeButton", mapClose),
+            ("playerHealth", health));
+    }
+
+    private static Image CreateIconBox(Transform parent, string name, Vector2 position, Color border)
+    {
+        GameObject box = CreatePanel(parent, name, new Vector2(0.5f, 0.5f), position, new Vector2(170f, 170f),
+            new Color(0.08f, 0.06f, 0.1f, 1f), border);
+        ((RectTransform)box.transform).pivot = new Vector2(0.5f, 0.5f);
+        Image icon = CreateImage(box.transform, "Icon", null, new Vector2(140f, 140f));
+        icon.preserveAspect = true;
+        return icon;
     }
 
     // ---------------- Menu principal (antes da etapa 8) ----------------
@@ -1049,12 +1246,14 @@ public static class ProjectSetup
         title.fontStyle = FontStyle.Bold;
         CreateText(main.transform, "Subtitle", "protótipo", 34, new Color(0.8f, 0.78f, 0.75f), new Vector2(0f, 110f));
 
-        Button play = CreateMenuButton(main.transform, "PlayButton", "Jogar", new Vector2(0f, -20f), new Vector2(560f, 110f), red);
-        Button creatures = CreateMenuButton(main.transform, "CreaturesButton", "Manual de Criaturas", new Vector2(0f, -150f), new Vector2(560f, 100f),
+        Button play = CreateMenuButton(main.transform, "PlayButton", "Jogar", new Vector2(0f, -10f), new Vector2(560f, 104f), red);
+        Button creatures = CreateMenuButton(main.transform, "CreaturesButton", "Manual de Criaturas", new Vector2(0f, -125f), new Vector2(560f, 92f),
             new Color(0.12f, 0.09f, 0.14f, 1f));
-        Button upgrades = CreateMenuButton(main.transform, "UpgradesButton", "Habilidades", new Vector2(0f, -270f), new Vector2(560f, 100f),
+        Button upgrades = CreateMenuButton(main.transform, "UpgradesButton", "Habilidades", new Vector2(0f, -232f), new Vector2(560f, 92f),
             new Color(0.12f, 0.09f, 0.14f, 1f));
-        Text profile = CreateText(main.transform, "Profile", "", 30, new Color(0.75f, 0.75f, 0.8f), new Vector2(0f, -440f));
+        Button recipes = CreateMenuButton(main.transform, "RecipesButton", "Fusões", new Vector2(0f, -339f), new Vector2(560f, 92f),
+            new Color(0.12f, 0.09f, 0.14f, 1f));
+        Text profile = CreateText(main.transform, "Profile", "", 30, new Color(0.75f, 0.75f, 0.8f), new Vector2(0f, -460f));
 
         // Sprites decorativos dos lados
         AddSprite(main.transform, "DecoPlayer", AssetDatabase.LoadAssetAtPath<Sprite>(Root + "/Sprites/Player_Placeholder.png"), new Vector2(-640f, -230f), 260f);
@@ -1064,10 +1263,12 @@ public static class ProjectSetup
         // ---- Páginas de coleção ----
         CollectionPage creaturesPage = CreateCollectionPage(root, "CreaturesPage", "Manual de Criaturas", CollectionPage.Mode.Creatures, catalog);
         CollectionPage upgradesPage = CreateCollectionPage(root, "UpgradesPage", "Habilidades", CollectionPage.Mode.Upgrades, catalog);
+        CollectionPage recipesPage = CreateCollectionPage(root, "RecipesPage", "Fusões", CollectionPage.Mode.Recipes, catalog);
 
         MainMenu menu = canvasGo.AddComponent<MainMenu>();
         SetRefs(menu, ("mainPanel", main), ("creaturesPage", creaturesPage), ("upgradesPage", upgradesPage),
-            ("playButton", play), ("creaturesButton", creatures), ("upgradesButton", upgrades), ("profileText", profile));
+            ("playButton", play), ("creaturesButton", creatures), ("upgradesButton", upgrades), ("profileText", profile),
+            ("recipesPage", recipesPage), ("recipesButton", recipes));
 
         EditorSceneManager.SaveScene(scene, MenuScenePath);
         // Menu é a primeira cena do build; o jogo vem depois
@@ -1210,6 +1411,14 @@ public static class ProjectSetup
 
         ProgressionSettings progression = AssetDatabase.LoadAssetAtPath<ProgressionSettings>(Root + "/ScriptableObjects/Progression/ProgressionSettings.asset");
         catalog.upgrades = new System.Collections.Generic.List<UpgradeDefinition>(progression.upgradePool);
+        catalog.recipes = new System.Collections.Generic.List<FusionRecipe>(progression.fusionRecipes);
+        foreach (FusionRecipe r in progression.fusionRecipes)
+        {
+            if (r != null && r.result != null && !catalog.upgrades.Contains(r.result))
+            {
+                catalog.upgrades.Add(r.result); // habilidades de fusão também aparecem em Habilidades
+            }
+        }
         EditorUtility.SetDirty(catalog);
         return catalog;
     }

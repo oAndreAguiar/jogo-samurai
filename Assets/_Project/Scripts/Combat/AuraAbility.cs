@@ -27,6 +27,14 @@ public class AuraAbility : AbilityBehaviour
         effect.enabled = false;
     }
 
+    private void OnDestroy()
+    {
+        if (effect != null)
+        {
+            Destroy(effect.gameObject);
+        }
+    }
+
     private void Update()
     {
         float dt = Time.deltaTime;

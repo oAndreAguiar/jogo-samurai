@@ -23,6 +23,9 @@ public class ProgressionSettings : ScriptableObject
     [Tooltip("Todos os upgrades que podem aparecer nas cartas.")]
     public List<UpgradeDefinition> upgradePool = new List<UpgradeDefinition>();
 
+    [Tooltip("Receitas de fusão (feitas no Altar de Fusão).")]
+    public List<FusionRecipe> fusionRecipes = new List<FusionRecipe>();
+
     [Tooltip("Cartas oferecidas por level-up.")]
     public int choicesPerLevel = 3;
 

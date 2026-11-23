@@ -61,7 +61,9 @@ Floresta de Bambu, Vila Costeira, Montanha Vulcânica, Templo Nevado, Cemitério
   - 3 espaços de passivas;
   - 1 habilidade ativa com recarga (tecla R no PC, botão na tela no celular);
   - 1 ultimate (tecla C no PC, botão na tela no celular).
-- **Fusão por receitas**: duas habilidades no **nível máximo** podem se fundir numa habilidade nova e mais forte (ex.: fogo + pedra = habilidade de fogo e pedra). As receitas são **descobertas** pelo jogador e ficam registradas numa coleção.
+- **Fusão por receitas**: duas habilidades no **nível máximo** podem se fundir numa habilidade nova e mais forte (ex.: fogo + pedra = habilidade de fogo e pedra). As receitas são **descobertas** pelo jogador e ficam registradas numa coleção (página Fusões do menu).
+  - **A fusão só acontece num Altar de Fusão** (decisão de 23/11/2026): cada zona tem um altar num ponto do mapa, marcado no minimapa e no mapa. Ao chegar nele com uma receita pronta, o jogador escolhe fundir. Depois de usado, o altar se apaga até a próxima zona. Não há altar no Santuário.
+  - Os dois ingredientes somem e não voltam mais nas cartas daquela partida; o resultado ocupa um espaço de habilidade.
 - **Catálogo de habilidades, armas e itens**: ainda **não definido**. Usar habilidades provisórias simples no protótipo.
 
 ## 5. Fora da partida (meta-jogo)
@@ -87,6 +89,8 @@ Inspirado na tela de seleção do Pokébonk:
 - **Centro**: barra de vida sob o personagem, com regeneração.
 - **Embaixo**: espaços de habilidades e passivas, habilidade ativa e ultimate com indicador de recarga.
 - **Celular**: joystick virtual e botões da ativa e do ultimate.
+- **Mapa da fase**: tecla **M** (ou tocar no minimapa no celular) abre o mapa inteiro, com o jogador, o Altar de Fusão, elites, guardião e chefe. O jogo pausa enquanto o mapa está aberto.
+- **Atalhos**: R ativa, C ultimate, G chamar guardião, M mapa, F fundir no altar, Esc volta/fecha (e leva ao menu nas telas de vitória e derrota).
 - **Números de dano**: grandes, em amarelo e branco, saindo dos inimigos atingidos.
 
 ## 7. Estilo visual

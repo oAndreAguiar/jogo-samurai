@@ -16,7 +16,8 @@ public class CollectionPage : MonoBehaviour
     public enum Mode
     {
         Creatures,
-        Upgrades
+        Upgrades,
+        Recipes
     }
 
     [SerializeField] private Mode mode;
@@ -64,7 +65,9 @@ public class CollectionPage : MonoBehaviour
         entries.Clear();
 
         int found = 0;
-        int total = mode == Mode.Creatures ? catalog.creatures.Count : catalog.upgrades.Count;
+        int total = mode == Mode.Creatures ? catalog.creatures.Count
+            : mode == Mode.Upgrades ? catalog.upgrades.Count
+            : catalog.recipes.Count;
         for (int i = 0; i < total; i++)
         {
             bool discovered;
@@ -73,6 +76,12 @@ public class CollectionPage : MonoBehaviour
                 EnemyData creature = catalog.creatures[i];
                 discovered = PlayerProfile.GetCreature(creature.name) != null;
                 AddEntry(creature.sprite, discovered ? creature.displayName : "???", discovered, creature.tint, () => ShowCreature(creature));
+            }
+            else if (mode == Mode.Recipes)
+            {
+                FusionRecipe recipe = catalog.recipes[i];
+                discovered = PlayerProfile.IsRecipeDiscovered(recipe.name);
+                AddEntry(recipe.result.icon, discovered ? recipe.result.displayName : "???", discovered, Color.white, () => ShowRecipe(recipe));
             }
             else
             {
@@ -150,14 +159,32 @@ public class CollectionPage : MonoBehaviour
         detailBody.text = sb.ToString();
     }
 
+    private void ShowRecipe(FusionRecipe recipe)
+    {
+        bool discovered = PlayerProfile.IsRecipeDiscovered(recipe.name);
+        detailIcon.enabled = true;
+        detailIcon.sprite = recipe.result.icon;
+        detailIcon.color = discovered ? Color.white : Silhouette;
+        if (!discovered)
+        {
+            detailName.text = "???";
+            detailSubtitle.text = "Fusão";
+            detailBody.text = "Receita ainda não descoberta.\n\nLeve duas habilidades que combinam ao nível máximo e encontre um Altar de Fusão.";
+            return;
+        }
+        detailName.text = recipe.result.displayName;
+        detailSubtitle.text = recipe.ingredientA.displayName + "  +  " + recipe.ingredientB.displayName;
+        detailBody.text = recipe.description + "\n\n" + recipe.result.GetDescription(1);
+    }
+
     private void ClearDetails()
     {
         detailIcon.enabled = false;
         detailName.text = "";
         detailSubtitle.text = "";
-        detailBody.text = mode == Mode.Creatures
-            ? "Escolha uma criatura para ver os detalhes."
-            : "Escolha uma habilidade para ver os detalhes.";
+        detailBody.text = mode == Mode.Creatures ? "Escolha uma criatura para ver os detalhes."
+            : mode == Mode.Upgrades ? "Escolha uma habilidade para ver os detalhes."
+            : "Escolha uma fusão para ver a receita.";
     }
 
     private static string RankName(EnemyRank rank)
