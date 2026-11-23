@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Enemy_Hitodama
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   displayName: Hitodama
+  description: "Chama errante de uma alma perdida. R\xE1pida e fr\xE1gil."
   sprite: {fileID: 21300000, guid: 3f9f6599579d39d49a5c21c51d267ebd, type: 3}
   rank: 0
   scale: 1

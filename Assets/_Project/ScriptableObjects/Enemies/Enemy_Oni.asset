@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Enemy_Oni
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   displayName: Oni
+  description: Ogro youkai das montanhas. Lento, mas aguenta pancada.
   sprite: {fileID: 21300000, guid: 85843e50eee7d1d4aac30542c6265f40, type: 3}
   rank: 0
   scale: 1

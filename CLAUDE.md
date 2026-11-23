@@ -76,6 +76,7 @@ Inspirado na tela de seleção do Pokébonk:
 - **Dificuldades**: Normal, Difícil e Pesadelo, desbloqueadas aos poucos. Dificuldades maiores aumentam a força dos inimigos e multiplicam a moeda de progressão.
 - **Metas**: recorde de abates, medalhas por tempo de conclusão (bronze, prata, ouro), recordes por região.
 - **Mochila**: o jogador leva até 2 itens para a partida.
+- **Coleções** (já no protótipo, cena `MainMenu`): **Manual de Criaturas** e **Habilidades**, mostrando o que o jogador já encontrou e o que falta (silhueta "???"). O registro fica no perfil do jogador.
 - **Futuro**: temporadas, ranking global e por região, clãs, modo ranqueado.
 
 ## 6. HUD da partida
@@ -180,6 +181,7 @@ Cada etapa deve terminar **jogável** e com **commit** no Git. Fazer uma etapa p
 5. **Zona**: timer de 10 minutos, elites, guardião sorteado, opção de chamar o guardião antes, transição para a próxima zona.
 6. **Região completa**: Zona 1 → 2 → 3 → Santuário com boss, tela de vitória e derrota.
 7. **HUD completo**: layout da seção 6, incluindo minimapa.
+7b. **Menu inicial** (pedido antes da etapa 8): cena `MainMenu` com Jogar, Manual de Criaturas e Habilidades.
 8. **Fusão**: primeira receita funcionando (duas habilidades no máximo viram uma nova).
 9. **Build de teste**: WebGL rodando no navegador do PC e do celular.
 

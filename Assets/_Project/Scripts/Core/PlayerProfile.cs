@@ -11,6 +11,14 @@ public class RegionRecord
     public int bestKills;
 }
 
+/// <summary>Criatura do Manual: se já foi vista e quantas foram derrotadas.</summary>
+[Serializable]
+public class CreatureRecord
+{
+    public string creatureId;
+    public int kills;
+}
+
 /// <summary>
 /// Dados salvos do jogador. Hoje fica no aparelho (PlayerPrefs, em JSON);
 /// depois vai para o servidor (Supabase) ligado ao mesmo ID.
@@ -24,6 +32,10 @@ public class ProfileData
     public int runsPlayed;
     public List<string> unlockedItems = new List<string>(); // personagens, skins etc. (futuro)
     public List<RegionRecord> records = new List<RegionRecord>();
+
+    // Coleções (Manual de Criaturas e Habilidades): o que já foi encontrado
+    public List<CreatureRecord> creatures = new List<CreatureRecord>();
+    public List<string> discoveredUpgrades = new List<string>();
 }
 
 /// <summary>
@@ -86,6 +98,61 @@ public static class PlayerProfile
         Save();
     }
 
+    // ---- Coleções ----
+
+    public static CreatureRecord GetCreature(string creatureId)
+    {
+        foreach (CreatureRecord c in Data.creatures)
+        {
+            if (c.creatureId == creatureId)
+            {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    /// <summary>Marca a criatura como encontrada. Devolve true se é a primeira vez (já salva).</summary>
+    public static bool DiscoverCreature(string creatureId)
+    {
+        if (GetCreature(creatureId) != null)
+        {
+            return false;
+        }
+        Data.creatures.Add(new CreatureRecord { creatureId = creatureId });
+        Save();
+        return true;
+    }
+
+    /// <summary>Soma abates de uma criatura (gravado junto com o fim da partida).</summary>
+    public static void AddCreatureKills(string creatureId, int kills)
+    {
+        CreatureRecord record = GetCreature(creatureId);
+        if (record == null)
+        {
+            record = new CreatureRecord { creatureId = creatureId };
+            Data.creatures.Add(record);
+        }
+        record.kills += kills;
+    }
+
+    public static bool IsUpgradeDiscovered(string upgradeId)
+    {
+        return Data.discoveredUpgrades.Contains(upgradeId);
+    }
+
+    /// <summary>Marca uma habilidade/passiva como descoberta. Devolve true se é nova (já salva).</summary>
+    public static bool DiscoverUpgrade(string upgradeId)
+    {
+        if (IsUpgradeDiscovered(upgradeId))
+        {
+            return false;
+        }
+        Data.discoveredUpgrades.Add(upgradeId);
+        Save();
+        return true;
+    }
+
     public static void Save()
     {
         PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(Data));
@@ -96,6 +163,12 @@ public static class PlayerProfile
     {
         string json = PlayerPrefs.GetString(SaveKey, "");
         data = string.IsNullOrEmpty(json) ? new ProfileData() : JsonUtility.FromJson<ProfileData>(json);
+        // Perfis salvos por versões antigas podem não ter as listas novas
+        if (data.creatures == null) data.creatures = new List<CreatureRecord>();
+        if (data.discoveredUpgrades == null) data.discoveredUpgrades = new List<string>();
+        if (data.records == null) data.records = new List<RegionRecord>();
+        if (data.unlockedItems == null) data.unlockedItems = new List<string>();
+
         if (string.IsNullOrEmpty(data.playerId))
         {
             // Convidado: ID gerado no aparelho, depois pode virar conta

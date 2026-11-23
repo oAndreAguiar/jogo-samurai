@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// Tela de derrota: aparece quando o jogador morre, pausa o jogo
-/// e reinicia a cena com R, Enter, clique ou toque.
+/// e reinicia a cena com R, Enter ou o botão "Jogar de novo".
 /// </summary>
 public class GameOverScreen : MonoBehaviour
 {
@@ -58,7 +58,7 @@ public class GameOverScreen : MonoBehaviour
             reached = "Chegou até: Zona " + (zones.ZoneIndex + 1) + "/" + zones.ZoneCount + "\n";
         }
 
-        summaryText.text = string.Format("{0}Tempo {1}   Abates {2}\n\nR ou toque para recomeçar",
+        summaryText.text = string.Format("{0}Tempo {1}   Abates {2}",
             reached, RunClock.Format(time), spawner.KillCount);
         panel.SetActive(true);
         shownTime = Time.unscaledTime;
@@ -73,13 +73,22 @@ public class GameOverScreen : MonoBehaviour
         }
 
         bool restart =
-            (Keyboard.current != null && (Keyboard.current.rKey.wasPressedThisFrame || Keyboard.current.enterKey.wasPressedThisFrame))
-            || (Pointer.current != null && Pointer.current.press.wasPressedThisFrame);
+            Keyboard.current != null && (Keyboard.current.rKey.wasPressedThisFrame || Keyboard.current.enterKey.wasPressedThisFrame);
 
         if (restart)
         {
-            Time.timeScale = 1f;
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            Restart();
         }
+    }
+
+    /// <summary>Recomeça a partida (tecla R/Enter ou botão "Jogar de novo").</summary>
+    public void Restart()
+    {
+        if (shownTime < 0f || Time.unscaledTime - shownTime < restartDelay)
+        {
+            return;
+        }
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Guardian_OnibiO
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   displayName: "Onibi-\u014C"
+  description: "Rei das chamas fantasmas. Arde sem parar. Um dos guardi\xF5es poss\xEDveis
+    das zonas."
   sprite: {fileID: 21300000, guid: 3f9f6599579d39d49a5c21c51d267ebd, type: 3}
   rank: 2
   scale: 2.9

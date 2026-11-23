@@ -19,6 +19,10 @@ public class EnemyData : ScriptableObject
     [Tooltip("Nome mostrado em telas e no editor.")]
     public string displayName = "Inimigo";
 
+    [Tooltip("Texto do Manual de Criaturas.")]
+    [TextArea(2, 4)]
+    public string description = "";
+
     [Tooltip("Sprite em pixel art do inimigo.")]
     public Sprite sprite;
 

@@ -27,6 +27,9 @@ public class PlayerLoadout : MonoBehaviour
     // Avisa quando algo foi ganho ou subiu de nível: (upgrade, novo nível)
     public event Action<UpgradeDefinition, int> UpgradeApplied;
 
+    // Cartas sorteadas para um level-up (para registrar o que o jogador já viu)
+    public event Action<List<UpgradeOffer>> OffersBuilt;
+
     public PlayerModifiers Modifiers { get; } = new PlayerModifiers();
     public HordeSpawner Spawner => spawner;
     public ProjectileSystem Projectiles => projectiles;
@@ -112,6 +115,7 @@ public class PlayerLoadout : MonoBehaviour
         {
             results.Add(new UpgradeOffer { Definition = null, NextLevel = 0 }); // cura
         }
+        OffersBuilt?.Invoke(results);
     }
 
     /// <summary>Aplica a carta escolhida.</summary>

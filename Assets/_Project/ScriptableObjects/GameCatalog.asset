@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc28a5b5ff86e3e42b42fe27351465d8, type: 3}
+  m_Name: GameCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::GameCatalog
+  creatures:
+  - {fileID: 11400000, guid: b3343d5b708bb3246966b78bd4ae290e, type: 2}
+  - {fileID: 11400000, guid: b39cb6e47078a9340bac4fab8edb2c49, type: 2}
+  - {fileID: 11400000, guid: 9146143b318d62641ae24c941bf59fe8, type: 2}
+  - {fileID: 11400000, guid: fdd33b1a500bf6942ab09e2b7b6a9ea9, type: 2}
+  - {fileID: 11400000, guid: c7654e81aa63e724cb04557192ab8506, type: 2}
+  - {fileID: 11400000, guid: 608f2b753310255469e1a7eaedfaf969, type: 2}
+  - {fileID: 11400000, guid: 12dd1edb16d0deb48bf1348b3f69798a, type: 2}
+  upgrades:
+  - {fileID: 11400000, guid: 824c58eec2194e24ebb0c10bf5131210, type: 2}
+  - {fileID: 11400000, guid: 24f39987b64d3ce43bba6fea04dd5042, type: 2}
+  - {fileID: 11400000, guid: 3b54e62e945e53f4da5669bca8075bec, type: 2}
+  - {fileID: 11400000, guid: d6dd0f7abf31b104a8ddebf5a328b7a1, type: 2}
+  - {fileID: 11400000, guid: 8de9da5f26e560b4886857e618ee417e, type: 2}
+  - {fileID: 11400000, guid: ef6b69f1c81eb0d4fb14e80fe973e4fa, type: 2}
+  - {fileID: 11400000, guid: 9e118325af3e93e4c8a7076b841ddbb4, type: 2}
+  - {fileID: 11400000, guid: 511147f2ce81dab44855f8046c8f15b5, type: 2}

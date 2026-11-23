@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// Tela de vitória: aparece quando o boss do Santuário morre.
-/// Mostra tempo total, abates, nível e a medalha pelo tempo. R, Enter ou toque recomeça.
+/// Mostra tempo total, abates, nível e a medalha pelo tempo. R, Enter ou o botão recomeça; M ou o botão volta ao menu.
 /// </summary>
 public class VictoryScreen : MonoBehaviour
 {
@@ -80,13 +80,22 @@ public class VictoryScreen : MonoBehaviour
         }
 
         bool restart =
-            (Keyboard.current != null && (Keyboard.current.rKey.wasPressedThisFrame || Keyboard.current.enterKey.wasPressedThisFrame))
-            || (Pointer.current != null && Pointer.current.press.wasPressedThisFrame);
+            Keyboard.current != null && (Keyboard.current.rKey.wasPressedThisFrame || Keyboard.current.enterKey.wasPressedThisFrame);
 
         if (restart)
         {
-            Time.timeScale = 1f;
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            Restart();
         }
+    }
+
+    /// <summary>Recomeça a partida (tecla R/Enter ou botão "Jogar de novo").</summary>
+    public void Restart()
+    {
+        if (shownTime < 0f || Time.unscaledTime - shownTime < restartDelay)
+        {
+            return;
+        }
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

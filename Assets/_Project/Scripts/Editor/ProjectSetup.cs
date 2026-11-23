@@ -33,6 +33,7 @@ public static class ProjectSetup
         CreateFolders();
         ConfigurePlayerSettings();
         CreatePrototypeScene();
+        CreateMainMenuScene();
         RemoveSampleScene();
         AssetDatabase.SaveAssets();
         Debug.Log("[ProjectSetup] Setup concluído.");
@@ -768,6 +769,18 @@ public static class ProjectSetup
         RunResults results = runGo.AddComponent<RunResults>();
         SetRefs(results, ("spawner", spawner), ("zones", zones), ("sanctuary", sanctuary), ("playerHealth", health), ("clock", clock));
 
+        // Coleções do menu: registra criaturas e habilidades encontradas
+        DiscoveryTracker tracker = runGo.AddComponent<DiscoveryTracker>();
+        SetRefs(tracker, ("spawner", spawner), ("loadout", loadout), ("playerHealth", health), ("sanctuary", sanctuary));
+
+        // Botões "Jogar de novo" e "Menu" nas telas de derrota e vitória
+        GameOverScreen gameOverScreen = Object.FindFirstObjectByType<GameOverScreen>();
+        VictoryScreen victoryScreen = Object.FindFirstObjectByType<VictoryScreen>();
+        CreateResultButtons(canvas.Find("GameOverPanel"), gameOverScreen.Restart);
+        CreateResultButtons(canvas.Find("VictoryPanel"), victoryScreen.Restart);
+        Transform oldHint = canvas.Find("VictoryPanel/Hint");
+        if (oldHint != null) Object.DestroyImmediate(oldHint.gameObject);
+
         // ---- Ativa (R) e ultimate (C) ----
         Directory.CreateDirectory(Root + "/ScriptableObjects/Skills");
         Sprite dashIcon = PaintSprite("Icon_Dash", 16, 16, 16f, (x, y) =>
@@ -955,6 +968,286 @@ public static class ProjectSetup
         // Painéis de level-up, derrota e vitória ficam por cima do HUD novo
         canvas.Find("LevelUpPanel").SetAsLastSibling();
         canvas.Find("VictoryPanel").SetAsLastSibling();
+    }
+
+    private static void CreateResultButtons(Transform panel, UnityEngine.Events.UnityAction restart)
+    {
+        Button again = CreateMenuButton(panel, "PlayAgainButton", "Jogar de novo (R)", new Vector2(-250f, -340f), new Vector2(440f, 100f),
+            new Color(0.55f, 0.1f, 0.1f, 1f));
+        UnityEditor.Events.UnityEventTools.AddPersistentListener(again.onClick, restart);
+        Button menu = CreateMenuButton(panel, "MenuButton", "Menu (M)", new Vector2(250f, -340f), new Vector2(440f, 100f),
+            new Color(0.12f, 0.09f, 0.14f, 1f));
+        ReturnToMenu back = menu.gameObject.AddComponent<ReturnToMenu>();
+        SetRefs(back, ("button", menu));
+    }
+
+    // Botão retangular com texto e borda dourada
+    private static Button CreateMenuButton(Transform parent, string name, string label, Vector2 position, Vector2 size, Color color)
+    {
+        GameObject go = new GameObject(name, typeof(RectTransform));
+        go.transform.SetParent(parent, false);
+        RectTransform rt = (RectTransform)go.transform;
+        rt.anchoredPosition = position;
+        rt.sizeDelta = size;
+        Image bg = go.AddComponent<Image>();
+        bg.color = color;
+        Outline border = go.AddComponent<Outline>();
+        border.effectColor = new Color(0.87f, 0.7f, 0.25f);
+        border.effectDistance = new Vector2(3f, -3f);
+        Button button = go.AddComponent<Button>();
+        ColorBlock colors = button.colors;
+        colors.highlightedColor = new Color(1f, 0.9f, 0.75f);
+        colors.pressedColor = new Color(1f, 0.8f, 0.5f);
+        button.colors = colors;
+        Text text = CreateText(go.transform, "Label", label, 40, Color.white, Vector2.zero);
+        ((RectTransform)text.transform).sizeDelta = size;
+        text.fontStyle = FontStyle.Bold;
+        return button;
+    }
+
+    // ---------------- Menu principal (antes da etapa 8) ----------------
+
+    private const string MenuScenePath = Root + "/Scenes/MainMenu.unity";
+
+    [MenuItem("JogoJapones/Setup/Recriar menu principal")]
+    public static void CreateMainMenuScene()
+    {
+        GameCatalog catalog = CreateCatalog();
+
+        Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+        GameObject camGo = new GameObject("Main Camera");
+        camGo.tag = "MainCamera";
+        Camera cam = camGo.AddComponent<Camera>();
+        cam.clearFlags = CameraClearFlags.SolidColor;
+        cam.backgroundColor = new Color(0.06f, 0.04f, 0.07f);
+
+        GameObject canvasGo = new GameObject("Menu Canvas");
+        Canvas canvas = canvasGo.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        CanvasScaler scaler = canvasGo.AddComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1920f, 1080f);
+        scaler.matchWidthOrHeight = 0.5f;
+        canvasGo.AddComponent<GraphicRaycaster>();
+        GameObject eventSystem = new GameObject("EventSystem");
+        eventSystem.AddComponent<EventSystem>();
+        eventSystem.AddComponent<InputSystemUIInputModule>();
+        Transform root = canvasGo.transform;
+
+        Color gold = new Color(0.87f, 0.7f, 0.25f);
+        Color red = new Color(0.72f, 0.12f, 0.1f);
+
+        // ---- Painel principal ----
+        GameObject main = Stretch(new GameObject("MainPanel", typeof(RectTransform)), root);
+        // Torii decorativo (retângulos vermelhos) atrás do título
+        AddRect(main.transform, "ToriiTop", new Vector2(0f, 420f), new Vector2(1100f, 46f), red);
+        AddRect(main.transform, "ToriiBeam", new Vector2(0f, 340f), new Vector2(900f, 28f), red);
+        AddRect(main.transform, "ToriiLeft", new Vector2(-360f, 120f), new Vector2(46f, 600f), red);
+        AddRect(main.transform, "ToriiRight", new Vector2(360f, 120f), new Vector2(46f, 600f), red);
+
+        Text title = CreateText(main.transform, "Title", "JOGO SAMURAI", 120, gold, new Vector2(0f, 200f));
+        title.fontStyle = FontStyle.Bold;
+        CreateText(main.transform, "Subtitle", "protótipo", 34, new Color(0.8f, 0.78f, 0.75f), new Vector2(0f, 110f));
+
+        Button play = CreateMenuButton(main.transform, "PlayButton", "Jogar", new Vector2(0f, -20f), new Vector2(560f, 110f), red);
+        Button creatures = CreateMenuButton(main.transform, "CreaturesButton", "Manual de Criaturas", new Vector2(0f, -150f), new Vector2(560f, 100f),
+            new Color(0.12f, 0.09f, 0.14f, 1f));
+        Button upgrades = CreateMenuButton(main.transform, "UpgradesButton", "Habilidades", new Vector2(0f, -270f), new Vector2(560f, 100f),
+            new Color(0.12f, 0.09f, 0.14f, 1f));
+        Text profile = CreateText(main.transform, "Profile", "", 30, new Color(0.75f, 0.75f, 0.8f), new Vector2(0f, -440f));
+
+        // Sprites decorativos dos lados
+        AddSprite(main.transform, "DecoPlayer", AssetDatabase.LoadAssetAtPath<Sprite>(Root + "/Sprites/Player_Placeholder.png"), new Vector2(-640f, -230f), 260f);
+        AddSprite(main.transform, "DecoOni", AssetDatabase.LoadAssetAtPath<Sprite>(Root + "/Sprites/Enemy_Oni.png"), new Vector2(640f, -250f), 200f);
+        AddSprite(main.transform, "DecoFlame", AssetDatabase.LoadAssetAtPath<Sprite>(Root + "/Sprites/Enemy_Hitodama.png"), new Vector2(800f, -120f), 130f);
+
+        // ---- Páginas de coleção ----
+        CollectionPage creaturesPage = CreateCollectionPage(root, "CreaturesPage", "Manual de Criaturas", CollectionPage.Mode.Creatures, catalog);
+        CollectionPage upgradesPage = CreateCollectionPage(root, "UpgradesPage", "Habilidades", CollectionPage.Mode.Upgrades, catalog);
+
+        MainMenu menu = canvasGo.AddComponent<MainMenu>();
+        SetRefs(menu, ("mainPanel", main), ("creaturesPage", creaturesPage), ("upgradesPage", upgradesPage),
+            ("playButton", play), ("creaturesButton", creatures), ("upgradesButton", upgrades), ("profileText", profile));
+
+        EditorSceneManager.SaveScene(scene, MenuScenePath);
+        // Menu é a primeira cena do build; o jogo vem depois
+        EditorBuildSettings.scenes = new[]
+        {
+            new EditorBuildSettingsScene(MenuScenePath, true),
+            new EditorBuildSettingsScene(ScenePath, true)
+        };
+    }
+
+    private static CollectionPage CreateCollectionPage(Transform root, string name, string titleText, CollectionPage.Mode mode, GameCatalog catalog)
+    {
+        Color gold = new Color(0.87f, 0.7f, 0.25f);
+        Color panel = new Color(0.1f, 0.07f, 0.12f, 1f);
+        GameObject page = Stretch(new GameObject(name, typeof(RectTransform)), root);
+
+        Text title = CreateText(page.transform, "Title", titleText, 64, gold, new Vector2(0f, 470f));
+        title.fontStyle = FontStyle.Bold;
+        Text progress = CreateText(page.transform, "Progress", "", 34, Color.white, new Vector2(620f, 470f));
+        ((RectTransform)progress.transform).sizeDelta = new Vector2(500f, 60f);
+        Button back = CreateMenuButton(page.transform, "BackButton", "Voltar (Esc)", new Vector2(-720f, 470f), new Vector2(340f, 80f),
+            new Color(0.12f, 0.09f, 0.14f, 1f));
+
+        // Grade com rolagem (esquerda)
+        GameObject scroll = new GameObject("Grid", typeof(RectTransform));
+        scroll.transform.SetParent(page.transform, false);
+        RectTransform scrollRt = (RectTransform)scroll.transform;
+        scrollRt.anchoredPosition = new Vector2(-380f, -40f);
+        scrollRt.sizeDelta = new Vector2(1060f, 860f);
+        scroll.AddComponent<Image>().color = panel;
+        scroll.AddComponent<RectMask2D>();
+        ScrollRect scrollRect = scroll.AddComponent<ScrollRect>();
+        scrollRect.horizontal = false;
+        scrollRect.movementType = ScrollRect.MovementType.Clamped;
+        scrollRect.scrollSensitivity = 40f;
+
+        GameObject content = new GameObject("Content", typeof(RectTransform));
+        content.transform.SetParent(scroll.transform, false);
+        RectTransform contentRt = (RectTransform)content.transform;
+        contentRt.anchorMin = new Vector2(0f, 1f);
+        contentRt.anchorMax = new Vector2(1f, 1f);
+        contentRt.pivot = new Vector2(0.5f, 1f);
+        contentRt.sizeDelta = new Vector2(0f, 0f);
+        GridLayoutGroup grid = content.AddComponent<GridLayoutGroup>();
+        grid.cellSize = new Vector2(190f, 220f);
+        grid.spacing = new Vector2(16f, 16f);
+        grid.padding = new RectOffset(24, 24, 24, 24);
+        grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+        grid.constraintCount = 5;
+        ContentSizeFitter fitter = content.AddComponent<ContentSizeFitter>();
+        fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+        scrollRect.content = contentRt;
+        scrollRect.viewport = scrollRt;
+
+        // Modelo de item da grade
+        GameObject entry = new GameObject("EntryTemplate", typeof(RectTransform));
+        entry.transform.SetParent(content.transform, false);
+        Image entryBg = entry.AddComponent<Image>();
+        entryBg.color = new Color(0.16f, 0.12f, 0.18f, 1f);
+        Outline entryBorder = entry.AddComponent<Outline>();
+        entryBorder.effectColor = gold;
+        entryBorder.effectDistance = new Vector2(2f, -2f);
+        entry.AddComponent<Button>();
+        GameObject iconGo = new GameObject("Icon", typeof(RectTransform));
+        iconGo.transform.SetParent(entry.transform, false);
+        ((RectTransform)iconGo.transform).anchoredPosition = new Vector2(0f, 22f);
+        ((RectTransform)iconGo.transform).sizeDelta = new Vector2(130f, 130f);
+        Image icon = iconGo.AddComponent<Image>();
+        icon.preserveAspect = true;
+        icon.raycastTarget = false;
+        Text entryName = CreateText(entry.transform, "Name", "???", 24, Color.white, new Vector2(0f, -82f));
+        ((RectTransform)entryName.transform).sizeDelta = new Vector2(180f, 56f);
+        // Nomes longos ("Hitodama Dourada") diminuem a fonte em vez de cortar
+        entryName.resizeTextForBestFit = true;
+        entryName.resizeTextMinSize = 14;
+        entryName.resizeTextMaxSize = 24;
+
+        // Detalhes (direita)
+        GameObject detail = new GameObject("Details", typeof(RectTransform));
+        detail.transform.SetParent(page.transform, false);
+        RectTransform detailRt = (RectTransform)detail.transform;
+        detailRt.anchoredPosition = new Vector2(560f, -40f);
+        detailRt.sizeDelta = new Vector2(720f, 860f);
+        detail.AddComponent<Image>().color = panel;
+        detail.AddComponent<Outline>().effectColor = gold;
+        GameObject dIconGo = new GameObject("Icon", typeof(RectTransform));
+        dIconGo.transform.SetParent(detail.transform, false);
+        ((RectTransform)dIconGo.transform).anchoredPosition = new Vector2(0f, 270f);
+        ((RectTransform)dIconGo.transform).sizeDelta = new Vector2(240f, 240f);
+        Image dIcon = dIconGo.AddComponent<Image>();
+        dIcon.preserveAspect = true;
+        dIcon.raycastTarget = false;
+        Text dName = CreateText(detail.transform, "Name", "", 54, Color.white, new Vector2(0f, 110f));
+        ((RectTransform)dName.transform).sizeDelta = new Vector2(680f, 70f);
+        dName.fontStyle = FontStyle.Bold;
+        Text dSub = CreateText(detail.transform, "Subtitle", "", 32, gold, new Vector2(0f, 55f));
+        ((RectTransform)dSub.transform).sizeDelta = new Vector2(680f, 50f);
+        Text dBody = CreateText(detail.transform, "Body", "", 30, new Color(0.9f, 0.9f, 0.92f), new Vector2(0f, -190f));
+        ((RectTransform)dBody.transform).sizeDelta = new Vector2(640f, 440f);
+        dBody.alignment = TextAnchor.UpperLeft;
+
+        CollectionPage collection = page.AddComponent<CollectionPage>();
+        SerializedObject so = new SerializedObject(collection);
+        so.FindProperty("mode").enumValueIndex = (int)mode;
+        so.ApplyModifiedPropertiesWithoutUndo();
+        SetRefs(collection, ("catalog", catalog), ("gridContent", content.transform), ("entryTemplate", entry),
+            ("progressText", progress), ("backButton", back), ("detailIcon", dIcon), ("detailName", dName),
+            ("detailSubtitle", dSub), ("detailBody", dBody));
+        return collection;
+    }
+
+    // Catálogo com todas as criaturas e habilidades (ordem das coleções) + descrições do Manual
+    private static GameCatalog CreateCatalog()
+    {
+        string enemies = Root + "/ScriptableObjects/Enemies/";
+        (string file, string text)[] creatures =
+        {
+            ("Enemy_Oni", "Ogro youkai das montanhas. Lento, mas aguenta pancada."),
+            ("Enemy_Hitodama", "Chama errante de uma alma perdida. Rápida e frágil."),
+            ("Elite_RedOni", "Oni veterano coberto de cicatrizes. Bate forte e demora a cair."),
+            ("Elite_GoldHitodama", "Chama rara que brilha como ouro. Corre muito e vale muita experiência."),
+            ("Guardian_OOni", "O grande oni que guarda as trilhas da floresta. Um dos guardiões possíveis das zonas."),
+            ("Guardian_OnibiO", "Rei das chamas fantasmas. Arde sem parar. Um dos guardiões possíveis das zonas."),
+            ("Boss_KageOni", "Senhor das sombras do templo e chefe da Floresta de Bambu. Solta ondas de choque e fica furioso quando ferido."),
+        };
+
+        GameCatalog catalog = GetOrCreateAsset<GameCatalog>(Root + "/ScriptableObjects/GameCatalog.asset");
+        catalog.creatures = new System.Collections.Generic.List<EnemyData>();
+        foreach (var c in creatures)
+        {
+            EnemyData data = AssetDatabase.LoadAssetAtPath<EnemyData>(enemies + c.file + ".asset");
+            if (data == null) continue;
+            if (string.IsNullOrEmpty(data.description))
+            {
+                data.description = c.text;
+                EditorUtility.SetDirty(data);
+            }
+            catalog.creatures.Add(data);
+        }
+
+        ProgressionSettings progression = AssetDatabase.LoadAssetAtPath<ProgressionSettings>(Root + "/ScriptableObjects/Progression/ProgressionSettings.asset");
+        catalog.upgrades = new System.Collections.Generic.List<UpgradeDefinition>(progression.upgradePool);
+        EditorUtility.SetDirty(catalog);
+        return catalog;
+    }
+
+    private static GameObject Stretch(GameObject go, Transform parent)
+    {
+        go.transform.SetParent(parent, false);
+        RectTransform rt = (RectTransform)go.transform;
+        rt.anchorMin = Vector2.zero;
+        rt.anchorMax = Vector2.one;
+        rt.offsetMin = Vector2.zero;
+        rt.offsetMax = Vector2.zero;
+        return go;
+    }
+
+    private static void AddRect(Transform parent, string name, Vector2 position, Vector2 size, Color color)
+    {
+        GameObject go = new GameObject(name, typeof(RectTransform));
+        go.transform.SetParent(parent, false);
+        RectTransform rt = (RectTransform)go.transform;
+        rt.anchoredPosition = position;
+        rt.sizeDelta = size;
+        Image image = go.AddComponent<Image>();
+        image.color = color;
+        image.raycastTarget = false;
+    }
+
+    private static void AddSprite(Transform parent, string name, Sprite sprite, Vector2 position, float size)
+    {
+        GameObject go = new GameObject(name, typeof(RectTransform));
+        go.transform.SetParent(parent, false);
+        RectTransform rt = (RectTransform)go.transform;
+        rt.anchoredPosition = position;
+        rt.sizeDelta = new Vector2(size, size);
+        Image image = go.AddComponent<Image>();
+        image.sprite = sprite;
+        image.preserveAspect = true;
+        image.raycastTarget = false;
     }
 
     private static void CreateSkillButton(Transform canvas, string name, string key, PlayerSkill skill, Sprite circle, Sprite ring,

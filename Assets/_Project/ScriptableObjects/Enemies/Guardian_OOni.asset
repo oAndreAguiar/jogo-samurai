@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Guardian_OOni
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   displayName: "\u014C-Oni"
+  description: "O grande oni que guarda as trilhas da floresta. Um dos guardi\xF5es
+    poss\xEDveis das zonas."
   sprite: {fileID: 21300000, guid: 85843e50eee7d1d4aac30542c6265f40, type: 3}
   rank: 2
   scale: 3.2

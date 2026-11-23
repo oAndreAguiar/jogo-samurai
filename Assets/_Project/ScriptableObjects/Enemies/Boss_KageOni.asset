@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Boss_KageOni
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   displayName: Kage-Oni
+  description: Senhor das sombras do templo e chefe da Floresta de Bambu. Solta ondas
+    de choque e fica furioso quando ferido.
   sprite: {fileID: 21300000, guid: 68d763b500ef9a94f9fec72c24f43394, type: 3}
   rank: 3
   scale: 3.6
