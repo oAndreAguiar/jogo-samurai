@@ -17,15 +17,16 @@ public class PlayerHealth : MonoBehaviour
     public event Action Died;
 
     public float CurrentHealth { get; private set; }
-    public float MaxHealth => stats.maxHealth;
+    public float MaxHealth => stats.maxHealth + bonusMaxHealth;
     public bool IsDead { get; private set; }
 
     private float invulnerableTimer;
+    private float bonusMaxHealth;
 
     private void Start()
     {
-        CurrentHealth = stats.maxHealth;
-        HealthChanged?.Invoke(CurrentHealth, stats.maxHealth);
+        CurrentHealth = MaxHealth;
+        HealthChanged?.Invoke(CurrentHealth, MaxHealth);
     }
 
     private void Update()
@@ -54,11 +55,31 @@ public class PlayerHealth : MonoBehaviour
             }
         }
 
-        if (CurrentHealth < stats.maxHealth && stats.regenPerSecond > 0f)
+        if (CurrentHealth < MaxHealth && stats.regenPerSecond > 0f)
         {
-            CurrentHealth = Mathf.Min(stats.maxHealth, CurrentHealth + stats.regenPerSecond * Time.deltaTime);
-            HealthChanged?.Invoke(CurrentHealth, stats.maxHealth);
+            CurrentHealth = Mathf.Min(MaxHealth, CurrentHealth + stats.regenPerSecond * Time.deltaTime);
+            HealthChanged?.Invoke(CurrentHealth, MaxHealth);
         }
+    }
+
+    /// <summary>Recupera vida (sem passar do máximo).</summary>
+    public void Heal(float amount)
+    {
+        if (IsDead)
+        {
+            return;
+        }
+        CurrentHealth = Mathf.Min(MaxHealth, CurrentHealth + amount);
+        HealthChanged?.Invoke(CurrentHealth, MaxHealth);
+    }
+
+    /// <summary>Muda o bônus de vida máxima (passivas). O aumento também cura.</summary>
+    public void SetBonusMaxHealth(float bonus)
+    {
+        float gained = bonus - bonusMaxHealth;
+        bonusMaxHealth = bonus;
+        CurrentHealth = Mathf.Clamp(CurrentHealth + Mathf.Max(0f, gained), 0f, MaxHealth);
+        HealthChanged?.Invoke(CurrentHealth, MaxHealth);
     }
 
     public void TakeDamage(float amount)
@@ -70,7 +91,7 @@ public class PlayerHealth : MonoBehaviour
 
         CurrentHealth = Mathf.Max(0f, CurrentHealth - amount);
         invulnerableTimer = stats.invulnerabilityTime;
-        HealthChanged?.Invoke(CurrentHealth, stats.maxHealth);
+        HealthChanged?.Invoke(CurrentHealth, MaxHealth);
 
         if (CurrentHealth <= 0f)
         {

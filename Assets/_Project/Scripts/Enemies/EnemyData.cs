@@ -28,4 +28,8 @@ public class EnemyData : ScriptableObject
 
     [Tooltip("Dano causado ao jogador quando encosta nele.")]
     public float contactDamage = 10f;
+
+    [Header("Recompensa")]
+    [Tooltip("Experiência da joia que o inimigo derruba ao morrer.")]
+    public int xpValue = 1;
 }

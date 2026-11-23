@@ -29,6 +29,9 @@ public class Enemy : MonoBehaviour
     // Ponto no meio do sprite (para mirar e para os números de dano)
     public Vector3 CenterPosition => GroundPosition + Vector3.up * Data.spriteHeight;
 
+    // Até quando os objetos orbitando não podem acertar este inimigo de novo
+    public float OrbitImmuneUntil { get; set; }
+
     private float flashTimer;
 
     public void Setup(SpriteRenderer renderer)
@@ -43,6 +46,7 @@ public class Enemy : MonoBehaviour
         spriteRenderer.sprite = data.sprite;
         spriteRenderer.color = Color.white;
         flashTimer = 0f;
+        OrbitImmuneUntil = 0f;
         CurrentHealth = data.maxHealth;
         GroundHeight = groundPosition.y;
         GroundPosition = groundPosition;

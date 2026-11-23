@@ -13,6 +13,9 @@ public class PlayerMovement : MonoBehaviour
     [Tooltip("Sprite do personagem, para virar para a esquerda ou direita conforme anda.")]
     [SerializeField] private SpriteRenderer spriteRenderer;
 
+    [Tooltip("Opcional: bônus de velocidade das passivas.")]
+    [SerializeField] private PlayerLoadout loadout;
+
     private CharacterController controller;
     private InputAction moveAction;
     private Transform cameraTransform;
@@ -71,7 +74,8 @@ public class PlayerMovement : MonoBehaviour
             right.y = 0f;
             right.Normalize();
         }
-        Vector3 horizontal = (forward * input.y + right * input.x) * settings.moveSpeed;
+        float speed = settings.moveSpeed * (loadout != null ? loadout.Modifiers.MoveSpeedMultiplier : 1f);
+        Vector3 horizontal = (forward * input.y + right * input.x) * speed;
 
         // Gravidade simples: encostado no chão, fica levemente "grudado" nele
         if (controller.isGrounded && verticalSpeed < 0f)

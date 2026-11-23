@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 382d051a8d9a5f54482d47452f251ba7, type: 3}
+  m_Name: ProgressionSettings
+  m_EditorClassIdentifier: Assembly-CSharp::ProgressionSettings
+  xpBase: 5
+  xpExponent: 1.35
+  maxAbilities: 4
+  maxPassives: 3
+  startingAbility: {fileID: 11400000, guid: 824c58eec2194e24ebb0c10bf5131210, type: 2}
+  upgradePool:
+  - {fileID: 11400000, guid: 824c58eec2194e24ebb0c10bf5131210, type: 2}
+  - {fileID: 11400000, guid: 24f39987b64d3ce43bba6fea04dd5042, type: 2}
+  - {fileID: 11400000, guid: 3b54e62e945e53f4da5669bca8075bec, type: 2}
+  - {fileID: 11400000, guid: d6dd0f7abf31b104a8ddebf5a328b7a1, type: 2}
+  - {fileID: 11400000, guid: 8de9da5f26e560b4886857e618ee417e, type: 2}
+  - {fileID: 11400000, guid: ef6b69f1c81eb0d4fb14e80fe973e4fa, type: 2}
+  - {fileID: 11400000, guid: 9e118325af3e93e4c8a7076b841ddbb4, type: 2}
+  - {fileID: 11400000, guid: 511147f2ce81dab44855f8046c8f15b5, type: 2}
+  choicesPerLevel: 3
+  fallbackHealPercent: 0.3
+  smallGemSprite: {fileID: 21300000, guid: 57f6493f0f9f64842bb8f0eda2b3b199, type: 3}
+  bigGemSprite: {fileID: 21300000, guid: 859d67f5f694af34db0b3e0dec857fa3, type: 3}
+  bigGemThreshold: 2
+  pickupRadius: 2.5
+  gemMagnetSpeed: 14
+  maxGems: 300

@@ -46,11 +46,11 @@ public class ProjectileSystem : MonoBehaviour
         }
     }
 
-    /// <summary>Dispara um projétil da posição dada, na direção dada (no plano do chão).</summary>
-    public void Fire(AbilityData ability, Vector3 position, Vector3 direction)
+    /// <summary>Dispara um projétil com os dados do disparo.</summary>
+    public void Fire(in ProjectileShot shot)
     {
         Projectile p = pool.Get();
-        p.Launch(ability, position, direction.normalized);
+        p.Launch(shot);
         p.ActiveIndex = active.Count;
         active.Add(p);
     }
@@ -73,7 +73,7 @@ public class ProjectileSystem : MonoBehaviour
             }
 
             Vector3 pos = p.transform.position + p.Velocity * dt;
-            p.SpinAngle += p.Ability.spinSpeed * dt;
+            p.SpinAngle += p.SpinSpeed * dt;
             p.transform.SetPositionAndRotation(pos, faceCamera * Quaternion.Euler(0f, 0f, p.SpinAngle));
 
             if (CheckHits(p, pos, enemies))
@@ -86,7 +86,7 @@ public class ProjectileSystem : MonoBehaviour
     // Devolve true quando o projétil acabou (não atravessa mais ninguém)
     private bool CheckHits(Projectile p, Vector3 pos, IReadOnlyList<Enemy> enemies)
     {
-        float radius = p.Ability.hitRadius;
+        float radius = p.HitRadius;
         // De trás para frente, porque um inimigo morto sai da lista
         for (int e = enemies.Count - 1; e >= 0; e--)
         {
@@ -107,7 +107,7 @@ public class ProjectileSystem : MonoBehaviour
             }
 
             p.RegisterHit(enemy);
-            spawner.DamageEnemy(enemy, p.Ability.damage);
+            spawner.DamageEnemy(enemy, p.Damage);
             if (p.PierceLeft <= 0)
             {
                 return true;

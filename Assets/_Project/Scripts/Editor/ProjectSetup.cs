@@ -12,7 +12,7 @@ using Unity.Cinemachine;
 using Unity.Cinemachine.TargetTracking;
 
 /// <summary>
-/// Script de Editor: configura o projeto para WebGL e monta a cena Prototype (etapas 0 a 3).
+/// Script de Editor: configura o projeto para WebGL e monta a cena Prototype (etapas 0 a 4).
 /// Pode ser rodado de novo pelo menu "JogoJapones > Setup > ..." sem quebrar nada.
 /// </summary>
 public static class ProjectSetup
@@ -24,7 +24,7 @@ public static class ProjectSetup
     {
         "Scenes", "Scripts/Core", "Scripts/Player", "Scripts/Enemies", "Scripts/Combat",
         "Scripts/Progression", "Scripts/World", "Scripts/UI", "Scripts/Utils",
-        "Sprites", "Prefabs", "Materials", "ScriptableObjects", "ScriptableObjects/Player", "ScriptableObjects/Enemies", "ScriptableObjects/World", "ScriptableObjects/Combat", "Audio"
+        "Sprites", "Prefabs", "Materials", "ScriptableObjects", "ScriptableObjects/Player", "ScriptableObjects/Enemies", "ScriptableObjects/World", "ScriptableObjects/Combat", "ScriptableObjects/Upgrades", "ScriptableObjects/Progression", "Audio"
     };
 
     // Chamado pela linha de comando: roda tudo de uma vez
@@ -295,7 +295,7 @@ public static class ProjectSetup
         rt.anchorMin = new Vector2(0f, 1f);
         rt.anchorMax = new Vector2(0f, 1f);
         rt.pivot = new Vector2(0f, 1f);
-        rt.anchoredPosition = new Vector2(24f, -20f);
+        rt.anchoredPosition = new Vector2(24f, -40f);
         rt.sizeDelta = new Vector2(1200f, 60f);
         Text text = textGo.AddComponent<Text>();
         text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
@@ -320,11 +320,6 @@ public static class ProjectSetup
         Directory.CreateDirectory(Root + "/ScriptableObjects/Combat");
 
         // Dados
-        Sprite shurikenSprite = CreateShurikenSprite();
-        AbilityData shuriken = GetOrCreateAsset<AbilityData>(Root + "/ScriptableObjects/Combat/Ability_Shuriken.asset");
-        shuriken.projectileSprite = shurikenSprite;
-        EditorUtility.SetDirty(shuriken);
-
         DamageNumberSettings numberSettings = GetOrCreateAsset<DamageNumberSettings>(Root + "/ScriptableObjects/Combat/DamageNumberSettings.asset");
         numberSettings.digitsTexture = CreateDigitsTexture();
         EditorUtility.SetDirty(numberSettings);
@@ -338,9 +333,7 @@ public static class ProjectSetup
         DamageNumberSystem numbers = combatGo.AddComponent<DamageNumberSystem>();
         SetRefs(numbers, ("settings", numberSettings), ("spawner", spawner));
 
-        // Jogador: habilidade automática e vida
-        AutoShooter shooter = player.AddComponent<AutoShooter>();
-        SetRefs(shooter, ("ability", shuriken), ("projectiles", projectiles), ("spawner", spawner));
+        // Jogador: vida (as habilidades vêm do PlayerLoadout, etapa 4)
         PlayerHealth health = player.AddComponent<PlayerHealth>();
         SetRefs(health, ("stats", stats), ("spawner", spawner), ("spriteRenderer", playerSprite));
 
@@ -381,6 +374,325 @@ public static class ProjectSetup
         GameObject gameOverGo = new GameObject("GameOver");
         GameOverScreen gameOver = gameOverGo.AddComponent<GameOverScreen>();
         SetRefs(gameOver, ("playerHealth", health), ("spawner", spawner), ("panel", panel), ("summaryText", summary));
+
+        CreateProgression(player, spawner, projectiles, health, canvasGo);
+        // Tela de derrota por cima de tudo
+        panel.transform.SetAsLastSibling();
+    }
+
+    // Progressão (etapa 4): XP, joias, habilidades, passivas e tela de level-up
+    private static void CreateProgression(GameObject player, HordeSpawner spawner, ProjectileSystem projectiles, PlayerHealth health, GameObject canvasGo)
+    {
+        string upgradesDir = Root + "/ScriptableObjects/Upgrades";
+        Directory.CreateDirectory(upgradesDir);
+
+        // ---- Sprites provisórios ----
+        Sprite shurikenSprite = CreateShurikenSprite();
+        Sprite ringSprite = CreateRingSprite();
+        Sprite ofudaSprite = PaintSprite("Ofuda", 8, 14, 16f, (x, y) =>
+            (y == 9 || y == 10) && x >= 2 && x <= 5 ? new Color32(200, 30, 30, 255)
+            : (x == 3 || x == 4) && y >= 3 && y <= 7 ? new Color32(200, 30, 30, 255)
+            : new Color32(245, 235, 200, 255));
+        Sprite smallGem = PaintSprite("Gem_Small", 7, 9, 22f, (x, y) =>
+            Mathf.Abs(x - 3) + Mathf.Abs(y - 4) * 0.75f <= 3.2f ? (x < 3 ? new Color32(150, 255, 160, 255) : new Color32(60, 200, 90, 255)) : (Color32?)null);
+        Sprite bigGem = PaintSprite("Gem_Big", 9, 11, 20f, (x, y) =>
+            Mathf.Abs(x - 4) + Mathf.Abs(y - 5) * 0.8f <= 4.2f ? (x < 4 ? new Color32(150, 210, 255, 255) : new Color32(50, 120, 230, 255)) : (Color32?)null);
+        Sprite katanaIcon = PaintSprite("Icon_Katana", 16, 16, 16f, (x, y) =>
+            Mathf.Abs(x - y) <= 1 && x >= 4 ? new Color32(220, 225, 235, 255)
+            : Mathf.Abs(x - y) <= 1 && x < 4 ? new Color32(120, 40, 40, 255)
+            : (x + y == 7 || x + y == 8) && x >= 2 && x <= 5 ? new Color32(222, 180, 64, 255) : (Color32?)null);
+        Sprite iconSpeed = PaintSprite("Icon_Speed", 16, 16, 16f, (x, y) =>
+            x >= 3 && x <= 12 && y >= 3 && y <= 5 ? new Color32(120, 80, 40, 255)
+            : (x == 5 || x == 10) && y >= 6 && y <= 8 ? new Color32(120, 80, 40, 255)
+            : x >= 4 && x <= 11 && y >= 9 && y <= 10 ? new Color32(160, 110, 60, 255) : (Color32?)null);
+        Sprite iconHealth = PaintSprite("Icon_Health", 16, 16, 16f, (x, y) =>
+            y <= 12 && Mathf.Abs(x - 7.5f) <= (12 - y) * 0.6f + 0.5f && y >= 2
+                ? (y <= 4 ? new Color32(30, 30, 40, 255) : new Color32(250, 250, 245, 255)) : (Color32?)null);
+        Sprite iconDamage = PaintSprite("Icon_Damage", 16, 16, 16f, (x, y) =>
+            x >= 2 && x <= 13 && y >= 5 && y <= 9 ? (y == 9 ? new Color32(170, 170, 180, 255) : new Color32(110, 110, 125, 255)) : (Color32?)null);
+        Sprite iconCooldown = PaintSprite("Icon_Cooldown", 16, 16, 16f, (x, y) =>
+            (x == 7 || x == 8) && y >= 2 && y <= 9 ? new Color32(150, 90, 50, 255)
+            : (x == 7 || x == 8) && y >= 10 && y <= 13 && (y % 2 == 0) ? new Color32(200, 200, 210, 180)
+            : x >= 4 && x <= 11 && y >= 1 && y <= 2 ? new Color32(90, 60, 40, 255) : (Color32?)null);
+        Sprite iconMagnet = PaintSprite("Icon_Magnet", 16, 16, 16f, (x, y) =>
+            (x - 7.5f) * (x - 7.5f) + (y - 6.5f) * (y - 6.5f) <= 30f ? new Color32(250, 245, 235, 255)
+            : (x - 4.5f) * (x - 4.5f) + (y - 12f) * (y - 12f) <= 4f || (x - 10.5f) * (x - 10.5f) + (y - 12f) * (y - 12f) <= 4f ? new Color32(250, 245, 235, 255)
+            : (Color32?)null);
+        Sprite iconHeal = PaintSprite("Icon_Heal", 16, 16, 16f, (x, y) =>
+            x >= 4 && x <= 11 && y >= 2 && y <= 10 ? (y >= 8 ? new Color32(120, 200, 90, 255) : new Color32(90, 150, 70, 255)) : (Color32?)null);
+
+        // ---- Habilidades ----
+        var shuriken = GetOrCreateAsset<ProjectileAbilityDefinition>(upgradesDir + "/Ability_Shuriken.asset");
+        shuriken.displayName = "Shuriken";
+        shuriken.icon = shurikenSprite;
+        shuriken.projectileSprite = shurikenSprite;
+        if (shuriken.levels == null || shuriken.levels.Length == 0)
+        {
+            shuriken.levels = new[]
+            {
+                new ProjectileAbilityDefinition.Level { description = "Lança uma shuriken no inimigo mais próximo.", damage = 10, cooldown = 0.6f, projectiles = 1, pierce = 1 },
+                new ProjectileAbilityDefinition.Level { description = "+1 shuriken por disparo.", damage = 12, cooldown = 0.6f, projectiles = 2, pierce = 1 },
+                new ProjectileAbilityDefinition.Level { description = "+25% de dano. Atravessa +1 inimigo.", damage = 15, cooldown = 0.55f, projectiles = 2, pierce = 2 },
+                new ProjectileAbilityDefinition.Level { description = "+1 shuriken. Recarga menor.", damage = 15, cooldown = 0.5f, projectiles = 3, pierce = 2 },
+                new ProjectileAbilityDefinition.Level { description = "+1 shuriken, +dano e atravessa +1.", damage = 20, cooldown = 0.45f, projectiles = 4, pierce = 3 },
+            };
+        }
+        EditorUtility.SetDirty(shuriken);
+
+        var katana = GetOrCreateAsset<AuraAbilityDefinition>(upgradesDir + "/Ability_KatanaSlash.asset");
+        katana.displayName = "Corte de Katana";
+        katana.icon = katanaIcon;
+        katana.effectSprite = ringSprite;
+        if (katana.levels == null || katana.levels.Length == 0)
+        {
+            katana.levels = new[]
+            {
+                new AuraAbilityDefinition.Level { description = "Corta todos os inimigos ao seu redor.", damage = 12, cooldown = 1.6f, radius = 2.2f },
+                new AuraAbilityDefinition.Level { description = "+dano e +alcance.", damage = 15, cooldown = 1.5f, radius = 2.4f },
+                new AuraAbilityDefinition.Level { description = "+dano e corta mais rápido.", damage = 18, cooldown = 1.35f, radius = 2.6f },
+                new AuraAbilityDefinition.Level { description = "+dano e +alcance.", damage = 22, cooldown = 1.2f, radius = 2.9f },
+                new AuraAbilityDefinition.Level { description = "Corte máximo: muito dano e alcance.", damage = 30, cooldown = 1.0f, radius = 3.3f },
+            };
+        }
+        EditorUtility.SetDirty(katana);
+
+        var ofuda = GetOrCreateAsset<OrbitAbilityDefinition>(upgradesDir + "/Ability_Ofuda.asset");
+        ofuda.displayName = "Ofuda";
+        ofuda.icon = ofudaSprite;
+        ofuda.orbiterSprite = ofudaSprite;
+        if (ofuda.levels == null || ofuda.levels.Length == 0)
+        {
+            ofuda.levels = new[]
+            {
+                new OrbitAbilityDefinition.Level { description = "Dois talismãs giram ao seu redor.", damage = 8, count = 2, radius = 1.8f, rotationSpeed = 180 },
+                new OrbitAbilityDefinition.Level { description = "+1 talismã.", damage = 8, count = 3, radius = 1.8f, rotationSpeed = 180 },
+                new OrbitAbilityDefinition.Level { description = "+dano e +raio.", damage = 11, count = 3, radius = 2.1f, rotationSpeed = 200 },
+                new OrbitAbilityDefinition.Level { description = "+1 talismã. Giram mais rápido.", damage = 11, count = 4, radius = 2.1f, rotationSpeed = 220 },
+                new OrbitAbilityDefinition.Level { description = "+1 talismã, +dano e +raio.", damage = 15, count = 5, radius = 2.4f, rotationSpeed = 240 },
+            };
+        }
+        EditorUtility.SetDirty(ofuda);
+
+        // ---- Passivas ----
+        var speed = CreatePassive(upgradesDir, "Passive_Geta", "Sandálias Geta", iconSpeed, PassiveStat.MoveSpeed, 0.08f, "+{0} de velocidade.");
+        var vitality = CreatePassive(upgradesDir, "Passive_Onigiri", "Onigiri", iconHealth, PassiveStat.MaxHealth, 20f, "+{0} de vida máxima.");
+        var might = CreatePassive(upgradesDir, "Passive_Whetstone", "Pedra de Amolar", iconDamage, PassiveStat.Damage, 0.1f, "+{0} de dano.");
+        var haste = CreatePassive(upgradesDir, "Passive_Incense", "Incenso", iconCooldown, PassiveStat.Cooldown, 0.08f, "{0} a menos de recarga.");
+        var magnet = CreatePassive(upgradesDir, "Passive_ManekiNeko", "Maneki-neko", iconMagnet, PassiveStat.PickupRadius, 0.25f, "+{0} de alcance de coleta.");
+
+        // ---- Configuração da progressão ----
+        var settings = GetOrCreateAsset<ProgressionSettings>(Root + "/ScriptableObjects/Progression/ProgressionSettings.asset");
+        settings.startingAbility = shuriken;
+        settings.upgradePool = new System.Collections.Generic.List<UpgradeDefinition> { shuriken, katana, ofuda, speed, vitality, might, haste, magnet };
+        settings.smallGemSprite = smallGem;
+        settings.bigGemSprite = bigGem;
+        EditorUtility.SetDirty(settings);
+
+        // XP dos inimigos: o Oni (mais forte) vale 2
+        EnemyData oni = AssetDatabase.LoadAssetAtPath<EnemyData>(Root + "/ScriptableObjects/Enemies/Enemy_Oni.asset");
+        if (oni != null && oni.xpValue == 1)
+        {
+            oni.xpValue = 2;
+            EditorUtility.SetDirty(oni);
+        }
+
+        // ---- Componentes no jogador ----
+        PlayerLoadout loadout = player.AddComponent<PlayerLoadout>();
+        SetRefs(loadout, ("settings", settings), ("spawner", spawner), ("projectiles", projectiles), ("playerHealth", health));
+        PlayerExperience experience = player.AddComponent<PlayerExperience>();
+        SetRefs(experience, ("settings", settings));
+        SetRefs(player.GetComponent<PlayerMovement>(), ("loadout", loadout));
+
+        GameObject progressionGo = new GameObject("Progression");
+        ExperienceGemSystem gemSystem = progressionGo.AddComponent<ExperienceGemSystem>();
+        SetRefs(gemSystem, ("settings", settings), ("spawner", spawner), ("experience", experience), ("loadout", loadout));
+
+        // ---- Barra de XP no topo ----
+        Sprite pixel = AssetDatabase.LoadAssetAtPath<Sprite>(Root + "/Sprites/UI_Pixel.png");
+        GameObject xpBar = new GameObject("ExperienceBar", typeof(RectTransform));
+        xpBar.transform.SetParent(canvasGo.transform, false);
+        RectTransform xpRt = (RectTransform)xpBar.transform;
+        xpRt.anchorMin = new Vector2(0f, 1f);
+        xpRt.anchorMax = new Vector2(1f, 1f);
+        xpRt.pivot = new Vector2(0.5f, 1f);
+        xpRt.offsetMin = new Vector2(0f, -26f);
+        xpRt.offsetMax = new Vector2(0f, 0f);
+        Image xpBg = xpBar.AddComponent<Image>();
+        xpBg.color = new Color(0.05f, 0.04f, 0.08f, 0.85f);
+        xpBg.raycastTarget = false;
+
+        GameObject xpFillGo = new GameObject("Fill", typeof(RectTransform));
+        xpFillGo.transform.SetParent(xpBar.transform, false);
+        RectTransform fillRt = (RectTransform)xpFillGo.transform;
+        fillRt.anchorMin = Vector2.zero;
+        fillRt.anchorMax = Vector2.one;
+        fillRt.offsetMin = new Vector2(3f, 3f);
+        fillRt.offsetMax = new Vector2(-3f, -3f);
+        Image xpFill = xpFillGo.AddComponent<Image>();
+        xpFill.sprite = pixel;
+        xpFill.type = Image.Type.Filled;
+        xpFill.fillMethod = Image.FillMethod.Horizontal;
+        xpFill.fillAmount = 0f;
+        xpFill.color = new Color(0.35f, 0.75f, 1f);
+        xpFill.raycastTarget = false;
+
+        Text levelText = CreateText(xpBar.transform, "Level", "Nv 1", 34, Color.white, Vector2.zero);
+        RectTransform levelRt = (RectTransform)levelText.transform;
+        levelRt.anchorMin = new Vector2(1f, 0f);
+        levelRt.anchorMax = new Vector2(1f, 0f);
+        levelRt.pivot = new Vector2(1f, 1f);
+        levelRt.anchoredPosition = new Vector2(-24f, -4f);
+        levelRt.sizeDelta = new Vector2(240f, 50f);
+        levelText.alignment = TextAnchor.UpperRight;
+
+        ExperienceBar xpBarComp = xpBar.AddComponent<ExperienceBar>();
+        SetRefs(xpBarComp, ("experience", experience), ("fill", xpFill), ("levelText", levelText));
+
+        // ---- Tela de level-up ----
+        GameObject panel = new GameObject("LevelUpPanel", typeof(RectTransform));
+        panel.transform.SetParent(canvasGo.transform, false);
+        RectTransform panelRt = (RectTransform)panel.transform;
+        panelRt.anchorMin = Vector2.zero;
+        panelRt.anchorMax = Vector2.one;
+        panelRt.offsetMin = Vector2.zero;
+        panelRt.offsetMax = Vector2.zero;
+        panel.AddComponent<Image>().color = new Color(0.02f, 0.02f, 0.05f, 0.7f);
+
+        Text title = CreateText(panel.transform, "Title", "Subiu de nível!", 80, new Color(1f, 0.85f, 0.3f), new Vector2(0f, 380f));
+        title.fontStyle = FontStyle.Bold;
+        CreateText(panel.transform, "Hint", "Toque numa carta ou aperte 1, 2 ou 3", 32, new Color(0.85f, 0.85f, 0.9f), new Vector2(0f, -400f));
+
+        GameObject levelUpGo = new GameObject("LevelUp");
+        LevelUpScreen screen = levelUpGo.AddComponent<LevelUpScreen>();
+        SerializedObject screenSo = new SerializedObject(screen);
+        screenSo.FindProperty("experience").objectReferenceValue = experience;
+        screenSo.FindProperty("loadout").objectReferenceValue = loadout;
+        screenSo.FindProperty("playerHealth").objectReferenceValue = health;
+        screenSo.FindProperty("panel").objectReferenceValue = panel;
+        screenSo.FindProperty("healIcon").objectReferenceValue = iconHeal;
+        SerializedProperty cardsProp = screenSo.FindProperty("cards");
+        cardsProp.arraySize = 3;
+        for (int i = 0; i < 3; i++)
+        {
+            GameObject card = new GameObject("Card" + (i + 1), typeof(RectTransform));
+            card.transform.SetParent(panel.transform, false);
+            RectTransform cardRt = (RectTransform)card.transform;
+            cardRt.anchoredPosition = new Vector2((i - 1) * 470f, -10f);
+            cardRt.sizeDelta = new Vector2(430f, 580f);
+            Image cardBg = card.AddComponent<Image>();
+            cardBg.color = new Color(0.12f, 0.09f, 0.14f, 0.97f);
+            Outline border = card.AddComponent<Outline>();
+            border.effectColor = new Color(0.87f, 0.7f, 0.25f);
+            border.effectDistance = new Vector2(4f, -4f);
+            Button button = card.AddComponent<Button>();
+            ColorBlock colors = button.colors;
+            colors.highlightedColor = new Color(1f, 0.95f, 0.8f);
+            colors.pressedColor = new Color(1f, 0.85f, 0.5f);
+            button.colors = colors;
+
+            GameObject iconGo = new GameObject("Icon", typeof(RectTransform));
+            iconGo.transform.SetParent(card.transform, false);
+            RectTransform iconRt = (RectTransform)iconGo.transform;
+            iconRt.anchoredPosition = new Vector2(0f, 170f);
+            iconRt.sizeDelta = new Vector2(150f, 150f);
+            Image icon = iconGo.AddComponent<Image>();
+            icon.preserveAspect = true;
+            icon.raycastTarget = false;
+
+            Text key = CreateText(card.transform, "Key", (i + 1).ToString(), 34, new Color(0.87f, 0.7f, 0.25f), new Vector2(-175f, 255f));
+            ((RectTransform)key.transform).sizeDelta = new Vector2(60f, 60f);
+            Text nameText = CreateText(card.transform, "Name", "Nome", 44, Color.white, new Vector2(0f, 40f));
+            ((RectTransform)nameText.transform).sizeDelta = new Vector2(410f, 70f);
+            nameText.fontStyle = FontStyle.Bold;
+            Text lvlText = CreateText(card.transform, "Level", "Nova!", 30, new Color(1f, 0.82f, 0.3f), new Vector2(0f, -20f));
+            ((RectTransform)lvlText.transform).sizeDelta = new Vector2(410f, 50f);
+            Text descText = CreateText(card.transform, "Description", "Descrição", 32, new Color(0.9f, 0.9f, 0.92f), new Vector2(0f, -150f));
+            ((RectTransform)descText.transform).sizeDelta = new Vector2(380f, 200f);
+            descText.alignment = TextAnchor.UpperCenter;
+
+            SerializedProperty cardProp = cardsProp.GetArrayElementAtIndex(i);
+            cardProp.FindPropertyRelative("button").objectReferenceValue = button;
+            cardProp.FindPropertyRelative("icon").objectReferenceValue = icon;
+            cardProp.FindPropertyRelative("nameText").objectReferenceValue = nameText;
+            cardProp.FindPropertyRelative("levelText").objectReferenceValue = lvlText;
+            cardProp.FindPropertyRelative("descriptionText").objectReferenceValue = descText;
+        }
+        screenSo.ApplyModifiedPropertiesWithoutUndo();
+    }
+
+    private static PassiveDefinition CreatePassive(string dir, string file, string displayName, Sprite icon, PassiveStat stat, float value, string format)
+    {
+        string path = dir + "/" + file + ".asset";
+        bool isNew = AssetDatabase.LoadAssetAtPath<PassiveDefinition>(path) == null;
+        PassiveDefinition passive = GetOrCreateAsset<PassiveDefinition>(path);
+        passive.displayName = displayName;
+        passive.icon = icon;
+        if (isNew)
+        {
+            passive.stat = stat;
+            passive.valuePerLevel = value;
+            passive.descriptionFormat = format;
+        }
+        EditorUtility.SetDirty(passive);
+        return passive;
+    }
+
+    // Anel branco 64x64 (efeito do Corte de Katana), 2 metros de diâmetro na escala 1
+    private static Sprite CreateRingSprite()
+    {
+        const int size = 64;
+        return PaintSprite("FX_Ring", size, size, 32f, (x, y) =>
+        {
+            float d = Vector2.Distance(new Vector2(x + 0.5f, y + 0.5f), new Vector2(32f, 32f));
+            if (d > 31f || d < 25f) return null;
+            byte a = (byte)(d > 29f ? 255 : 140);
+            return new Color32(255, 255, 255, a);
+        }, false);
+    }
+
+    // Desenha um sprite pixel a pixel. "paint" devolve a cor do pixel ou null (transparente).
+    // Com outline = true, ganha contorno escuro de 1 pixel em volta.
+    private static Sprite PaintSprite(string name, int width, int height, float pixelsPerUnit,
+        System.Func<int, int, Color32?> paint, bool outline = true)
+    {
+        int w = width + (outline ? 2 : 0), h = height + (outline ? 2 : 0);
+        int o = outline ? 1 : 0;
+        Color32[] pixels = new Color32[w * h];
+        bool[] filled = new bool[w * h];
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                Color32? c = paint(x, y);
+                if (c.HasValue)
+                {
+                    pixels[(y + o) * w + x + o] = c.Value;
+                    filled[(y + o) * w + x + o] = true;
+                }
+            }
+        }
+        if (outline)
+        {
+            Color32 dark = new Color32(16, 12, 16, 255);
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    if (filled[y * w + x]) continue;
+                    bool near = false;
+                    for (int dy = -1; dy <= 1 && !near; dy++)
+                        for (int dx = -1; dx <= 1 && !near; dx++)
+                        {
+                            int nx = x + dx, ny = y + dy;
+                            if (nx >= 0 && ny >= 0 && nx < w && ny < h && filled[ny * w + nx]) near = true;
+                        }
+                    if (near) pixels[y * w + x] = dark;
+                }
+            }
+        }
+        Texture2D tex = new Texture2D(w, h, TextureFormat.RGBA32, false);
+        tex.SetPixels32(pixels);
+        return SaveSprite(tex, name, pixelsPerUnit, true);
     }
 
     private static Text CreateText(Transform parent, string name, string content, int size, Color color, Vector2 position)

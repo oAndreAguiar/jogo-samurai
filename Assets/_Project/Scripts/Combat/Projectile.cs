@@ -1,5 +1,19 @@
 using UnityEngine;
 
+/// <summary>Dados de um disparo (o que a habilidade manda para o ProjectileSystem).</summary>
+public struct ProjectileShot
+{
+    public Sprite sprite;
+    public Vector3 position;
+    public Vector3 direction;
+    public float speed;
+    public float damage;
+    public int pierce;
+    public float hitRadius;
+    public float lifetime;
+    public float spinSpeed;
+}
+
 /// <summary>
 /// Um projétil em voo. Não tem Update próprio: o ProjectileSystem move e testa todos de uma vez.
 /// </summary>
@@ -12,8 +26,10 @@ public class Projectile : MonoBehaviour
 
     [SerializeField] private SpriteRenderer spriteRenderer;
 
-    public AbilityData Ability { get; private set; }
     public Vector3 Velocity { get; private set; }
+    public float Damage { get; private set; }
+    public float HitRadius { get; private set; }
+    public float SpinSpeed { get; private set; }
     public float TimeLeft { get; set; }
     public int PierceLeft { get; set; }
     public float SpinAngle { get; set; }
@@ -24,14 +40,16 @@ public class Projectile : MonoBehaviour
         spriteRenderer = renderer;
     }
 
-    public void Launch(AbilityData ability, Vector3 position, Vector3 direction)
+    public void Launch(in ProjectileShot shot)
     {
-        Ability = ability;
-        spriteRenderer.sprite = ability.projectileSprite;
-        transform.position = position;
-        Velocity = direction * ability.projectileSpeed;
-        TimeLeft = ability.projectileLifetime;
-        PierceLeft = ability.pierce;
+        spriteRenderer.sprite = shot.sprite;
+        transform.position = shot.position;
+        Velocity = shot.direction.normalized * shot.speed;
+        Damage = shot.damage;
+        HitRadius = shot.hitRadius;
+        SpinSpeed = shot.spinSpeed;
+        TimeLeft = shot.lifetime;
+        PierceLeft = shot.pierce;
         SpinAngle = 0f;
         hitCount = 0;
     }

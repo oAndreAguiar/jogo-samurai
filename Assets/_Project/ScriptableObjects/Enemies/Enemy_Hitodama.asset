@@ -19,3 +19,4 @@ MonoBehaviour:
   spriteHeight: 0.7
   maxHealth: 10
   contactDamage: 6
+  xpValue: 1
