@@ -12,7 +12,7 @@ using Unity.Cinemachine;
 using Unity.Cinemachine.TargetTracking;
 
 /// <summary>
-/// Script de Editor: configura o projeto para WebGL e monta a cena Prototype (etapas 0 a 6).
+/// Script de Editor: configura o projeto para WebGL e monta a cena Prototype (etapas 0 a 7).
 /// Pode ser rodado de novo pelo menu "JogoJapones > Setup > ..." sem quebrar nada.
 /// </summary>
 public static class ProjectSetup
@@ -377,6 +377,7 @@ public static class ProjectSetup
 
         ExperienceGemSystem gems = CreateProgression(player, spawner, projectiles, health, canvasGo);
         CreateZones(spawner, gems, health, canvasGo);
+        CreateFullHud(player, playerSprite, spawner, health, canvasGo);
         // A derrota mostra até onde o jogador chegou e o tempo total
         SetRefs(gameOver, ("zones", Object.FindFirstObjectByType<ZoneController>()),
             ("sanctuary", Object.FindFirstObjectByType<SanctuaryController>()), ("clock", Object.FindFirstObjectByType<RunClock>()));
@@ -636,8 +637,11 @@ public static class ProjectSetup
         // Elites e guardiões: mesmos sprites provisórios, maiores e com outra cor
         EnemyData redOni = CreateSpecialEnemy(enemiesDir + "/Elite_RedOni.asset", "Oni Vermelho", oni.sprite, EnemyRank.Elite,
             1.8f, new Color(1f, 0.45f, 0.35f), 2.3f, 220f, 18f, 15, 0.6f);
-        EnemyData goldFlame = CreateSpecialEnemy(enemiesDir + "/Elite_GoldHitodama.asset", "Hitodama Dourada", flame.sprite, EnemyRank.Elite,
-            1.6f, new Color(1f, 0.85f, 0.3f), 3.4f, 140f, 14f, 12, 0.7f);
+        // Sprite próprio dourado (pintar o sprite azul de amarelo deixaria verde)
+        Sprite goldFlameSprite = CreateEnemySprite("Enemy_HitodamaGold", new Color32(235, 180, 40, 255), true);
+        EnemyData goldFlame = CreateSpecialEnemy(enemiesDir + "/Elite_GoldHitodama.asset", "Hitodama Dourada", goldFlameSprite, EnemyRank.Elite,
+            1.6f, Color.white, 3.4f, 140f, 14f, 12, 0.7f);
+        goldFlame.tint = Color.white;
         EnemyData bigOni = CreateSpecialEnemy(enemiesDir + "/Guardian_OOni.asset", "Ō-Oni", oni.sprite, EnemyRank.Guardian,
             3.2f, new Color(0.75f, 0.25f, 0.3f), 2.1f, 2400f, 30f, 60, 0.6f);
         EnemyData flameKing = CreateSpecialEnemy(enemiesDir + "/Guardian_OnibiO.asset", "Onibi-Ō", flame.sprite, EnemyRank.Guardian,
@@ -728,6 +732,321 @@ public static class ProjectSetup
         ZoneHUD hud = zoneGo.AddComponent<ZoneHUD>();
         SetRefs(hud, ("zones", controller), ("sanctuary", sanctuary), ("timerText", timer), ("callGuardianButton", button), ("bannerText", banner),
             ("guardianBar", gBar), ("guardianFill", gFill), ("guardianName", gName));
+    }
+
+    // HUD completo (etapa 7): perfil, moedas, ativa/ultimate, minimapa e layout da seção 6
+    private static void CreateFullHud(GameObject player, SpriteRenderer playerSprite, HordeSpawner spawner, PlayerHealth health, GameObject canvasGo)
+    {
+        const int minimapLayer = 8;
+        EnsureLayer(minimapLayer, "Minimap");
+
+        Transform canvas = canvasGo.transform;
+        ZoneController zones = Object.FindFirstObjectByType<ZoneController>();
+        SanctuaryController sanctuary = Object.FindFirstObjectByType<SanctuaryController>();
+        RunClock clock = Object.FindFirstObjectByType<RunClock>();
+        PlayerLoadout loadout = player.GetComponent<PlayerLoadout>();
+        PlayerExperience experience = player.GetComponent<PlayerExperience>();
+        Sprite circle = AssetDatabase.LoadAssetAtPath<Sprite>(Root + "/Sprites/UI_Circle.png");
+        Sprite ring = AssetDatabase.LoadAssetAtPath<Sprite>(Root + "/Sprites/FX_Ring.png");
+        Color gold = new Color(0.87f, 0.7f, 0.25f);
+        Color panelColor = new Color(0.07f, 0.05f, 0.09f, 1f); // opaco: a borda (Outline) não vaza por baixo
+
+        // ---- Moedas: valores das elites, guardiões e boss ----
+        foreach (string guid in AssetDatabase.FindAssets("t:EnemyData", new[] { Root + "/ScriptableObjects/Enemies" }))
+        {
+            EnemyData e = AssetDatabase.LoadAssetAtPath<EnemyData>(AssetDatabase.GUIDToAssetPath(guid));
+            if (e.rank == EnemyRank.Common || !Mathf.Approximately(e.coinChance, 0.05f))
+            {
+                continue; // comuns e valores já ajustados ficam como estão
+            }
+            e.coinChance = 1f;
+            e.coinValue = e.rank == EnemyRank.Elite ? 5 : e.rank == EnemyRank.Guardian ? 25 : 100;
+            EditorUtility.SetDirty(e);
+        }
+
+        GameObject runGo = new GameObject("RunResults");
+        RunResults results = runGo.AddComponent<RunResults>();
+        SetRefs(results, ("spawner", spawner), ("zones", zones), ("sanctuary", sanctuary), ("playerHealth", health), ("clock", clock));
+
+        // ---- Ativa (R) e ultimate (C) ----
+        Directory.CreateDirectory(Root + "/ScriptableObjects/Skills");
+        Sprite dashIcon = PaintSprite("Icon_Dash", 16, 16, 16f, (x, y) =>
+            (y >= 6 && y <= 9 && x >= 1 && x <= 9) ? new Color32(200, 220, 255, 255)
+            : (Mathf.Abs(y - 7.5f) <= 14 - x - 0.5f && x >= 9) ? new Color32(120, 170, 255, 255) : (Color32?)null);
+        Sprite ultIcon = PaintSprite("Icon_Ultimate", 16, 16, 16f, (x, y) =>
+        {
+            float dx = x - 7.5f, dy = y - 7.5f;
+            float r = Mathf.Sqrt(dx * dx + dy * dy);
+            float a = Mathf.Atan2(dy, dx);
+            float petal = 5.5f + 2.5f * Mathf.Cos(a * 5f);
+            if (r <= 2f) return new Color32(255, 220, 90, 255);
+            return r <= petal ? new Color32(255, 150, 190, 255) : (Color32?)null;
+        });
+        SkillData dashData = GetOrCreateAsset<SkillData>(Root + "/ScriptableObjects/Skills/Skill_Dash.asset");
+        if (dashData.displayName == "Habilidade") dashData.displayName = "Passo das Sombras";
+        dashData.icon = dashIcon;
+        EditorUtility.SetDirty(dashData);
+        SkillData ultData = GetOrCreateAsset<SkillData>(Root + "/ScriptableObjects/Skills/Skill_Ultimate.asset");
+        if (ultData.displayName == "Habilidade") ultData.displayName = "Tempestade de Pétalas";
+        ultData.icon = ultIcon;
+        EditorUtility.SetDirty(ultData);
+
+        // Clarão de tela cheia da ultimate (atrás do resto do HUD)
+        GameObject flashGo = new GameObject("UltimateFlash", typeof(RectTransform));
+        flashGo.transform.SetParent(canvas, false);
+        flashGo.transform.SetSiblingIndex(0);
+        RectTransform flashRt = (RectTransform)flashGo.transform;
+        flashRt.anchorMin = Vector2.zero;
+        flashRt.anchorMax = Vector2.one;
+        flashRt.offsetMin = Vector2.zero;
+        flashRt.offsetMax = Vector2.zero;
+        Image flash = flashGo.AddComponent<Image>();
+        flash.color = new Color(1f, 0.85f, 0.95f, 0f);
+        flash.raycastTarget = false;
+        flash.enabled = false;
+
+        DashSkill dash = player.AddComponent<DashSkill>();
+        SetRefs(dash, ("data", dashData), ("controller", player.GetComponent<CharacterController>()), ("health", health), ("playerSprite", playerSprite));
+        UltimateSkill ult = player.AddComponent<UltimateSkill>();
+        SetRefs(ult, ("data", ultData), ("spawner", spawner), ("health", health), ("loadout", loadout), ("flash", flash));
+
+        // ---- Topo esquerdo: retrato, nome, conta, nível ----
+        GameObject infoPanel = CreatePanel(canvas, "PlayerPanel", new Vector2(0f, 1f), new Vector2(24f, -40f), new Vector2(440f, 150f), panelColor, gold);
+        GameObject portraitFrame = CreatePanel(infoPanel.transform, "PortraitFrame", new Vector2(0f, 1f), new Vector2(14f, -14f), new Vector2(122f, 122f), new Color(0.2f, 0.12f, 0.12f, 1f), gold);
+        Image portrait = CreateImage(portraitFrame.transform, "Portrait", null, new Vector2(100f, 110f));
+        portrait.preserveAspect = true;
+        Text nameText = CreateText(infoPanel.transform, "Name", "Samurai", 38, Color.white, Vector2.zero);
+        Place(nameText, new Vector2(0f, 1f), new Vector2(150f, -18f), new Vector2(280f, 50f), TextAnchor.UpperLeft);
+        nameText.fontStyle = FontStyle.Bold;
+        Text accountText = CreateText(infoPanel.transform, "Account", "Conta Nv 1", 26, new Color(0.75f, 0.75f, 0.8f), Vector2.zero);
+        Place(accountText, new Vector2(0f, 1f), new Vector2(150f, -66f), new Vector2(280f, 36f), TextAnchor.UpperLeft);
+        Text runLevel = CreateText(infoPanel.transform, "RunLevel", "Nv 1", 40, new Color(1f, 0.82f, 0.3f), Vector2.zero);
+        Place(runLevel, new Vector2(0f, 1f), new Vector2(150f, -98f), new Vector2(280f, 50f), TextAnchor.UpperLeft);
+        runLevel.fontStyle = FontStyle.Bold;
+        PlayerInfoHUD info = infoPanel.AddComponent<PlayerInfoHUD>();
+        SetRefs(info, ("experience", experience), ("portrait", portrait), ("nameText", nameText), ("accountLevelText", accountText),
+            ("runLevelText", runLevel), ("portraitSprite", playerSprite.sprite));
+
+        // O nível agora fica no painel; a barra de XP não precisa mais do texto
+        Transform xpLevel = canvas.Find("ExperienceBar/Level");
+        if (xpLevel != null) xpLevel.gameObject.SetActive(false);
+
+        // Texto de debug (FPS etc.) vai para baixo do painel, menor
+        Text debugText = canvas.Find("HordeDebugText").GetComponent<Text>();
+        debugText.fontSize = 22;
+        ((RectTransform)debugText.transform).anchoredPosition = new Vector2(28f, -200f);
+        debugText.color = new Color(1f, 1f, 1f, 0.6f);
+
+        // ---- Topo central: região/zona/dificuldade, timer, números ----
+        Text zoneLine = CreateText(canvas, "ZoneLine", "", 32, new Color(0.9f, 0.88f, 0.8f), Vector2.zero);
+        Place(zoneLine, new Vector2(0.5f, 1f), new Vector2(0f, -36f), new Vector2(1000f, 44f), TextAnchor.UpperCenter);
+        Text timer = canvas.Find("ZoneTimer").GetComponent<Text>();
+        Place(timer, new Vector2(0.5f, 1f), new Vector2(0f, -76f), new Vector2(600f, 80f), TextAnchor.UpperCenter);
+        timer.fontSize = 64;
+        Text stats = CreateText(canvas, "RunStats", "", 28, Color.white, Vector2.zero);
+        Place(stats, new Vector2(0.5f, 1f), new Vector2(0f, -152f), new Vector2(1100f, 40f), TextAnchor.UpperCenter);
+        RunStatsHUD statsHud = runGo.AddComponent<RunStatsHUD>();
+        SetRefs(statsHud, ("clock", clock), ("results", results), ("spawner", spawner), ("zones", zones), ("statsText", stats));
+        ((RectTransform)canvas.Find("GuardianBar")).anchoredPosition = new Vector2(0f, -236f);
+        SetRefs(Object.FindFirstObjectByType<ZoneHUD>(), ("zoneLineText", zoneLine));
+
+        // ---- Topo direito: minimapa redondo ----
+        RenderTexture rt = AssetDatabase.LoadAssetAtPath<RenderTexture>(Root + "/Materials/RT_Minimap.renderTexture");
+        if (rt == null)
+        {
+            rt = new RenderTexture(256, 256, 16) { name = "RT_Minimap" };
+            AssetDatabase.CreateAsset(rt, Root + "/Materials/RT_Minimap.renderTexture");
+        }
+        GameObject camGo = new GameObject("MinimapCamera");
+        Camera mapCam = camGo.AddComponent<Camera>();
+        mapCam.orthographic = true;
+        mapCam.orthographicSize = 22f;
+        mapCam.clearFlags = CameraClearFlags.SolidColor;
+        mapCam.backgroundColor = new Color(0.08f, 0.1f, 0.08f);
+        mapCam.cullingMask = (1 << 0) | (1 << minimapLayer);
+        mapCam.targetTexture = rt;
+        mapCam.nearClipPlane = 1f;
+        mapCam.farClipPlane = 100f;
+        Camera.main.cullingMask &= ~(1 << minimapLayer); // a câmera do jogo não vê os marcadores
+
+        GameObject playerMarker = new GameObject("MinimapPlayerMarker");
+        playerMarker.layer = minimapLayer;
+        playerMarker.transform.SetParent(player.transform, false);
+        playerMarker.transform.localPosition = new Vector3(0f, 20f, 0f);
+        playerMarker.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+        playerMarker.transform.localScale = Vector3.one * 2f;
+        SpriteRenderer pm = playerMarker.AddComponent<SpriteRenderer>();
+        pm.sprite = circle;
+        pm.color = Color.white;
+        pm.sortingOrder = 210;
+
+        MinimapController minimap = camGo.AddComponent<MinimapController>();
+        SetRefs(minimap, ("minimapCamera", mapCam), ("player", player.transform), ("spawner", spawner), ("markerSprite", circle));
+
+        GameObject mapRoot = new GameObject("Minimap", typeof(RectTransform));
+        mapRoot.transform.SetParent(canvas, false);
+        RectTransform mapRt = (RectTransform)mapRoot.transform;
+        mapRt.anchorMin = mapRt.anchorMax = new Vector2(1f, 1f);
+        mapRt.pivot = new Vector2(1f, 1f);
+        mapRt.anchoredPosition = new Vector2(-24f, -40f);
+        mapRt.sizeDelta = new Vector2(270f, 270f);
+        Image border = mapRoot.AddComponent<Image>();
+        border.sprite = circle;
+        border.color = gold;
+        border.raycastTarget = false;
+        GameObject maskGo = new GameObject("Mask", typeof(RectTransform));
+        maskGo.transform.SetParent(mapRoot.transform, false);
+        ((RectTransform)maskGo.transform).sizeDelta = new Vector2(254f, 254f);
+        Image maskImage = maskGo.AddComponent<Image>();
+        maskImage.sprite = circle;
+        maskImage.raycastTarget = false;
+        maskGo.AddComponent<Mask>().showMaskGraphic = false;
+        GameObject rawGo = new GameObject("Map", typeof(RectTransform));
+        rawGo.transform.SetParent(maskGo.transform, false);
+        ((RectTransform)rawGo.transform).sizeDelta = new Vector2(254f, 254f);
+        RawImage raw = rawGo.AddComponent<RawImage>();
+        raw.texture = rt;
+        raw.raycastTarget = false;
+
+        ((RectTransform)canvas.Find("CallGuardianButton")).anchoredPosition = new Vector2(-24f, -330f);
+
+        // ---- Embaixo: espaços de habilidades (4) e passivas (3) ----
+        int abilityCount = 4, passiveCount = 3;
+        float slotSize = 100f, spacing = 112f, gap = 44f;
+        float totalWidth = (abilityCount + passiveCount) * spacing + gap;
+        GameObject slotsRoot = new GameObject("LoadoutSlots", typeof(RectTransform));
+        slotsRoot.transform.SetParent(canvas, false);
+        RectTransform slotsRt = (RectTransform)slotsRoot.transform;
+        slotsRt.anchorMin = slotsRt.anchorMax = new Vector2(0.5f, 0f);
+        slotsRt.pivot = new Vector2(0.5f, 0f);
+        slotsRt.anchoredPosition = new Vector2(-40f, 24f);
+        slotsRt.sizeDelta = new Vector2(totalWidth, slotSize + 30f);
+
+        LoadoutHUD loadoutHud = slotsRoot.AddComponent<LoadoutHUD>();
+        SerializedObject lso = new SerializedObject(loadoutHud);
+        lso.FindProperty("loadout").objectReferenceValue = loadout;
+        SerializedProperty abilityProp = lso.FindProperty("abilitySlots");
+        SerializedProperty passiveProp = lso.FindProperty("passiveSlots");
+        abilityProp.arraySize = abilityCount;
+        passiveProp.arraySize = passiveCount;
+        for (int i = 0; i < abilityCount + passiveCount; i++)
+        {
+            bool isAbility = i < abilityCount;
+            float x = -totalWidth * 0.5f + spacing * 0.5f + i * spacing + (isAbility ? 0f : gap);
+            Color frame = isAbility ? gold : new Color(0.45f, 0.65f, 0.95f);
+            GameObject slot = CreatePanel(slotsRoot.transform, (isAbility ? "Ability" : "Passive") + "Slot" + i,
+                new Vector2(0.5f, 0f), new Vector2(x, 28f), new Vector2(slotSize, slotSize), panelColor, frame);
+            RectTransform slotRt = (RectTransform)slot.transform;
+            slotRt.pivot = new Vector2(0.5f, 0f);
+            Image icon = CreateImage(slot.transform, "Icon", null, new Vector2(78f, 78f));
+            icon.preserveAspect = true;
+            Text lvl = CreateText(slot.transform, "Level", "", 22, Color.white, new Vector2(0f, -64f));
+            ((RectTransform)lvl.transform).sizeDelta = new Vector2(110f, 30f);
+            SerializedProperty el = (isAbility ? abilityProp : passiveProp).GetArrayElementAtIndex(isAbility ? i : i - abilityCount);
+            el.FindPropertyRelative("icon").objectReferenceValue = icon;
+            el.FindPropertyRelative("levelText").objectReferenceValue = lvl;
+        }
+        lso.ApplyModifiedPropertiesWithoutUndo();
+
+        // ---- Embaixo à direita: botões da ativa (R) e da ultimate (C) ----
+        CreateSkillButton(canvas, "UltimateButton", "C", ult, circle, ring, new Vector2(-40f, 40f), 170f, new Color(1f, 0.6f, 0.8f));
+        CreateSkillButton(canvas, "ActiveButton", "R", dash, circle, ring, new Vector2(-240f, 40f), 140f, new Color(0.6f, 0.8f, 1f));
+
+        // Painéis de level-up, derrota e vitória ficam por cima do HUD novo
+        canvas.Find("LevelUpPanel").SetAsLastSibling();
+        canvas.Find("VictoryPanel").SetAsLastSibling();
+    }
+
+    private static void CreateSkillButton(Transform canvas, string name, string key, PlayerSkill skill, Sprite circle, Sprite ring,
+        Vector2 position, float size, Color accent)
+    {
+        GameObject root = new GameObject(name, typeof(RectTransform));
+        root.transform.SetParent(canvas, false);
+        RectTransform rt = (RectTransform)root.transform;
+        rt.anchorMin = rt.anchorMax = new Vector2(1f, 0f);
+        rt.pivot = new Vector2(1f, 0f);
+        rt.anchoredPosition = position;
+        rt.sizeDelta = new Vector2(size, size);
+        Image bg = root.AddComponent<Image>();
+        bg.sprite = circle;
+        bg.color = new Color(0.07f, 0.05f, 0.09f, 0.85f);
+        Button button = root.AddComponent<Button>();
+
+        Image icon = CreateImage(root.transform, "Icon", null, new Vector2(size * 0.62f, size * 0.62f));
+        icon.preserveAspect = true;
+
+        Image overlay = CreateImage(root.transform, "Cooldown", circle, new Vector2(size, size));
+        overlay.color = new Color(0f, 0f, 0f, 0.65f);
+        overlay.type = Image.Type.Filled;
+        overlay.fillMethod = Image.FillMethod.Radial360;
+        overlay.fillOrigin = (int)Image.Origin360.Top;
+        overlay.fillClockwise = false;
+
+        Image glow = CreateImage(root.transform, "Ready", ring, new Vector2(size + 8f, size + 8f));
+        glow.color = accent;
+
+        GameObject keyGo = CreatePanel(root.transform, "Key", new Vector2(1f, 0f), new Vector2(4f, -4f), new Vector2(48f, 48f),
+            new Color(0.07f, 0.05f, 0.09f, 1f), accent);
+        ((RectTransform)keyGo.transform).pivot = new Vector2(1f, 0f);
+        Text keyText = CreateText(keyGo.transform, "Label", key, 30, Color.white, Vector2.zero);
+        ((RectTransform)keyText.transform).sizeDelta = new Vector2(48f, 48f);
+        keyText.fontStyle = FontStyle.Bold;
+
+        SkillButtonHUD hud = root.AddComponent<SkillButtonHUD>();
+        SetRefs(hud, ("skill", skill), ("button", button), ("icon", icon), ("cooldownOverlay", overlay), ("readyGlow", glow));
+    }
+
+    // Painel retangular com borda (Outline)
+    private static GameObject CreatePanel(Transform parent, string name, Vector2 anchor, Vector2 position, Vector2 size, Color color, Color border)
+    {
+        GameObject go = new GameObject(name, typeof(RectTransform));
+        go.transform.SetParent(parent, false);
+        RectTransform rt = (RectTransform)go.transform;
+        rt.anchorMin = rt.anchorMax = anchor;
+        rt.pivot = new Vector2(anchor.x, anchor.y);
+        rt.anchoredPosition = position;
+        rt.sizeDelta = size;
+        Image image = go.AddComponent<Image>();
+        image.color = color;
+        image.raycastTarget = false;
+        Outline outline = go.AddComponent<Outline>();
+        outline.effectColor = border;
+        outline.effectDistance = new Vector2(3f, -3f);
+        return go;
+    }
+
+    private static Image CreateImage(Transform parent, string name, Sprite sprite, Vector2 size)
+    {
+        GameObject go = new GameObject(name, typeof(RectTransform));
+        go.transform.SetParent(parent, false);
+        ((RectTransform)go.transform).sizeDelta = size;
+        Image image = go.AddComponent<Image>();
+        image.sprite = sprite;
+        image.raycastTarget = false;
+        return image;
+    }
+
+    private static void Place(Text text, Vector2 anchor, Vector2 position, Vector2 size, TextAnchor alignment)
+    {
+        RectTransform rt = (RectTransform)text.transform;
+        rt.anchorMin = rt.anchorMax = anchor;
+        rt.pivot = anchor;
+        rt.anchoredPosition = position;
+        rt.sizeDelta = size;
+        text.alignment = alignment;
+    }
+
+    // Garante que a camada (layer) exista no projeto, com o nome dado
+    private static void EnsureLayer(int index, string layerName)
+    {
+        SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+        SerializedProperty layers = tagManager.FindProperty("layers");
+        SerializedProperty layer = layers.GetArrayElementAtIndex(index);
+        if (layer.stringValue != layerName)
+        {
+            layer.stringValue = layerName;
+            tagManager.ApplyModifiedPropertiesWithoutUndo();
+        }
     }
 
     // Região (etapa 6): boss do Santuário e os dados da região

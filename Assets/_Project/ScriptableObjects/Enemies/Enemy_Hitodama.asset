@@ -23,3 +23,5 @@ MonoBehaviour:
   maxHealth: 10
   contactDamage: 6
   xpValue: 1
+  coinValue: 1
+  coinChance: 0.05

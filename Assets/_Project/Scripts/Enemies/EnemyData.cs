@@ -49,4 +49,11 @@ public class EnemyData : ScriptableObject
     [Header("Recompensa")]
     [Tooltip("Experiência da joia que o inimigo derruba ao morrer.")]
     public int xpValue = 1;
+
+    [Tooltip("Moedas que o inimigo dá ao morrer.")]
+    public int coinValue = 1;
+
+    [Tooltip("Chance de dar as moedas (0 a 1). Inimigos comuns: baixa; elites e chefes: 1.")]
+    [Range(0f, 1f)]
+    public float coinChance = 0.05f;
 }

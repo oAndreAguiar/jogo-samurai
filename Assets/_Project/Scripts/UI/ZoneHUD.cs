@@ -11,7 +11,12 @@ public class ZoneHUD : MonoBehaviour
     [SerializeField] private SanctuaryController sanctuary;
 
     [Header("Topo")]
+    [Tooltip("Linha com região, zona e dificuldade.")]
+    [SerializeField] private Text zoneLineText;
+    [Tooltip("Contagem regressiva da zona, em destaque.")]
     [SerializeField] private Text timerText;
+    [Tooltip("Dificuldade mostrada no HUD (as dificuldades entram depois).")]
+    [SerializeField] private string difficultyName = "Normal";
     [SerializeField] private Button callGuardianButton;
 
     [Header("Aviso central")]
@@ -143,15 +148,18 @@ public class ZoneHUD : MonoBehaviour
         if (sanctuary.IsActive)
         {
             bool bossFight = trackedEnemy != null && trackedEnemy.Data.rank == EnemyRank.Boss;
-            timerText.text = bossFight ? "Santuário   CHEFE" : "Santuário";
+            zoneLineText.text = zones.Region.displayName + "  ·  Santuário  ·  " + difficultyName;
+            timerText.text = bossFight ? "CHEFE" : "--:--";
             callGuardianButton.gameObject.SetActive(false);
             return;
         }
 
         int seconds = Mathf.CeilToInt(zones.TimeRemaining);
-        string status = zones.GuardianActive ? "  GUARDIÃO" : "";
-        timerText.text = string.Format("Zona {0}/{1}   {2:00}:{3:00}{4}",
-            zones.ZoneIndex + 1, zones.ZoneCount, seconds / 60, seconds % 60, status);
+        zoneLineText.text = string.Format("{0}  ·  Zona {1}/{2}  ·  {3}",
+            zones.Region.displayName, zones.ZoneIndex + 1, zones.ZoneCount, difficultyName);
+        timerText.text = zones.GuardianActive
+            ? "GUARDIÃO"
+            : string.Format("{0:00}:{1:00}", seconds / 60, seconds % 60);
         callGuardianButton.gameObject.SetActive(zones.CanCallGuardian);
     }
 }

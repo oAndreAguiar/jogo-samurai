@@ -62,6 +62,12 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
+    /// <summary>Fica invulnerável por um tempo (ex.: durante o avanço).</summary>
+    public void SetInvulnerable(float seconds)
+    {
+        invulnerableTimer = Mathf.Max(invulnerableTimer, seconds);
+    }
+
     /// <summary>Recupera vida (sem passar do máximo).</summary>
     public void Heal(float amount)
     {

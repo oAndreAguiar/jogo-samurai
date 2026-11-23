@@ -46,6 +46,19 @@ public class PlayerLoadout : MonoBehaviour
         return item != null ? item.Level : 0;
     }
 
+    /// <summary>Preenche "results" com os upgrades do tipo dado, na ordem em que foram ganhos.</summary>
+    public void GetOwned(UpgradeKind kind, List<UpgradeDefinition> results)
+    {
+        results.Clear();
+        foreach (OwnedUpgrade item in owned)
+        {
+            if (item.Definition.Kind == kind)
+            {
+                results.Add(item.Definition);
+            }
+        }
+    }
+
     public int CountOwned(UpgradeKind kind)
     {
         int count = 0;

@@ -13,13 +13,15 @@ MonoBehaviour:
   m_Name: Elite_GoldHitodama
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   displayName: Hitodama Dourada
-  sprite: {fileID: 21300000, guid: 3f9f6599579d39d49a5c21c51d267ebd, type: 3}
+  sprite: {fileID: 21300000, guid: e618cf60fd375f84ba9ee593cde43bf9, type: 3}
   rank: 1
   scale: 1.6
-  tint: {r: 1, g: 0.85, b: 0.3, a: 1}
+  tint: {r: 1, g: 1, b: 1, a: 1}
   moveSpeed: 3.4
   spawnWeight: 0
   spriteHeight: 0.7
   maxHealth: 140
   contactDamage: 14
   xpValue: 12
+  coinValue: 5
+  coinChance: 1
