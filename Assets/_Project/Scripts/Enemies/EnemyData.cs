@@ -21,4 +21,11 @@ public class EnemyData : ScriptableObject
 
     [Tooltip("Altura do centro do sprite em relação ao chão, em metros.")]
     public float spriteHeight = 0.6f;
+
+    [Header("Combate")]
+    [Tooltip("Vida máxima do inimigo.")]
+    public float maxHealth = 20f;
+
+    [Tooltip("Dano causado ao jogador quando encosta nele.")]
+    public float contactDamage = 10f;
 }

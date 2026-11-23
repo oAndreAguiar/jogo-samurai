@@ -20,6 +20,12 @@ public class HordeSpawner : MonoBehaviour
     public event Action<Enemy> EnemySpawned;
     public event Action<Enemy> EnemyDespawned;
     public event Action<int> WaveStarted;
+    // Inimigo levou dano: (inimigo, dano, morreu com esse golpe?)
+    public event Action<Enemy, float, bool> EnemyDamaged;
+    // Inimigo morreu (antes de voltar para o pool)
+    public event Action<Enemy> EnemyKilled;
+
+    public int KillCount { get; private set; }
 
     public IReadOnlyList<Enemy> ActiveEnemies => activeEnemies;
     public HordeSettings Settings => settings;
@@ -89,6 +95,24 @@ public class HordeSpawner : MonoBehaviour
         }
 
         RecycleFarEnemies();
+    }
+
+    /// <summary>Causa dano num inimigo. Se a vida acabar, ele morre e volta para o pool.</summary>
+    public void DamageEnemy(Enemy enemy, float amount)
+    {
+        if (!enemy.IsAlive)
+        {
+            return;
+        }
+
+        bool killed = enemy.ApplyDamage(amount);
+        EnemyDamaged?.Invoke(enemy, amount, killed);
+        if (killed)
+        {
+            KillCount++;
+            EnemyKilled?.Invoke(enemy);
+            Despawn(enemy);
+        }
     }
 
     /// <summary>Tira um inimigo do jogo e devolve ao pool (morte, distância, fim de zona).</summary>

@@ -83,6 +83,7 @@ public class EnemyMovementSystem : MonoBehaviour
             {
                 enemy.SetFacingLeft(toPlayer.x < 0f);
             }
+            enemy.TickFlash(dt);
             enemy.ApplyTransform(faceCamera);
         }
     }

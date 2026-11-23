@@ -12,7 +12,7 @@ using Unity.Cinemachine;
 using Unity.Cinemachine.TargetTracking;
 
 /// <summary>
-/// Script de Editor: configura o projeto para WebGL e monta a cena Prototype (etapas 0, 1 e 2).
+/// Script de Editor: configura o projeto para WebGL e monta a cena Prototype (etapas 0 a 3).
 /// Pode ser rodado de novo pelo menu "JogoJapones > Setup > ..." sem quebrar nada.
 /// </summary>
 public static class ProjectSetup
@@ -24,7 +24,7 @@ public static class ProjectSetup
     {
         "Scenes", "Scripts/Core", "Scripts/Player", "Scripts/Enemies", "Scripts/Combat",
         "Scripts/Progression", "Scripts/World", "Scripts/UI", "Scripts/Utils",
-        "Sprites", "Prefabs", "Materials", "ScriptableObjects", "ScriptableObjects/Player", "ScriptableObjects/Enemies", "ScriptableObjects/World", "Audio"
+        "Sprites", "Prefabs", "Materials", "ScriptableObjects", "ScriptableObjects/Player", "ScriptableObjects/Enemies", "ScriptableObjects/World", "ScriptableObjects/Combat", "Audio"
     };
 
     // Chamado pela linha de comando: roda tudo de uma vez
@@ -171,7 +171,8 @@ public static class ProjectSetup
         follow.TrackerSettings.PositionDamping = new Vector3(0.4f, 0.4f, 0.4f);
 
         GameObject canvasGo = CreateMobileJoystick();
-        CreateHorde(player.transform, canvasGo);
+        HordeSpawner spawner = CreateHorde(player.transform, canvasGo);
+        CreateCombat(player, sr, spawner, canvasGo);
 
         EditorSceneManager.SaveScene(scene, ScenePath);
         EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(ScenePath, true) };
@@ -255,7 +256,7 @@ public static class ProjectSetup
     }
 
     // Horda (etapa 2): dados dos inimigos, spawner, movimento e texto de debug
-    private static void CreateHorde(Transform player, GameObject canvasGo)
+    private static HordeSpawner CreateHorde(Transform player, GameObject canvasGo)
     {
         Directory.CreateDirectory(Root + "/ScriptableObjects/Enemies");
         Directory.CreateDirectory(Root + "/ScriptableObjects/World");
@@ -310,6 +311,236 @@ public static class ProjectSetup
         hudSo.FindProperty("spawner").objectReferenceValue = spawner;
         hudSo.FindProperty("label").objectReferenceValue = text;
         hudSo.ApplyModifiedPropertiesWithoutUndo();
+        return spawner;
+    }
+
+    // Combate (etapa 3): shuriken automática, números de dano, vida do jogador e tela de derrota
+    private static void CreateCombat(GameObject player, SpriteRenderer playerSprite, HordeSpawner spawner, GameObject canvasGo)
+    {
+        Directory.CreateDirectory(Root + "/ScriptableObjects/Combat");
+
+        // Dados
+        Sprite shurikenSprite = CreateShurikenSprite();
+        AbilityData shuriken = GetOrCreateAsset<AbilityData>(Root + "/ScriptableObjects/Combat/Ability_Shuriken.asset");
+        shuriken.projectileSprite = shurikenSprite;
+        EditorUtility.SetDirty(shuriken);
+
+        DamageNumberSettings numberSettings = GetOrCreateAsset<DamageNumberSettings>(Root + "/ScriptableObjects/Combat/DamageNumberSettings.asset");
+        numberSettings.digitsTexture = CreateDigitsTexture();
+        EditorUtility.SetDirty(numberSettings);
+
+        PlayerStats stats = GetOrCreateAsset<PlayerStats>(Root + "/ScriptableObjects/Player/PlayerStats.asset");
+
+        // Sistemas de combate
+        GameObject combatGo = new GameObject("Combat");
+        ProjectileSystem projectiles = combatGo.AddComponent<ProjectileSystem>();
+        SetRefs(projectiles, ("spawner", spawner));
+        DamageNumberSystem numbers = combatGo.AddComponent<DamageNumberSystem>();
+        SetRefs(numbers, ("settings", numberSettings), ("spawner", spawner));
+
+        // Jogador: habilidade automática e vida
+        AutoShooter shooter = player.AddComponent<AutoShooter>();
+        SetRefs(shooter, ("ability", shuriken), ("projectiles", projectiles), ("spawner", spawner));
+        PlayerHealth health = player.AddComponent<PlayerHealth>();
+        SetRefs(health, ("stats", stats), ("spawner", spawner), ("spriteRenderer", playerSprite));
+
+        // Barra de vida embaixo do personagem
+        Sprite pixel = CreatePixelSprite();
+        GameObject bar = new GameObject("HealthBar");
+        bar.transform.SetParent(player.transform, false);
+        bar.transform.localPosition = new Vector3(0f, 0.12f, 0f);
+        SpriteRenderer barBg = new GameObject("Background").AddComponent<SpriteRenderer>();
+        barBg.transform.SetParent(bar.transform, false);
+        barBg.transform.localScale = new Vector3(1.1f, 0.16f, 1f);
+        barBg.sprite = pixel;
+        barBg.color = new Color(0.08f, 0.06f, 0.08f, 0.9f);
+        barBg.sortingOrder = 60;
+        SpriteRenderer barFill = new GameObject("Fill").AddComponent<SpriteRenderer>();
+        barFill.transform.SetParent(bar.transform, false);
+        barFill.transform.localScale = new Vector3(1.02f, 0.09f, 1f);
+        barFill.sprite = pixel;
+        barFill.sortingOrder = 61;
+        PlayerHealthBar healthBar = bar.AddComponent<PlayerHealthBar>();
+        SetRefs(healthBar, ("health", health), ("fill", barFill.transform), ("fillRenderer", barFill));
+
+        // Tela de derrota
+        GameObject panel = new GameObject("GameOverPanel", typeof(RectTransform));
+        panel.transform.SetParent(canvasGo.transform, false);
+        RectTransform panelRt = (RectTransform)panel.transform;
+        panelRt.anchorMin = Vector2.zero;
+        panelRt.anchorMax = Vector2.one;
+        panelRt.offsetMin = Vector2.zero;
+        panelRt.offsetMax = Vector2.zero;
+        Image dim = panel.AddComponent<Image>();
+        dim.color = new Color(0.05f, 0.02f, 0.03f, 0.75f);
+
+        Text title = CreateText(panel.transform, "Title", "Você caiu", 110, new Color(0.85f, 0.15f, 0.12f), new Vector2(0f, 90f));
+        Text summary = CreateText(panel.transform, "Summary", "", 44, Color.white, new Vector2(0f, -70f));
+        title.fontStyle = FontStyle.Bold;
+
+        GameObject gameOverGo = new GameObject("GameOver");
+        GameOverScreen gameOver = gameOverGo.AddComponent<GameOverScreen>();
+        SetRefs(gameOver, ("playerHealth", health), ("spawner", spawner), ("panel", panel), ("summaryText", summary));
+    }
+
+    private static Text CreateText(Transform parent, string name, string content, int size, Color color, Vector2 position)
+    {
+        GameObject go = new GameObject(name, typeof(RectTransform));
+        go.transform.SetParent(parent, false);
+        RectTransform rt = (RectTransform)go.transform;
+        rt.anchoredPosition = position;
+        rt.sizeDelta = new Vector2(1600f, 300f);
+        Text text = go.AddComponent<Text>();
+        text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        text.fontSize = size;
+        text.color = color;
+        text.alignment = TextAnchor.MiddleCenter;
+        text.text = content;
+        text.raycastTarget = false;
+        go.AddComponent<Outline>().effectColor = Color.black;
+        return text;
+    }
+
+    // Preenche campos [SerializeField] de um componente pelo nome
+    private static void SetRefs(Object target, params (string field, Object value)[] refs)
+    {
+        SerializedObject so = new SerializedObject(target);
+        foreach (var r in refs)
+        {
+            SerializedProperty prop = so.FindProperty(r.field);
+            if (prop == null)
+            {
+                Debug.LogError("[ProjectSetup] Campo não encontrado: " + target.GetType().Name + "." + r.field);
+                continue;
+            }
+            prop.objectReferenceValue = r.value;
+        }
+        so.ApplyModifiedPropertiesWithoutUndo();
+    }
+
+    private static T GetOrCreateAsset<T>(string path) where T : ScriptableObject
+    {
+        T asset = AssetDatabase.LoadAssetAtPath<T>(path);
+        if (asset == null)
+        {
+            asset = ScriptableObject.CreateInstance<T>();
+            AssetDatabase.CreateAsset(asset, path);
+        }
+        return asset;
+    }
+
+    // Estrela de 4 pontas 13x13, cinza metálico
+    private static Sprite CreateShurikenSprite()
+    {
+        const int size = 13;
+        Color32 clear = new Color32(0, 0, 0, 0);
+        Color32 outline = new Color32(16, 12, 16, 255);
+        Color32 steel = new Color32(190, 196, 210, 255);
+        Color32 dark = new Color32(110, 116, 130, 255);
+        Texture2D tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
+        for (int y = 0; y < size; y++)
+        {
+            for (int x = 0; x < size; x++)
+            {
+                int dx = Mathf.Abs(x - 6), dy = Mathf.Abs(y - 6);
+                Color32 c = clear;
+                // pontas: losango fino em cruz
+                bool blade = (dx <= 1 && dy <= 6 - dx * 3) || (dy <= 1 && dx <= 6 - dy * 3) || (dx + dy <= 3);
+                if (blade) c = (dx + dy <= 1) ? dark : steel;
+                if (dx == 0 && dy == 0) c = outline; // furo do meio
+                tex.SetPixel(x, y, c);
+            }
+        }
+        return SaveSprite(tex, "Shuriken", 20f, true);
+    }
+
+    // Dígitos 0-9 em pixel art 5x7 com contorno (cada célula 7x9), lado a lado
+    private static Texture2D CreateDigitsTexture()
+    {
+        string[] glyphs =
+        {
+            "01110100011001110101110011000101110", // 0
+            "00100011000010000100001000010001110", // 1
+            "01110100010000100010001000100011111", // 2
+            "11111000100010000010000011000101110", // 3
+            "00010001100101010010111110001000010", // 4
+            "11111100001111000001000011000101110", // 5
+            "00110010001000011110100011000101110", // 6
+            "11111000010001000100010000100001000", // 7
+            "01110100011000101110100011000101110", // 8
+            "01110100011000101111000010001001100", // 9
+        };
+        const int cellW = 7, cellH = 9;
+        Texture2D tex = new Texture2D(cellW * 10, cellH, TextureFormat.RGBA32, false);
+        Color32 clear = new Color32(0, 0, 0, 0);
+        Color32 outline = new Color32(10, 8, 12, 255);
+        Color32 white = new Color32(255, 255, 255, 255);
+        Color32[] pixels = new Color32[tex.width * tex.height];
+        for (int i = 0; i < pixels.Length; i++) pixels[i] = clear;
+
+        for (int d = 0; d < 10; d++)
+        {
+            // Primeiro o contorno, depois o miolo branco por cima
+            for (int pass = 0; pass < 2; pass++)
+            {
+                for (int gy = 0; gy < 7; gy++)
+                {
+                    for (int gx = 0; gx < 5; gx++)
+                    {
+                        if (glyphs[d][gy * 5 + gx] != '1') continue;
+                        int px = d * cellW + 1 + gx;
+                        int py = cellH - 2 - gy; // linha 0 do glifo é o topo
+                        if (pass == 0)
+                        {
+                            for (int oy = -1; oy <= 1; oy++)
+                                for (int ox = -1; ox <= 1; ox++)
+                                    pixels[(py + oy) * tex.width + px + ox] = outline;
+                        }
+                        else
+                        {
+                            pixels[py * tex.width + px] = white;
+                        }
+                    }
+                }
+            }
+        }
+        tex.SetPixels32(pixels);
+        Sprite unused = SaveSprite(tex, "UI_Digits", 14f, false);
+        return AssetDatabase.LoadAssetAtPath<Texture2D>(Root + "/Sprites/UI_Digits.png");
+    }
+
+    // Quadrado branco 4x4 (1 metro) para barras
+    private static Sprite CreatePixelSprite()
+    {
+        Texture2D tex = new Texture2D(4, 4, TextureFormat.RGBA32, false);
+        Color32[] pixels = new Color32[16];
+        for (int i = 0; i < 16; i++) pixels[i] = new Color32(255, 255, 255, 255);
+        tex.SetPixels32(pixels);
+        return SaveSprite(tex, "UI_Pixel", 4f, true);
+    }
+
+    // Salva a textura como PNG e importa como sprite em pixel art (filtro Point)
+    private static Sprite SaveSprite(Texture2D tex, string name, float pixelsPerUnit, bool asSprite)
+    {
+        string path = Root + "/Sprites/" + name + ".png";
+        File.WriteAllBytes(path, tex.EncodeToPNG());
+        Object.DestroyImmediate(tex);
+        AssetDatabase.ImportAsset(path);
+        TextureImporter importer = (TextureImporter)AssetImporter.GetAtPath(path);
+        importer.textureType = asSprite ? TextureImporterType.Sprite : TextureImporterType.Default;
+        if (asSprite)
+        {
+            importer.spriteImportMode = SpriteImportMode.Single;
+            importer.spritePixelsPerUnit = pixelsPerUnit;
+        }
+        importer.alphaIsTransparency = true;
+        importer.filterMode = FilterMode.Point;
+        importer.wrapMode = TextureWrapMode.Clamp;
+        importer.mipmapEnabled = false;
+        importer.npotScale = TextureImporterNPOTScale.None;
+        importer.textureCompression = TextureImporterCompression.Uncompressed;
+        importer.SaveAndReimport();
+        return asSprite ? AssetDatabase.LoadAssetAtPath<Sprite>(path) : null;
     }
 
     private static EnemyData GetOrCreateEnemy(string assetName, string displayName, Sprite sprite, float speed, float weight, float height)

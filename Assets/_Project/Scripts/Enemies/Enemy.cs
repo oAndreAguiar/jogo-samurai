@@ -7,6 +7,9 @@ using UnityEngine;
 /// </summary>
 public class Enemy : MonoBehaviour
 {
+    private const float FlashDuration = 0.1f;
+    private static readonly Color FlashColor = new Color(1f, 0.45f, 0.45f);
+
     [SerializeField] private SpriteRenderer spriteRenderer;
 
     public EnemyData Data { get; private set; }
@@ -20,6 +23,14 @@ public class Enemy : MonoBehaviour
     // Posição na lista de inimigos ativos do HordeSpawner (para remover rápido)
     public int ActiveIndex { get; set; } = -1;
 
+    public float CurrentHealth { get; private set; }
+    public bool IsAlive => ActiveIndex >= 0 && CurrentHealth > 0f;
+
+    // Ponto no meio do sprite (para mirar e para os números de dano)
+    public Vector3 CenterPosition => GroundPosition + Vector3.up * Data.spriteHeight;
+
+    private float flashTimer;
+
     public void Setup(SpriteRenderer renderer)
     {
         spriteRenderer = renderer;
@@ -30,9 +41,39 @@ public class Enemy : MonoBehaviour
     {
         Data = data;
         spriteRenderer.sprite = data.sprite;
+        spriteRenderer.color = Color.white;
+        flashTimer = 0f;
+        CurrentHealth = data.maxHealth;
         GroundHeight = groundPosition.y;
         GroundPosition = groundPosition;
         ApplyTransform(Quaternion.identity);
+    }
+
+    /// <summary>Tira vida e pisca. Devolve true se o inimigo morreu com esse golpe.</summary>
+    public bool ApplyDamage(float amount)
+    {
+        if (CurrentHealth <= 0f)
+        {
+            return false;
+        }
+        CurrentHealth -= amount;
+        flashTimer = FlashDuration;
+        spriteRenderer.color = FlashColor;
+        return CurrentHealth <= 0f;
+    }
+
+    /// <summary>Chamado todo frame pelo sistema de movimento para apagar o piscar.</summary>
+    public void TickFlash(float deltaTime)
+    {
+        if (flashTimer <= 0f)
+        {
+            return;
+        }
+        flashTimer -= deltaTime;
+        if (flashTimer <= 0f)
+        {
+            spriteRenderer.color = Color.white;
+        }
     }
 
     /// <summary>Copia a posição no chão para o transform, com o sprite virado para a câmera.</summary>

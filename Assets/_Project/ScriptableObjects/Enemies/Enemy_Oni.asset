@@ -17,3 +17,5 @@ MonoBehaviour:
   moveSpeed: 2.5
   spawnWeight: 3
   spriteHeight: 0.6
+  maxHealth: 20
+  contactDamage: 10
