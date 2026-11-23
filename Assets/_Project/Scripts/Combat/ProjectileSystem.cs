@@ -96,12 +96,13 @@ public class ProjectileSystem : MonoBehaviour
             }
             Enemy enemy = enemies[e];
             Vector3 offset = enemy.CenterPosition - pos;
-            if (Mathf.Abs(offset.y) > 1.2f)
+            if (Mathf.Abs(offset.y) > 1.2f + enemy.BodyRadius)
             {
                 continue; // muito acima ou abaixo (em cima de um bloco, por exemplo)
             }
             offset.y = 0f;
-            if (offset.sqrMagnitude > radius * radius || p.HasHit(enemy))
+            float reach = radius + enemy.BodyRadius;
+            if (offset.sqrMagnitude > reach * reach || p.HasHit(enemy))
             {
                 continue;
             }

@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   displayName: Hitodama
   sprite: {fileID: 21300000, guid: 3f9f6599579d39d49a5c21c51d267ebd, type: 3}
+  rank: 0
+  scale: 1
+  tint: {r: 1, g: 1, b: 1, a: 1}
   moveSpeed: 4
   spawnWeight: 1
   spriteHeight: 0.7

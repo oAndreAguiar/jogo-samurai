@@ -109,7 +109,6 @@ public class PlayerHealth : MonoBehaviour
     {
         IReadOnlyList<Enemy> enemies = spawner.ActiveEnemies;
         Vector3 pos = transform.position;
-        float radiusSqr = stats.contactRadius * stats.contactRadius;
         float strongest = 0f;
         for (int i = 0; i < enemies.Count; i++)
         {
@@ -119,7 +118,9 @@ public class PlayerHealth : MonoBehaviour
                 continue;
             }
             offset.y = 0f;
-            if (offset.sqrMagnitude <= radiusSqr && enemies[i].Data.contactDamage > strongest)
+            // Inimigos grandes encostam de mais longe
+            float reach = stats.contactRadius + enemies[i].BodyRadius - 0.25f;
+            if (offset.sqrMagnitude <= reach * reach && enemies[i].Data.contactDamage > strongest)
             {
                 strongest = enemies[i].Data.contactDamage;
             }

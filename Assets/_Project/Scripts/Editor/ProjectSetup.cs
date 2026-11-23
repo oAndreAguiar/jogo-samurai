@@ -12,7 +12,7 @@ using Unity.Cinemachine;
 using Unity.Cinemachine.TargetTracking;
 
 /// <summary>
-/// Script de Editor: configura o projeto para WebGL e monta a cena Prototype (etapas 0 a 4).
+/// Script de Editor: configura o projeto para WebGL e monta a cena Prototype (etapas 0 a 5).
 /// Pode ser rodado de novo pelo menu "JogoJapones > Setup > ..." sem quebrar nada.
 /// </summary>
 public static class ProjectSetup
@@ -375,13 +375,14 @@ public static class ProjectSetup
         GameOverScreen gameOver = gameOverGo.AddComponent<GameOverScreen>();
         SetRefs(gameOver, ("playerHealth", health), ("spawner", spawner), ("panel", panel), ("summaryText", summary));
 
-        CreateProgression(player, spawner, projectiles, health, canvasGo);
+        ExperienceGemSystem gems = CreateProgression(player, spawner, projectiles, health, canvasGo);
+        CreateZones(spawner, gems, health, canvasGo);
         // Tela de derrota por cima de tudo
         panel.transform.SetAsLastSibling();
     }
 
     // Progressão (etapa 4): XP, joias, habilidades, passivas e tela de level-up
-    private static void CreateProgression(GameObject player, HordeSpawner spawner, ProjectileSystem projectiles, PlayerHealth health, GameObject canvasGo)
+    private static ExperienceGemSystem CreateProgression(GameObject player, HordeSpawner spawner, ProjectileSystem projectiles, PlayerHealth health, GameObject canvasGo)
     {
         string upgradesDir = Root + "/ScriptableObjects/Upgrades";
         Directory.CreateDirectory(upgradesDir);
@@ -618,6 +619,173 @@ public static class ProjectSetup
             cardProp.FindPropertyRelative("descriptionText").objectReferenceValue = descText;
         }
         screenSo.ApplyModifiedPropertiesWithoutUndo();
+        return gemSystem;
+    }
+
+    // Zonas (etapa 5): elites, guardiões, 3 zonas e HUD da zona
+    private static void CreateZones(HordeSpawner spawner, ExperienceGemSystem gems, PlayerHealth health, GameObject canvasGo)
+    {
+        string enemiesDir = Root + "/ScriptableObjects/Enemies";
+        string worldDir = Root + "/ScriptableObjects/World";
+        EnemyData oni = AssetDatabase.LoadAssetAtPath<EnemyData>(enemiesDir + "/Enemy_Oni.asset");
+        EnemyData flame = AssetDatabase.LoadAssetAtPath<EnemyData>(enemiesDir + "/Enemy_Hitodama.asset");
+
+        // Elites e guardiões: mesmos sprites provisórios, maiores e com outra cor
+        EnemyData redOni = CreateSpecialEnemy(enemiesDir + "/Elite_RedOni.asset", "Oni Vermelho", oni.sprite, EnemyRank.Elite,
+            1.8f, new Color(1f, 0.45f, 0.35f), 2.3f, 220f, 18f, 15, 0.6f);
+        EnemyData goldFlame = CreateSpecialEnemy(enemiesDir + "/Elite_GoldHitodama.asset", "Hitodama Dourada", flame.sprite, EnemyRank.Elite,
+            1.6f, new Color(1f, 0.85f, 0.3f), 3.4f, 140f, 14f, 12, 0.7f);
+        EnemyData bigOni = CreateSpecialEnemy(enemiesDir + "/Guardian_OOni.asset", "Ō-Oni", oni.sprite, EnemyRank.Guardian,
+            3.2f, new Color(0.75f, 0.25f, 0.3f), 2.1f, 2400f, 30f, 60, 0.6f);
+        EnemyData flameKing = CreateSpecialEnemy(enemiesDir + "/Guardian_OnibiO.asset", "Onibi-Ō", flame.sprite, EnemyRank.Guardian,
+            2.9f, new Color(0.75f, 0.45f, 1f), 2.8f, 1800f, 25f, 60, 0.7f);
+
+        // Hordas das zonas 2 e 3: cópias da zona 1 com mais inimigos por segundo
+        HordeSettings horde1 = AssetDatabase.LoadAssetAtPath<HordeSettings>(worldDir + "/HordeSettings.asset");
+        HordeSettings horde2 = CreateScaledHorde(horde1, worldDir + "/HordeSettings_Zone2.asset", 1.5f, 10);
+        HordeSettings horde3 = CreateScaledHorde(horde1, worldDir + "/HordeSettings_Zone3.asset", 2f, 14);
+
+        var zoneList = new System.Collections.Generic.List<ZoneData>
+        {
+            CreateZone(worldDir + "/Zone_1.asset", "Bosque de Bambu", horde1, 1f, new[] { redOni, goldFlame }, new[] { bigOni, flameKing }),
+            CreateZone(worldDir + "/Zone_2.asset", "Trilha dos Lampiões", horde2, 1.6f, new[] { redOni, goldFlame }, new[] { bigOni, flameKing }),
+            CreateZone(worldDir + "/Zone_3.asset", "Portão do Templo", horde3, 2.4f, new[] { redOni, goldFlame }, new[] { bigOni, flameKing }),
+        };
+
+        GameObject zoneGo = new GameObject("Zones");
+        ZoneController controller = zoneGo.AddComponent<ZoneController>();
+        SerializedObject so = new SerializedObject(controller);
+        SerializedProperty list = so.FindProperty("zones");
+        list.arraySize = zoneList.Count;
+        for (int i = 0; i < zoneList.Count; i++)
+        {
+            list.GetArrayElementAtIndex(i).objectReferenceValue = zoneList[i];
+        }
+        so.FindProperty("spawner").objectReferenceValue = spawner;
+        so.FindProperty("gems").objectReferenceValue = gems;
+        so.FindProperty("playerHealth").objectReferenceValue = health;
+        so.ApplyModifiedPropertiesWithoutUndo();
+
+        // ---- HUD da zona ----
+        Sprite pixel = AssetDatabase.LoadAssetAtPath<Sprite>(Root + "/Sprites/UI_Pixel.png");
+        Text timer = CreateText(canvasGo.transform, "ZoneTimer", "Zona 1/3   10:00", 46, Color.white, Vector2.zero);
+        RectTransform timerRt = (RectTransform)timer.transform;
+        timerRt.anchorMin = timerRt.anchorMax = new Vector2(0.5f, 1f);
+        timerRt.pivot = new Vector2(0.5f, 1f);
+        timerRt.anchoredPosition = new Vector2(0f, -34f);
+        timerRt.sizeDelta = new Vector2(900f, 70f);
+        timer.fontStyle = FontStyle.Bold;
+
+        // Botão "Chamar guardião" no canto superior direito
+        GameObject buttonGo = new GameObject("CallGuardianButton", typeof(RectTransform));
+        buttonGo.transform.SetParent(canvasGo.transform, false);
+        RectTransform buttonRt = (RectTransform)buttonGo.transform;
+        buttonRt.anchorMin = buttonRt.anchorMax = new Vector2(1f, 1f);
+        buttonRt.pivot = new Vector2(1f, 1f);
+        buttonRt.anchoredPosition = new Vector2(-24f, -90f);
+        buttonRt.sizeDelta = new Vector2(360f, 80f);
+        Image buttonBg = buttonGo.AddComponent<Image>();
+        buttonBg.color = new Color(0.55f, 0.1f, 0.1f, 0.9f);
+        Outline buttonBorder = buttonGo.AddComponent<Outline>();
+        buttonBorder.effectColor = new Color(0.87f, 0.7f, 0.25f);
+        buttonBorder.effectDistance = new Vector2(3f, -3f);
+        Button button = buttonGo.AddComponent<Button>();
+        Text buttonText = CreateText(buttonGo.transform, "Label", "Chamar guardião (G)", 32, Color.white, Vector2.zero);
+        ((RectTransform)buttonText.transform).sizeDelta = new Vector2(360f, 80f);
+
+        // Aviso no meio da tela
+        Text banner = CreateText(canvasGo.transform, "ZoneBanner", "", 64, new Color(1f, 0.88f, 0.4f), new Vector2(0f, 220f));
+        ((RectTransform)banner.transform).sizeDelta = new Vector2(1700f, 400f);
+        banner.fontStyle = FontStyle.Bold;
+        banner.supportRichText = true;
+
+        // Barra de vida do guardião (embaixo do timer)
+        GameObject gBar = new GameObject("GuardianBar", typeof(RectTransform));
+        gBar.transform.SetParent(canvasGo.transform, false);
+        RectTransform gRt = (RectTransform)gBar.transform;
+        gRt.anchorMin = gRt.anchorMax = new Vector2(0.5f, 1f);
+        gRt.pivot = new Vector2(0.5f, 1f);
+        gRt.anchoredPosition = new Vector2(0f, -150f);
+        gRt.sizeDelta = new Vector2(900f, 34f);
+        Image gBg = gBar.AddComponent<Image>();
+        gBg.color = new Color(0.05f, 0.03f, 0.05f, 0.9f);
+        GameObject gFillGo = new GameObject("Fill", typeof(RectTransform));
+        gFillGo.transform.SetParent(gBar.transform, false);
+        RectTransform gFillRt = (RectTransform)gFillGo.transform;
+        gFillRt.anchorMin = Vector2.zero;
+        gFillRt.anchorMax = Vector2.one;
+        gFillRt.offsetMin = new Vector2(4f, 4f);
+        gFillRt.offsetMax = new Vector2(-4f, -4f);
+        Image gFill = gFillGo.AddComponent<Image>();
+        gFill.sprite = pixel;
+        gFill.type = Image.Type.Filled;
+        gFill.fillMethod = Image.FillMethod.Horizontal;
+        gFill.color = new Color(0.85f, 0.15f, 0.15f);
+        Text gName = CreateText(gBar.transform, "Name", "Guardião", 34, Color.white, new Vector2(0f, 40f));
+        ((RectTransform)gName.transform).sizeDelta = new Vector2(900f, 50f);
+
+        ZoneHUD hud = zoneGo.AddComponent<ZoneHUD>();
+        SetRefs(hud, ("zones", controller), ("timerText", timer), ("callGuardianButton", button), ("bannerText", banner),
+            ("guardianBar", gBar), ("guardianFill", gFill), ("guardianName", gName));
+    }
+
+    private static EnemyData CreateSpecialEnemy(string path, string displayName, Sprite sprite, EnemyRank rank, float scale, Color tint,
+        float speed, float health, float contactDamage, int xp, float spriteHeight)
+    {
+        bool isNew = AssetDatabase.LoadAssetAtPath<EnemyData>(path) == null;
+        EnemyData data = GetOrCreateAsset<EnemyData>(path);
+        data.sprite = sprite;
+        if (isNew)
+        {
+            data.displayName = displayName;
+            data.rank = rank;
+            data.scale = scale;
+            data.tint = tint;
+            data.moveSpeed = speed;
+            data.maxHealth = health;
+            data.contactDamage = contactDamage;
+            data.xpValue = xp;
+            data.spriteHeight = spriteHeight;
+            data.spawnWeight = 0f;
+        }
+        EditorUtility.SetDirty(data);
+        return data;
+    }
+
+    private static HordeSettings CreateScaledHorde(HordeSettings source, string path, float rateMultiplier, int waveBase)
+    {
+        HordeSettings horde = AssetDatabase.LoadAssetAtPath<HordeSettings>(path);
+        if (horde != null)
+        {
+            return horde;
+        }
+        horde = Object.Instantiate(source);
+        Keyframe[] keys = horde.spawnsPerSecond.keys;
+        for (int i = 0; i < keys.Length; i++)
+        {
+            keys[i].value *= rateMultiplier;
+        }
+        horde.spawnsPerSecond = new AnimationCurve(keys);
+        horde.waveBaseCount = waveBase;
+        AssetDatabase.CreateAsset(horde, path);
+        return horde;
+    }
+
+    private static ZoneData CreateZone(string path, string displayName, HordeSettings horde, float healthMultiplier,
+        EnemyData[] elites, EnemyData[] guardians)
+    {
+        bool isNew = AssetDatabase.LoadAssetAtPath<ZoneData>(path) == null;
+        ZoneData zone = GetOrCreateAsset<ZoneData>(path);
+        if (isNew)
+        {
+            zone.displayName = displayName;
+            zone.horde = horde;
+            zone.enemyHealthMultiplier = healthMultiplier;
+            zone.elites = new System.Collections.Generic.List<EnemyData>(elites);
+            zone.guardianOptions = new System.Collections.Generic.List<EnemyData>(guardians);
+        }
+        EditorUtility.SetDirty(zone);
+        return zone;
     }
 
     private static PassiveDefinition CreatePassive(string dir, string file, string displayName, Sprite icon, PassiveStat stat, float value, string format)

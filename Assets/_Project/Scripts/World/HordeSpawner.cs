@@ -27,6 +27,12 @@ public class HordeSpawner : MonoBehaviour
 
     public int KillCount { get; private set; }
 
+    // Multiplicador de vida dos inimigos (zonas mais avançadas são mais fortes)
+    public float HealthMultiplier { get; private set; } = 1f;
+
+    // Desligado, não nascem inimigos comuns (ex.: transição entre zonas)
+    public bool SpawningEnabled { get; set; } = true;
+
     public IReadOnlyList<Enemy> ActiveEnemies => activeEnemies;
     public HordeSettings Settings => settings;
     public Transform Player => player;
@@ -53,13 +59,48 @@ public class HordeSpawner : MonoBehaviour
             defaultCapacity: settings.poolPrewarm,
             maxSize: settings.maxAlive * 2);
 
+        Prewarm();
+        Configure(settings, 1f);
+    }
+
+    /// <summary>
+    /// Troca o balanceamento da horda (nova zona) e zera tempo e ondas.
+    /// O tamanho do pool continua o da configuração inicial.
+    /// </summary>
+    public void Configure(HordeSettings newSettings, float healthMultiplier)
+    {
+        settings = newSettings;
+        HealthMultiplier = healthMultiplier;
+        ElapsedTime = 0f;
+        WaveIndex = 0;
+        spawnAccumulator = 0f;
+        nextWaveTime = settings.waveInterval;
+        totalWeight = 0f;
         foreach (EnemyData data in settings.enemyTypes)
         {
             totalWeight += data.spawnWeight;
         }
+    }
 
-        Prewarm();
-        nextWaveTime = settings.waveInterval;
+    /// <summary>Faz nascer um inimigo específico fora da tela (elites, guardiões). Ignora o limite.</summary>
+    public Enemy SpawnSpecific(EnemyData data)
+    {
+        Vector3 position = FindSpawnPosition(UnityEngine.Random.Range(0f, 360f));
+        Enemy enemy = pool.Get();
+        enemy.Spawn(data, position, HealthMultiplier);
+        enemy.ActiveIndex = activeEnemies.Count;
+        activeEnemies.Add(enemy);
+        EnemySpawned?.Invoke(enemy);
+        return enemy;
+    }
+
+    /// <summary>Tira todos os inimigos de jogo (sem contar como abate).</summary>
+    public void DespawnAll()
+    {
+        for (int i = activeEnemies.Count - 1; i >= 0; i--)
+        {
+            Despawn(activeEnemies[i]);
+        }
     }
 
     private void Start()
@@ -69,6 +110,12 @@ public class HordeSpawner : MonoBehaviour
 
     private void Update()
     {
+        RecycleFarEnemies();
+        if (!SpawningEnabled)
+        {
+            return;
+        }
+
         ElapsedTime += Time.deltaTime;
 
         // Nascimento contínuo: acumula "frações" de inimigo até dar um inteiro
@@ -93,8 +140,6 @@ public class HordeSpawner : MonoBehaviour
             }
             WaveStarted?.Invoke(WaveIndex);
         }
-
-        RecycleFarEnemies();
     }
 
     /// <summary>Causa dano num inimigo. Se a vida acabar, ele morre e volta para o pool.</summary>
@@ -145,7 +190,7 @@ public class HordeSpawner : MonoBehaviour
 
         Vector3 position = FindSpawnPosition(angleDegrees);
         Enemy enemy = pool.Get();
-        enemy.Spawn(PickEnemyType(), position);
+        enemy.Spawn(PickEnemyType(), position, HealthMultiplier);
         enemy.ActiveIndex = activeEnemies.Count;
         activeEnemies.Add(enemy);
         EnemySpawned?.Invoke(enemy);
@@ -214,6 +259,10 @@ public class HordeSpawner : MonoBehaviour
         // De trás para frente, porque Despawn mexe na lista
         for (int i = activeEnemies.Count - 1; i >= 0; i--)
         {
+            if (activeEnemies[i].Data.rank != EnemyRank.Common)
+            {
+                continue; // elites e guardiões nunca somem por distância
+            }
             Vector3 offset = activeEnemies[i].GroundPosition - playerPos;
             offset.y = 0f;
             if (offset.sqrMagnitude > maxSqr)

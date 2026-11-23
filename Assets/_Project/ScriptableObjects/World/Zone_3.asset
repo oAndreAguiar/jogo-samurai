@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf09496f3f2681479ad0630359d22f9, type: 3}
+  m_Name: Zone_3
+  m_EditorClassIdentifier: Assembly-CSharp::ZoneData
+  displayName: "Port\xE3o do Templo"
+  durationSeconds: 600
+  horde: {fileID: 11400000, guid: aef46872169f47a4aa038c88159006d7, type: 2}
+  enemyHealthMultiplier: 2.4
+  elites:
+  - {fileID: 11400000, guid: 9146143b318d62641ae24c941bf59fe8, type: 2}
+  - {fileID: 11400000, guid: fdd33b1a500bf6942ab09e2b7b6a9ea9, type: 2}
+  firstEliteTime: 60
+  eliteInterval: 90
+  maxElitesPerWave: 3
+  guardianOptions:
+  - {fileID: 11400000, guid: c7654e81aa63e724cb04557192ab8506, type: 2}
+  - {fileID: 11400000, guid: 608f2b753310255469e1a7eaedfaf969, type: 2}
+  callGuardianAfter: 60

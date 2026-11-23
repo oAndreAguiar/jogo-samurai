@@ -91,6 +91,18 @@ public class ExperienceGemSystem : MonoBehaviour
         ActiveGemCount++;
     }
 
+    /// <summary>Puxa todas as joias do chão para o jogador (fim de zona).</summary>
+    public void CollectAll()
+    {
+        for (int i = 0; i < gems.Length; i++)
+        {
+            if (gems[i].InUse)
+            {
+                gems[i].Attracted = true;
+            }
+        }
+    }
+
     private void Update()
     {
         float dt = Time.deltaTime;

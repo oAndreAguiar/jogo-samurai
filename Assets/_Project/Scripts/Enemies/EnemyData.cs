@@ -1,5 +1,14 @@
 using UnityEngine;
 
+/// <summary>Categoria do inimigo dentro da zona.</summary>
+public enum EnemyRank
+{
+    Common,     // horda comum
+    Elite,      // mini boss que aparece ao longo da zona
+    Guardian,   // mini boss que encerra a zona
+    Boss        // chefe do santuário (etapa 6)
+}
+
 /// <summary>
 /// Dados de um tipo de inimigo (visual e balanceamento).
 /// Cada tipo de inimigo é um asset criado em Assets/_Project/ScriptableObjects/Enemies.
@@ -12,6 +21,14 @@ public class EnemyData : ScriptableObject
 
     [Tooltip("Sprite em pixel art do inimigo.")]
     public Sprite sprite;
+
+    public EnemyRank rank = EnemyRank.Common;
+
+    [Tooltip("Tamanho do sprite (1 = normal). Elites e guardiões são maiores.")]
+    public float scale = 1f;
+
+    [Tooltip("Cor aplicada ao sprite (branco = cores originais).")]
+    public Color tint = Color.white;
 
     [Tooltip("Velocidade em metros por segundo. O jogador anda a 5.")]
     public float moveSpeed = 2.5f;

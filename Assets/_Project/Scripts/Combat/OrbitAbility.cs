@@ -46,7 +46,6 @@ public class OrbitAbility : AbilityBehaviour
         Quaternion faceCamera = cameraTransform != null ? cameraTransform.rotation : Quaternion.identity;
         Vector3 center = transform.position + Vector3.up * OrbitHeight;
         float damage = stats.damage * Modifiers.DamageMultiplier;
-        float hitSqr = data.hitRadius * data.hitRadius;
         IReadOnlyList<Enemy> enemies = Spawner.ActiveEnemies;
         float now = Time.time;
 
@@ -69,12 +68,13 @@ public class OrbitAbility : AbilityBehaviour
                     continue;
                 }
                 Vector3 offset = enemy.CenterPosition - pos;
-                if (Mathf.Abs(offset.y) > 1.2f)
+                if (Mathf.Abs(offset.y) > 1.2f + enemy.BodyRadius)
                 {
                     continue;
                 }
                 offset.y = 0f;
-                if (offset.sqrMagnitude <= hitSqr)
+                float reach = data.hitRadius + enemy.BodyRadius;
+                if (offset.sqrMagnitude <= reach * reach)
                 {
                     enemy.OrbitImmuneUntil = now + data.hitInterval;
                     Spawner.DamageEnemy(enemy, damage);

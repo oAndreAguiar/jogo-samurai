@@ -60,7 +60,6 @@ public class AuraAbility : AbilityBehaviour
         effect.enabled = true;
 
         float damage = stats.damage * Modifiers.DamageMultiplier;
-        float radiusSqr = stats.radius * stats.radius;
         Vector3 pos = transform.position;
         IReadOnlyList<Enemy> enemies = Spawner.ActiveEnemies;
 
@@ -78,7 +77,8 @@ public class AuraAbility : AbilityBehaviour
                 continue;
             }
             offset.y = 0f;
-            if (offset.sqrMagnitude <= radiusSqr)
+            float reach = stats.radius + enemy.BodyRadius;
+            if (offset.sqrMagnitude <= reach * reach)
             {
                 Spawner.DamageEnemy(enemy, damage);
             }

@@ -8,6 +8,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     private const float FlashDuration = 0.1f;
+    private const float BaseBodyRadius = 0.25f;
     private static readonly Color FlashColor = new Color(1f, 0.45f, 0.45f);
 
     [SerializeField] private SpriteRenderer spriteRenderer;
@@ -24,10 +25,14 @@ public class Enemy : MonoBehaviour
     public int ActiveIndex { get; set; } = -1;
 
     public float CurrentHealth { get; private set; }
+    public float MaxHealth { get; private set; }
     public bool IsAlive => ActiveIndex >= 0 && CurrentHealth > 0f;
 
+    // Raio do "corpo" (cresce com o tamanho do sprite): usado nos acertos e no contato
+    public float BodyRadius => BaseBodyRadius * Data.scale;
+
     // Ponto no meio do sprite (para mirar e para os números de dano)
-    public Vector3 CenterPosition => GroundPosition + Vector3.up * Data.spriteHeight;
+    public Vector3 CenterPosition => GroundPosition + Vector3.up * (Data.spriteHeight * Data.scale);
 
     // Até quando os objetos orbitando não podem acertar este inimigo de novo
     public float OrbitImmuneUntil { get; set; }
@@ -40,14 +45,18 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary>Prepara o inimigo para entrar em jogo (chamado ao sair do pool).</summary>
-    public void Spawn(EnemyData data, Vector3 groundPosition)
+    public void Spawn(EnemyData data, Vector3 groundPosition, float healthMultiplier)
     {
         Data = data;
         spriteRenderer.sprite = data.sprite;
-        spriteRenderer.color = Color.white;
+        spriteRenderer.color = data.tint;
+        // Guardiões e chefes desenham por cima da horda
+        spriteRenderer.sortingOrder = data.rank == EnemyRank.Common ? 0 : 10;
+        transform.localScale = Vector3.one * data.scale;
         flashTimer = 0f;
         OrbitImmuneUntil = 0f;
-        CurrentHealth = data.maxHealth;
+        MaxHealth = data.maxHealth * healthMultiplier;
+        CurrentHealth = MaxHealth;
         GroundHeight = groundPosition.y;
         GroundPosition = groundPosition;
         ApplyTransform(Quaternion.identity);
@@ -76,16 +85,14 @@ public class Enemy : MonoBehaviour
         flashTimer -= deltaTime;
         if (flashTimer <= 0f)
         {
-            spriteRenderer.color = Color.white;
+            spriteRenderer.color = Data.tint;
         }
     }
 
     /// <summary>Copia a posição no chão para o transform, com o sprite virado para a câmera.</summary>
     public void ApplyTransform(Quaternion cameraRotation)
     {
-        Vector3 pos = GroundPosition;
-        pos.y += Data.spriteHeight;
-        transform.SetPositionAndRotation(pos, cameraRotation);
+        transform.SetPositionAndRotation(CenterPosition, cameraRotation);
     }
 
     public void SetFacingLeft(bool left)

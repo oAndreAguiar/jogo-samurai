@@ -55,7 +55,6 @@ public class EnemyMovementSystem : MonoBehaviour
 
         float radius = settings.separationRadius;
         float radiusSqr = radius * radius;
-        float stopSqr = settings.stopDistance * settings.stopDistance;
 
         for (int i = 0; i < count; i++)
         {
@@ -67,7 +66,9 @@ public class EnemyMovementSystem : MonoBehaviour
             toPlayer.y = 0f;
             Vector3 velocity = Vector3.zero;
             float distSqr = toPlayer.sqrMagnitude;
-            if (distSqr > stopSqr)
+            // Inimigos grandes param mais longe (o corpo deles é maior)
+            float stop = settings.stopDistance + enemy.BodyRadius;
+            if (distSqr > stop * stop)
             {
                 velocity = toPlayer / Mathf.Sqrt(distSqr) * enemy.Data.moveSpeed;
             }
