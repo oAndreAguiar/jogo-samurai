@@ -43,7 +43,7 @@ Partida completa no modo Clássico: Zona 1 → Zona 2 → Zona 3 → Santuário.
   - **Elites**: mini bosses que aparecem ao longo da zona, mais fortes e com recompensa melhor.
   - **Guardião**: o mini boss da zona. Derrotá-lo encerra a zona. Cada zona tem uma lista de guardiões possíveis e **um é sorteado por partida**.
 - O jogador explora o mapa e pega itens, baús e pontos de interesse marcados no minimapa.
-- **A definir**: o que acontece quando o timer chega a zero (guardião aparece automaticamente, punição, derrota).
+- **Timer zerado**: o guardião aparece automaticamente, sem punição extra (decisão provisória de 23/11/2026, configurável). O timer para enquanto o guardião está em campo.
 
 ### Exemplo de regiões (provisório)
 Floresta de Bambu, Vila Costeira, Montanha Vulcânica, Templo Nevado, Cemitério de Youkais. Nomes, temas e inimigos serão definidos depois.
