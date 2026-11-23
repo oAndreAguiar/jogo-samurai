@@ -12,7 +12,7 @@ using Unity.Cinemachine;
 using Unity.Cinemachine.TargetTracking;
 
 /// <summary>
-/// Script de Editor: configura o projeto para WebGL e monta a cena Prototype (etapas 0 a 5).
+/// Script de Editor: configura o projeto para WebGL e monta a cena Prototype (etapas 0 a 6).
 /// Pode ser rodado de novo pelo menu "JogoJapones > Setup > ..." sem quebrar nada.
 /// </summary>
 public static class ProjectSetup
@@ -377,6 +377,9 @@ public static class ProjectSetup
 
         ExperienceGemSystem gems = CreateProgression(player, spawner, projectiles, health, canvasGo);
         CreateZones(spawner, gems, health, canvasGo);
+        // A derrota mostra até onde o jogador chegou e o tempo total
+        SetRefs(gameOver, ("zones", Object.FindFirstObjectByType<ZoneController>()),
+            ("sanctuary", Object.FindFirstObjectByType<SanctuaryController>()), ("clock", Object.FindFirstObjectByType<RunClock>()));
         // Tela de derrota por cima de tudo
         panel.transform.SetAsLastSibling();
     }
@@ -655,12 +658,8 @@ public static class ProjectSetup
         GameObject zoneGo = new GameObject("Zones");
         ZoneController controller = zoneGo.AddComponent<ZoneController>();
         SerializedObject so = new SerializedObject(controller);
-        SerializedProperty list = so.FindProperty("zones");
-        list.arraySize = zoneList.Count;
-        for (int i = 0; i < zoneList.Count; i++)
-        {
-            list.GetArrayElementAtIndex(i).objectReferenceValue = zoneList[i];
-        }
+        RegionData region = CreateRegion(worldDir, zoneList);
+        so.FindProperty("region").objectReferenceValue = region;
         so.FindProperty("spawner").objectReferenceValue = spawner;
         so.FindProperty("gems").objectReferenceValue = gems;
         so.FindProperty("playerHealth").objectReferenceValue = health;
@@ -724,9 +723,100 @@ public static class ProjectSetup
         Text gName = CreateText(gBar.transform, "Name", "Guardião", 34, Color.white, new Vector2(0f, 40f));
         ((RectTransform)gName.transform).sizeDelta = new Vector2(900f, 50f);
 
+        SanctuaryController sanctuary = CreateSanctuary(controller, spawner, health, canvasGo);
+
         ZoneHUD hud = zoneGo.AddComponent<ZoneHUD>();
-        SetRefs(hud, ("zones", controller), ("timerText", timer), ("callGuardianButton", button), ("bannerText", banner),
+        SetRefs(hud, ("zones", controller), ("sanctuary", sanctuary), ("timerText", timer), ("callGuardianButton", button), ("bannerText", banner),
             ("guardianBar", gBar), ("guardianFill", gFill), ("guardianName", gName));
+    }
+
+    // Região (etapa 6): boss do Santuário e os dados da região
+    private static RegionData CreateRegion(string worldDir, System.Collections.Generic.List<ZoneData> zoneList)
+    {
+        // Sprite provisório do boss: oni escuro com máscara vermelha e chifres dourados (32x32)
+        Sprite bossSprite = PaintSprite("Boss_KageOni", 32, 32, 20f, (x, y) =>
+        {
+            float dx = x - 15.5f;
+            bool horn = y >= 26 && y <= 31 && (Mathf.Abs(x - (8 - (y - 26) / 2)) <= 1 || Mathf.Abs(x - (23 + (y - 26) / 2)) <= 1);
+            bool head = dx * dx + (y - 19) * (y - 19) <= 64;
+            bool body = y >= 2 && y < 18 && Mathf.Abs(dx) <= 10 - (17 - y) * 0.15f && !(y < 4 && x % 5 == 0);
+            if (horn) return new Color32(222, 180, 64, 255);
+            if (head)
+            {
+                bool eye = (x == 12 || x == 13 || x == 18 || x == 19) && (y == 20 || y == 21);
+                bool mouth = y == 15 && x >= 11 && x <= 20 && x % 2 == 0;
+                if (eye) return new Color32(255, 240, 120, 255);
+                if (mouth) return new Color32(250, 250, 250, 255);
+                return new Color32(170, 30, 35, 255); // máscara vermelha
+            }
+            if (body) return (Mathf.Abs(dx) < 3 ? new Color32(222, 180, 64, 255) : new Color32(35, 25, 40, 255));
+            return null;
+        });
+
+        EnemyData boss = CreateSpecialEnemy(Root + "/ScriptableObjects/Enemies/Boss_KageOni.asset", "Kage-Oni", bossSprite, EnemyRank.Boss,
+            3.6f, Color.white, 2.4f, 5000f, 35f, 0, 0.8f);
+
+        string path = worldDir + "/Region_BambooForest.asset";
+        bool isNew = AssetDatabase.LoadAssetAtPath<RegionData>(path) == null;
+        RegionData region = GetOrCreateAsset<RegionData>(path);
+        if (isNew)
+        {
+            region.displayName = "Floresta de Bambu";
+            region.zones = zoneList;
+            region.boss = boss;
+        }
+        EditorUtility.SetDirty(region);
+        return region;
+    }
+
+    // Santuário (etapa 6): arena, ataque do boss, relógio da partida e tela de vitória
+    private static SanctuaryController CreateSanctuary(ZoneController zones, HordeSpawner spawner, PlayerHealth health, GameObject canvasGo)
+    {
+        Sprite ring = AssetDatabase.LoadAssetAtPath<Sprite>(Root + "/Sprites/FX_Ring.png");
+
+        GameObject sanctuaryGo = new GameObject("Sanctuary");
+        RunClock clock = sanctuaryGo.AddComponent<RunClock>();
+
+        SpriteRenderer arenaRing = new GameObject("ArenaRing").AddComponent<SpriteRenderer>();
+        arenaRing.transform.SetParent(sanctuaryGo.transform, false);
+        arenaRing.sprite = ring;
+        arenaRing.sortingOrder = 30;
+        ArenaBoundary arena = sanctuaryGo.AddComponent<ArenaBoundary>();
+        SetRefs(arena, ("player", health.GetComponent<CharacterController>()), ("ring", arenaRing));
+
+        SpriteRenderer warning = new GameObject("BossWarningRing").AddComponent<SpriteRenderer>();
+        warning.transform.SetParent(sanctuaryGo.transform, false);
+        warning.sprite = ring;
+        warning.sortingOrder = 35;
+        BossAttack attack = sanctuaryGo.AddComponent<BossAttack>();
+        SetRefs(attack, ("playerHealth", health), ("warningRing", warning));
+
+        SanctuaryController sanctuary = sanctuaryGo.AddComponent<SanctuaryController>();
+        Light light = GameObject.Find("Directional Light").GetComponent<Light>();
+        SetRefs(sanctuary, ("zones", zones), ("spawner", spawner), ("arena", arena), ("bossAttack", attack),
+            ("player", health.transform), ("mainLight", light));
+
+        // Tela de vitória
+        GameObject panel = new GameObject("VictoryPanel", typeof(RectTransform));
+        panel.transform.SetParent(canvasGo.transform, false);
+        RectTransform panelRt = (RectTransform)panel.transform;
+        panelRt.anchorMin = Vector2.zero;
+        panelRt.anchorMax = Vector2.one;
+        panelRt.offsetMin = Vector2.zero;
+        panelRt.offsetMax = Vector2.zero;
+        panel.AddComponent<Image>().color = new Color(0.03f, 0.03f, 0.06f, 0.8f);
+        Text title = CreateText(panel.transform, "Title", "Vitória!", 120, new Color(1f, 0.85f, 0.3f), new Vector2(0f, 200f));
+        title.fontStyle = FontStyle.Bold;
+        Text summary = CreateText(panel.transform, "Summary", "", 46, Color.white, new Vector2(0f, 10f));
+        Text medal = CreateText(panel.transform, "Medal", "", 60, Color.white, new Vector2(0f, -160f));
+        medal.fontStyle = FontStyle.Bold;
+        CreateText(panel.transform, "Hint", "R ou toque para jogar de novo", 36, new Color(0.85f, 0.85f, 0.9f), new Vector2(0f, -320f));
+
+        VictoryScreen victory = sanctuaryGo.AddComponent<VictoryScreen>();
+        SetRefs(victory, ("sanctuary", sanctuary), ("zones", zones), ("spawner", spawner),
+            ("experience", health.GetComponent<PlayerExperience>()), ("clock", clock), ("panel", panel),
+            ("summaryText", summary), ("medalText", medal));
+        return sanctuary;
     }
 
     private static EnemyData CreateSpecialEnemy(string path, string displayName, Sprite sprite, EnemyRank rank, float scale, Color tint,

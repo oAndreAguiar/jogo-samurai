@@ -6,11 +6,12 @@ using UnityEngine.InputSystem;
 
 /// <summary>
 /// Controla as zonas da região: timer, elites, guardião sorteado e a passagem de uma zona para a outra.
+/// Depois da última zona avisa (AllZonesCleared) e o SanctuaryController assume.
 /// Quando o timer zera, o guardião aparece sozinho. O jogador também pode chamá-lo antes (tecla G ou botão).
 /// </summary>
 public class ZoneController : MonoBehaviour
 {
-    [SerializeField] private List<ZoneData> zones = new List<ZoneData>();
+    [SerializeField] private RegionData region;
     [SerializeField] private HordeSpawner spawner;
     [SerializeField] private ExperienceGemSystem gems;
     [SerializeField] private PlayerHealth playerHealth;
@@ -24,11 +25,13 @@ public class ZoneController : MonoBehaviour
     public event Action<Enemy> EliteSpawned;
     // índice da zona concluída
     public event Action<int> ZoneCleared;
-    public event Action RegionCleared;
+    // Todas as zonas concluídas (o Santuário começa)
+    public event Action AllZonesCleared;
 
     public int ZoneIndex { get; private set; }
-    public int ZoneCount => zones.Count;
-    public ZoneData CurrentZone => zones[ZoneIndex];
+    public RegionData Region => region;
+    public int ZoneCount => region.zones.Count;
+    public ZoneData CurrentZone => region.zones[ZoneIndex];
     public EnemyData ChosenGuardian { get; private set; }
     public Enemy Guardian { get; private set; }
     public float TimeRemaining { get; private set; }
@@ -168,14 +171,14 @@ public class ZoneController : MonoBehaviour
         yield return new WaitForSeconds(transitionSeconds);
         InTransition = false;
 
-        if (cleared + 1 < zones.Count)
+        if (cleared + 1 < region.zones.Count)
         {
             StartZone(cleared + 1);
         }
         else
         {
             IsFinished = true;
-            RegionCleared?.Invoke();
+            AllZonesCleared?.Invoke();
         }
     }
 }

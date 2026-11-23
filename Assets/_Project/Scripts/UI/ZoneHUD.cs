@@ -1,15 +1,14 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
 /// HUD da zona: timer, botão de chamar o guardião, avisos no meio da tela
-/// e barra de vida do guardião. Quando a região acaba, mostra a mensagem final.
+/// e barra de vida do guardião ou do chefe do Santuário.
 /// </summary>
 public class ZoneHUD : MonoBehaviour
 {
     [SerializeField] private ZoneController zones;
+    [SerializeField] private SanctuaryController sanctuary;
 
     [Header("Topo")]
     [SerializeField] private Text timerText;
@@ -19,14 +18,16 @@ public class ZoneHUD : MonoBehaviour
     [SerializeField] private Text bannerText;
     [SerializeField] private float bannerSeconds = 2.5f;
 
-    [Header("Guardião")]
+    [Header("Guardião / chefe")]
     [SerializeField] private GameObject guardianBar;
     [SerializeField] private Image guardianFill;
     [SerializeField] private Text guardianName;
 
     private float bannerTimer;
     private float refreshTimer;
-    private bool regionDone;
+
+    // Inimigo cuja vida aparece na barra do topo (guardião ou boss)
+    private Enemy trackedEnemy;
 
     private void Awake()
     {
@@ -41,7 +42,9 @@ public class ZoneHUD : MonoBehaviour
         zones.GuardianSummoned += HandleGuardianSummoned;
         zones.EliteSpawned += HandleEliteSpawned;
         zones.ZoneCleared += HandleZoneCleared;
-        zones.RegionCleared += HandleRegionCleared;
+        sanctuary.SanctuaryStarted += HandleSanctuaryStarted;
+        sanctuary.BossSpawned += HandleBossSpawned;
+        sanctuary.Victory += HandleVictory;
     }
 
     private void OnDisable()
@@ -50,7 +53,9 @@ public class ZoneHUD : MonoBehaviour
         zones.GuardianSummoned -= HandleGuardianSummoned;
         zones.EliteSpawned -= HandleEliteSpawned;
         zones.ZoneCleared -= HandleZoneCleared;
-        zones.RegionCleared -= HandleRegionCleared;
+        sanctuary.SanctuaryStarted -= HandleSanctuaryStarted;
+        sanctuary.BossSpawned -= HandleBossSpawned;
+        sanctuary.Victory -= HandleVictory;
     }
 
     private void HandleZoneStarted(int index, ZoneData zone, EnemyData guardian)
@@ -61,9 +66,7 @@ public class ZoneHUD : MonoBehaviour
 
     private void HandleGuardianSummoned(Enemy guardian)
     {
-        guardianBar.SetActive(true);
-        guardianName.text = guardian.Data.displayName;
-        guardianFill.fillAmount = 1f;
+        Track(guardian, "Guardião: ");
         ShowBanner(guardian.Data.displayName + " apareceu!");
     }
 
@@ -74,43 +77,47 @@ public class ZoneHUD : MonoBehaviour
 
     private void HandleZoneCleared(int index)
     {
-        guardianBar.SetActive(false);
+        Track(null, "");
         ShowBanner("Zona " + (index + 1) + " concluída!");
     }
 
-    private void HandleRegionCleared()
+    private void HandleSanctuaryStarted()
     {
-        regionDone = true;
-        bannerTimer = float.MaxValue;
-        bannerText.text = "Região concluída!\n<size=40>O Santuário vem na próxima etapa.\nR ou toque para jogar de novo</size>";
-        Time.timeScale = 0f;
+        ShowBanner("Santuário\n<size=40>Só o chefe da região espera por você</size>");
+    }
+
+    private void HandleBossSpawned(Enemy boss)
+    {
+        Track(boss, "Chefe: ");
+        ShowBanner(boss.Data.displayName + " desperta!");
+    }
+
+    private void HandleVictory()
+    {
+        Track(null, "");
+        bannerText.text = "";
+        bannerTimer = 0f;
+    }
+
+    private void Track(Enemy enemy, string prefix)
+    {
+        trackedEnemy = enemy;
+        guardianBar.SetActive(enemy != null);
+        if (enemy != null)
+        {
+            guardianName.text = prefix + enemy.Data.displayName;
+            guardianFill.fillAmount = 1f;
+        }
     }
 
     private void ShowBanner(string message)
     {
-        if (regionDone)
-        {
-            return;
-        }
         bannerText.text = message;
         bannerTimer = bannerSeconds;
     }
 
     private void Update()
     {
-        if (regionDone)
-        {
-            bool restart =
-                (Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame)
-                || (Pointer.current != null && Pointer.current.press.wasPressedThisFrame);
-            if (restart)
-            {
-                Time.timeScale = 1f;
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            }
-            return;
-        }
-
         if (bannerTimer > 0f)
         {
             bannerTimer -= Time.unscaledDeltaTime;
@@ -120,10 +127,10 @@ public class ZoneHUD : MonoBehaviour
             }
         }
 
-        // Barra do guardião acompanha a vida (barato: é só um número)
-        if (zones.Guardian != null)
+        // Barra do guardião/chefe acompanha a vida (barato: é só um número)
+        if (trackedEnemy != null && trackedEnemy.IsAlive)
         {
-            guardianFill.fillAmount = Mathf.Clamp01(zones.Guardian.CurrentHealth / zones.Guardian.MaxHealth);
+            guardianFill.fillAmount = Mathf.Clamp01(trackedEnemy.CurrentHealth / trackedEnemy.MaxHealth);
         }
 
         refreshTimer -= Time.unscaledDeltaTime;
@@ -132,6 +139,14 @@ public class ZoneHUD : MonoBehaviour
             return;
         }
         refreshTimer = 0.2f;
+
+        if (sanctuary.IsActive)
+        {
+            bool bossFight = trackedEnemy != null && trackedEnemy.Data.rank == EnemyRank.Boss;
+            timerText.text = bossFight ? "Santuário   CHEFE" : "Santuário";
+            callGuardianButton.gameObject.SetActive(false);
+            return;
+        }
 
         int seconds = Mathf.CeilToInt(zones.TimeRemaining);
         string status = zones.GuardianActive ? "  GUARDIÃO" : "";

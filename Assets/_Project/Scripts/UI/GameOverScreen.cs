@@ -14,6 +14,11 @@ public class GameOverScreen : MonoBehaviour
     [SerializeField] private GameObject panel;
     [SerializeField] private Text summaryText;
 
+    [Header("Opcional: para mostrar até onde chegou")]
+    [SerializeField] private ZoneController zones;
+    [SerializeField] private SanctuaryController sanctuary;
+    [SerializeField] private RunClock clock;
+
     [Tooltip("Espera antes de aceitar o reinício, para não reiniciar sem querer.")]
     [SerializeField] private float restartDelay = 0.8f;
 
@@ -36,10 +41,25 @@ public class GameOverScreen : MonoBehaviour
 
     private void HandleDied()
     {
-        int seconds = Mathf.FloorToInt(spawner.ElapsedTime);
-        summaryText.text = string.Format(
-            "Sobreviveu {0:00}:{1:00}   Abates {2}\n\nR ou toque para recomeçar",
-            seconds / 60, seconds % 60, spawner.KillCount);
+        float time = spawner.ElapsedTime;
+        if (clock != null)
+        {
+            clock.Stop();
+            time = clock.TotalTime;
+        }
+
+        string reached = "";
+        if (sanctuary != null && sanctuary.IsActive)
+        {
+            reached = "Chegou até: Santuário\n";
+        }
+        else if (zones != null)
+        {
+            reached = "Chegou até: Zona " + (zones.ZoneIndex + 1) + "/" + zones.ZoneCount + "\n";
+        }
+
+        summaryText.text = string.Format("{0}Tempo {1}   Abates {2}\n\nR ou toque para recomeçar",
+            reached, RunClock.Format(time), spawner.KillCount);
         panel.SetActive(true);
         shownTime = Time.unscaledTime;
         Time.timeScale = 0f; // pausa inimigos, projéteis e timer

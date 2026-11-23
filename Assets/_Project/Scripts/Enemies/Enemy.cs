@@ -37,6 +37,9 @@ public class Enemy : MonoBehaviour
     // Até quando os objetos orbitando não podem acertar este inimigo de novo
     public float OrbitImmuneUntil { get; set; }
 
+    // Multiplicador de velocidade (ex.: boss furioso). Volta a 1 ao renascer.
+    public float SpeedMultiplier { get; set; } = 1f;
+
     private float flashTimer;
 
     public void Setup(SpriteRenderer renderer)
@@ -55,6 +58,7 @@ public class Enemy : MonoBehaviour
         transform.localScale = Vector3.one * data.scale;
         flashTimer = 0f;
         OrbitImmuneUntil = 0f;
+        SpeedMultiplier = 1f;
         MaxHealth = data.maxHealth * healthMultiplier;
         CurrentHealth = MaxHealth;
         GroundHeight = groundPosition.y;

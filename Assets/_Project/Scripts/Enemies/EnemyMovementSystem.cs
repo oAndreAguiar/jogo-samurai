@@ -70,7 +70,7 @@ public class EnemyMovementSystem : MonoBehaviour
             float stop = settings.stopDistance + enemy.BodyRadius;
             if (distSqr > stop * stop)
             {
-                velocity = toPlayer / Mathf.Sqrt(distSqr) * enemy.Data.moveSpeed;
+                velocity = toPlayer / Mathf.Sqrt(distSqr) * enemy.Data.moveSpeed * enemy.SpeedMultiplier;
             }
 
             // 2) Separação: empurra para longe dos vizinhos muito próximos
