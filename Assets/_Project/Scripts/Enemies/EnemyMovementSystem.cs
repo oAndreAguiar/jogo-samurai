@@ -24,6 +24,12 @@ public class EnemyMovementSystem : MonoBehaviour
 
     private Transform cameraTransform;
 
+    // Folga além da distância de parada para considerar "encostado" (animação de ataque)
+    private const float TouchMargin = 0.3f;
+
+    // Distância lateral mínima (metros) para o inimigo trocar o lado em que olha
+    private const float MinFacingDeadZone = 0.3f;
+
     private void Start()
     {
         if (Camera.main != null)
@@ -72,6 +78,10 @@ public class EnemyMovementSystem : MonoBehaviour
             {
                 velocity = toPlayer / Mathf.Sqrt(distSqr) * enemy.Data.moveSpeed * enemy.SpeedMultiplier;
             }
+            bool approaching = distSqr > stop * stop;
+            // Colado no jogador: toca a animação de ataque
+            float touch = stop + TouchMargin;
+            bool touching = distSqr <= touch * touch;
 
             // 2) Separação: empurra para longe dos vizinhos muito próximos
             velocity += ComputeSeparation(i, pos, radius, radiusSqr) * settings.separationStrength;
@@ -80,11 +90,16 @@ public class EnemyMovementSystem : MonoBehaviour
             Vector3 step = velocity * dt;
             enemy.GroundPosition = MoveOnGround(pos, step);
 
-            if (Mathf.Abs(toPlayer.x) > 0.05f)
+            // Só vira quando o jogador está claramente de um lado. Com uma folga pequena,
+            // o inimigo ficava virando sem parar quando passava em cima/embaixo do jogador
+            // (nos grandes, a clava trocava de mão a cada passo).
+            float facingDeadZone = Mathf.Max(MinFacingDeadZone, enemy.BodyRadius);
+            if (Mathf.Abs(toPlayer.x) > facingDeadZone)
             {
                 enemy.SetFacingLeft(toPlayer.x < 0f);
             }
             enemy.TickFlash(dt);
+            enemy.TickAnimation(dt, touching, approaching);
             enemy.ApplyTransform(faceCamera);
         }
     }

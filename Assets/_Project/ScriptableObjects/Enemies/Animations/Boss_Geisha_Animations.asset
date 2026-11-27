@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d76d4330f1446beab0c11fdecb91ce37, type: 3}
+  m_Name: Boss_Geisha_Animations
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAnimationSet
+  idle:
+    frames:
+    - {fileID: 1855701312930463570, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    - {fileID: 1459074139081661792, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    - {fileID: 2579000897509122258, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    - {fileID: 8999252084626714164, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    fps: 6
+    loop: 1
+  walk:
+    frames:
+    - {fileID: 69675328476553970, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    - {fileID: 8808961871649208052, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    - {fileID: 336093669397605293, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    - {fileID: 5166647532700028837, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    - {fileID: 8740012873828093484, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    - {fileID: 856053528716750862, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    - {fileID: 5417256685724397616, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    fps: 9
+    loop: 1
+  attack:
+    frames:
+    - {fileID: 2168193862550863670, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    - {fileID: 3298044273443254693, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    - {fileID: 1732967924493814685, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    - {fileID: 7506061239770845174, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    - {fileID: 5094010641246394458, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    - {fileID: 6360283742565369040, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    fps: 10
+    loop: 0
+  hurt:
+    frames:
+    - {fileID: 7502415678275614842, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    - {fileID: 411208544752045816, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    fps: 10
+    loop: 0
+  death:
+    frames:
+    - {fileID: 6191225294735239231, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    - {fileID: 4211467648113039241, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    - {fileID: 4366252795055546309, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    - {fileID: 3923168853646421894, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    - {fileID: 8790371892461856747, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    - {fileID: 7667823100667796037, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+    fps: 8
+    loop: 0
+  portrait: {fileID: 1951303629259604939, guid: 969c7369e01b8033c620f51a0af3048a, type: 3}
+  corpseTime: 0.25

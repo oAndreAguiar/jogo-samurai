@@ -15,6 +15,8 @@ public class PlayerHealth : MonoBehaviour
     // (vida atual, vida máxima)
     public event Action<float, float> HealthChanged;
     public event Action Died;
+    // Tomou dano (para a animação de dano)
+    public event Action Damaged;
 
     public float CurrentHealth { get; private set; }
     public float MaxHealth => stats.maxHealth + bonusMaxHealth;
@@ -98,13 +100,14 @@ public class PlayerHealth : MonoBehaviour
         CurrentHealth = Mathf.Max(0f, CurrentHealth - amount);
         invulnerableTimer = stats.invulnerabilityTime;
         HealthChanged?.Invoke(CurrentHealth, MaxHealth);
+        Damaged?.Invoke();
 
         if (CurrentHealth <= 0f)
         {
             IsDead = true;
             if (spriteRenderer != null)
             {
-                spriteRenderer.color = new Color(0.4f, 0.4f, 0.4f);
+                spriteRenderer.color = Color.white; // a animação de morte mostra a queda
             }
             Died?.Invoke();
         }

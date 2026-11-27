@@ -10,9 +10,6 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private PlayerMovementSettings settings;
 
-    [Tooltip("Sprite do personagem, para virar para a esquerda ou direita conforme anda.")]
-    [SerializeField] private SpriteRenderer spriteRenderer;
-
     [Tooltip("Opcional: bônus de velocidade das passivas.")]
     [SerializeField] private PlayerLoadout loadout;
 
@@ -20,6 +17,9 @@ public class PlayerMovement : MonoBehaviour
     private InputAction moveAction;
     private Transform cameraTransform;
     private float verticalSpeed;
+
+    /// <summary>Entrada de movimento deste frame (-1 a 1). Usada pela animação do sprite.</summary>
+    public Vector2 MoveInput { get; private set; }
 
     private void Awake()
     {
@@ -61,6 +61,7 @@ public class PlayerMovement : MonoBehaviour
             input = Vector2.zero;
         }
         input = Vector2.ClampMagnitude(input, 1f);
+        MoveInput = input;
 
         // Converte a entrada para a direção da câmera (cima na tela = frente da câmera)
         Vector3 forward = Vector3.forward;
@@ -86,12 +87,6 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 velocity = horizontal + Vector3.up * verticalSpeed;
         controller.Move(velocity * Time.deltaTime);
-
-        // Vira o sprite para o lado em que está andando
-        if (spriteRenderer != null && Mathf.Abs(input.x) > 0.01f)
-        {
-            spriteRenderer.flipX = input.x < 0f;
-        }
     }
 
     private static InputAction CreateFallbackMoveAction()

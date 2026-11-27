@@ -1,0 +1,832 @@
+fileFormatVersion: 2
+guid: 4bacbfc416c2f77bc08d0249e3a6781e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7915023580672601555
+    second: Enemy_OniRed_turn_0
+  - first:
+      213: 4779097932650342495
+    second: Enemy_OniRed_turn_1
+  - first:
+      213: 2708049178665297987
+    second: Enemy_OniRed_turn_2
+  - first:
+      213: 7078026032082966694
+    second: Enemy_OniRed_idle_0
+  - first:
+      213: 5807497272893100775
+    second: Enemy_OniRed_idle_1
+  - first:
+      213: 8667358495661993453
+    second: Enemy_OniRed_idle_2
+  - first:
+      213: 2832083599909941006
+    second: Enemy_OniRed_idle_3
+  - first:
+      213: 7325385037189481100
+    second: Enemy_OniRed_walk_0
+  - first:
+      213: 5216151376225807820
+    second: Enemy_OniRed_walk_1
+  - first:
+      213: 4649022625612434261
+    second: Enemy_OniRed_walk_2
+  - first:
+      213: 6067503643958565178
+    second: Enemy_OniRed_walk_3
+  - first:
+      213: 8069849269997922281
+    second: Enemy_OniRed_walk_4
+  - first:
+      213: 2365801326503953431
+    second: Enemy_OniRed_walk_5
+  - first:
+      213: 6131438422083613744
+    second: Enemy_OniRed_attack_0
+  - first:
+      213: 2847383560418053429
+    second: Enemy_OniRed_attack_1
+  - first:
+      213: 8137155010658696967
+    second: Enemy_OniRed_attack_2
+  - first:
+      213: 8377836788814563754
+    second: Enemy_OniRed_attack_3
+  - first:
+      213: 6445162840644912493
+    second: Enemy_OniRed_attack_4
+  - first:
+      213: 4071454975203320482
+    second: Enemy_OniRed_attack_5
+  - first:
+      213: 4250991215489491724
+    second: Enemy_OniRed_hurt_0
+  - first:
+      213: 6604834041411787229
+    second: Enemy_OniRed_hurt_1
+  - first:
+      213: 2029284753556074549
+    second: Enemy_OniRed_death_0
+  - first:
+      213: 7941288151962323845
+    second: Enemy_OniRed_death_1
+  - first:
+      213: 5294157552863380061
+    second: Enemy_OniRed_death_2
+  - first:
+      213: 7577965584928531878
+    second: Enemy_OniRed_death_3
+  - first:
+      213: 7368885012074209386
+    second: Enemy_OniRed_death_4
+  - first:
+      213: 7467511054974424384
+    second: Enemy_OniRed_death_5
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 7
+  spritePivot: {x: 0.5, y: 0}
+  spritePixelsToUnits: 45
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Enemy_OniRed_turn_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 530
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 109145ae1f6f51b572c7daf8625fe799
+      internalID: 7915023580672601555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_turn_1
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 530
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2b972ebea451d960cceeda88ad8bf3c
+      internalID: 4779097932650342495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_turn_2
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 530
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 059c3826ade63ec9a5a3951a3d2562ac
+      internalID: 2708049178665297987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_idle_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 424
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5acb8ee6031310b56d905bcb6000f045
+      internalID: 7078026032082966694
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_idle_1
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 424
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bbe09674a915da38881a17a313f305d1
+      internalID: 5807497272893100775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_idle_2
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 424
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea61aa8f713690e8ce59f55d080e97b4
+      internalID: 8667358495661993453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_idle_3
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 424
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08ef9fa725b2033162a561c0af82d69b
+      internalID: 2832083599909941006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_walk_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 318
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e72104f76f114f3dd63a4ce70baa1db4
+      internalID: 7325385037189481100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_walk_1
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 318
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4191391ef01e2950a36e4853325bfcb4
+      internalID: 5216151376225807820
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_walk_2
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 318
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c0c10a3d041f28c65f2ae9e5682a2e2
+      internalID: 4649022625612434261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_walk_3
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 318
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e1788783898d6d1235440de09d88c98
+      internalID: 6067503643958565178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_walk_4
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 318
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3fd46be9f38faef187460453e24946b
+      internalID: 8069849269997922281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_walk_5
+      rect:
+        serializedVersion: 2
+        x: 560
+        y: 318
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25ebe2cb52a007816e42a63cf2943cf8
+      internalID: 2365801326503953431
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_attack_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 212
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8a58db384cb6657df0194077c4a73ff
+      internalID: 6131438422083613744
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_attack_1
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 212
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2568280c0a3f08c0a43655226ef98c9
+      internalID: 2847383560418053429
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_attack_2
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 212
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a8bbd2947978ba83794d120eb4ea721
+      internalID: 8137155010658696967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_attack_3
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 212
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 982aeb36436940b9ece83400ef9e269b
+      internalID: 8377836788814563754
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_attack_4
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 212
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39fab76421a2542cc7a8aba1e973ae2c
+      internalID: 6445162840644912493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_attack_5
+      rect:
+        serializedVersion: 2
+        x: 560
+        y: 212
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5dacc9550b1b6bfdb8f05fc19037d52
+      internalID: 4071454975203320482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_hurt_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 106
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d830b24f694eefd060da34cbe630357
+      internalID: 4250991215489491724
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_hurt_1
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 106
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a62fc4f77c70545799860c9aff73647f
+      internalID: 6604834041411787229
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_death_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5049d927784169e0e2d2378256f5fc78
+      internalID: 2029284753556074549
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_death_1
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 0
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afadb8021aeee185dee2c7f690129efa
+      internalID: 7941288151962323845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_death_2
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 0
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fdc345d33d6bf5ca906eadc8a42f996b
+      internalID: 5294157552863380061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_death_3
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 0
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 046e9159a5db3e0bce8e15f80afcf0c8
+      internalID: 7577965584928531878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_death_4
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 0
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03def18aed50a0a35940ce2e99586979
+      internalID: 7368885012074209386
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniRed_death_5
+      rect:
+        serializedVersion: 2
+        x: 560
+        y: 0
+        width: 112
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ee098d332bd3433c033dd67e52a3649
+      internalID: 7467511054974424384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Enemy_OniRed_turn_0: 7915023580672601555
+      Enemy_OniRed_turn_1: 4779097932650342495
+      Enemy_OniRed_turn_2: 2708049178665297987
+      Enemy_OniRed_idle_0: 7078026032082966694
+      Enemy_OniRed_idle_1: 5807497272893100775
+      Enemy_OniRed_idle_2: 8667358495661993453
+      Enemy_OniRed_idle_3: 2832083599909941006
+      Enemy_OniRed_walk_0: 7325385037189481100
+      Enemy_OniRed_walk_1: 5216151376225807820
+      Enemy_OniRed_walk_2: 4649022625612434261
+      Enemy_OniRed_walk_3: 6067503643958565178
+      Enemy_OniRed_walk_4: 8069849269997922281
+      Enemy_OniRed_walk_5: 2365801326503953431
+      Enemy_OniRed_attack_0: 6131438422083613744
+      Enemy_OniRed_attack_1: 2847383560418053429
+      Enemy_OniRed_attack_2: 8137155010658696967
+      Enemy_OniRed_attack_3: 8377836788814563754
+      Enemy_OniRed_attack_4: 6445162840644912493
+      Enemy_OniRed_attack_5: 4071454975203320482
+      Enemy_OniRed_hurt_0: 4250991215489491724
+      Enemy_OniRed_hurt_1: 6604834041411787229
+      Enemy_OniRed_death_0: 2029284753556074549
+      Enemy_OniRed_death_1: 7941288151962323845
+      Enemy_OniRed_death_2: 5294157552863380061
+      Enemy_OniRed_death_3: 7577965584928531878
+      Enemy_OniRed_death_4: 7368885012074209386
+      Enemy_OniRed_death_5: 7467511054974424384
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -40,6 +40,8 @@ public class HordeSpawner : MonoBehaviour
     public int WaveIndex { get; private set; }
 
     private readonly List<Enemy> activeEnemies = new List<Enemy>();
+    // Inimigos mortos tocando a animação de morte (já fora de activeEnemies)
+    private readonly List<Enemy> dyingEnemies = new List<Enemy>();
     private ObjectPool<Enemy> pool;
     private Transform poolRoot;
     private Camera mainCamera;
@@ -110,6 +112,7 @@ public class HordeSpawner : MonoBehaviour
 
     private void Update()
     {
+        TickDying();
         RecycleFarEnemies();
         if (!SpawningEnabled)
         {
@@ -156,12 +159,35 @@ public class HordeSpawner : MonoBehaviour
         {
             KillCount++;
             EnemyKilled?.Invoke(enemy);
-            Despawn(enemy);
+            // Com animação de morte, o corpo fica um pouco no chão antes de voltar ao pool
+            Despawn(enemy, enemy.StartDeath());
+        }
+    }
+
+    // Avança a morte dos corpos caídos e devolve ao pool os que terminaram
+    private void TickDying()
+    {
+        float dt = Time.deltaTime;
+        for (int i = dyingEnemies.Count - 1; i >= 0; i--)
+        {
+            if (dyingEnemies[i].TickDeath(dt))
+            {
+                pool.Release(dyingEnemies[i]);
+                int last = dyingEnemies.Count - 1;
+                dyingEnemies[i] = dyingEnemies[last];
+                dyingEnemies.RemoveAt(last);
+            }
         }
     }
 
     /// <summary>Tira um inimigo do jogo e devolve ao pool (morte, distância, fim de zona).</summary>
     public void Despawn(Enemy enemy)
+    {
+        Despawn(enemy, false);
+    }
+
+    // keepCorpse: o inimigo sai de jogo, mas o visual continua tocando a morte
+    private void Despawn(Enemy enemy, bool keepCorpse)
     {
         int index = enemy.ActiveIndex;
         if (index < 0)
@@ -177,7 +203,14 @@ public class HordeSpawner : MonoBehaviour
         activeEnemies.RemoveAt(last);
         enemy.ActiveIndex = -1;
 
-        pool.Release(enemy);
+        if (keepCorpse)
+        {
+            dyingEnemies.Add(enemy);
+        }
+        else
+        {
+            pool.Release(enemy);
+        }
         EnemyDespawned?.Invoke(enemy);
     }
 
@@ -212,6 +245,15 @@ public class HordeSpawner : MonoBehaviour
         }
 
         position.y = SampleGroundHeight(position);
+
+        // Caiu em cima de uma construção (telhado)? Gira um pouco o ângulo e tenta de novo
+        for (int i = 0; i < 6 && position.y > 0.6f; i++)
+        {
+            radians += 25f * Mathf.Deg2Rad;
+            direction = new Vector3(Mathf.Cos(radians), 0f, Mathf.Sin(radians));
+            position = player.position + direction * distance;
+            position.y = SampleGroundHeight(position);
+        }
         return position;
     }
 

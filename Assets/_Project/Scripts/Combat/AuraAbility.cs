@@ -66,6 +66,7 @@ public class AuraAbility : AbilityBehaviour
     {
         effectTimer = data.effectDuration;
         effect.enabled = true;
+        Loadout.NotifyAttack();
 
         float damage = stats.damage * Modifiers.DamageMultiplier;
         Vector3 pos = transform.position;

@@ -1,0 +1,832 @@
+fileFormatVersion: 2
+guid: 7cda88850c132ce6e682d19ea5488eeb
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2459268401418648293
+    second: Elite_OniAlpha_turn_0
+  - first:
+      213: 1756525392300619692
+    second: Elite_OniAlpha_turn_1
+  - first:
+      213: 6479026062254552144
+    second: Elite_OniAlpha_turn_2
+  - first:
+      213: 6995483492538674087
+    second: Elite_OniAlpha_idle_0
+  - first:
+      213: 5853201030323146483
+    second: Elite_OniAlpha_idle_1
+  - first:
+      213: 9093810475841761887
+    second: Elite_OniAlpha_idle_2
+  - first:
+      213: 2726911684140368829
+    second: Elite_OniAlpha_idle_3
+  - first:
+      213: 4312026279606857890
+    second: Elite_OniAlpha_walk_0
+  - first:
+      213: 2596692100458824825
+    second: Elite_OniAlpha_walk_1
+  - first:
+      213: 3957831810045402884
+    second: Elite_OniAlpha_walk_2
+  - first:
+      213: 6307361944484210059
+    second: Elite_OniAlpha_walk_3
+  - first:
+      213: 2107449466780383759
+    second: Elite_OniAlpha_walk_4
+  - first:
+      213: 5526546367277773323
+    second: Elite_OniAlpha_walk_5
+  - first:
+      213: 5462134870598661408
+    second: Elite_OniAlpha_attack_0
+  - first:
+      213: 4339887037036422924
+    second: Elite_OniAlpha_attack_1
+  - first:
+      213: 5570180488287353627
+    second: Elite_OniAlpha_attack_2
+  - first:
+      213: 2991193500288829361
+    second: Elite_OniAlpha_attack_3
+  - first:
+      213: 6485102813285071934
+    second: Elite_OniAlpha_attack_4
+  - first:
+      213: 8059141382790677085
+    second: Elite_OniAlpha_attack_5
+  - first:
+      213: 4358270332644722469
+    second: Elite_OniAlpha_hurt_0
+  - first:
+      213: 9130854362989538376
+    second: Elite_OniAlpha_hurt_1
+  - first:
+      213: 8137157756101516090
+    second: Elite_OniAlpha_death_0
+  - first:
+      213: 9012956771381014033
+    second: Elite_OniAlpha_death_1
+  - first:
+      213: 5862779191397322695
+    second: Elite_OniAlpha_death_2
+  - first:
+      213: 4237029965804199112
+    second: Elite_OniAlpha_death_3
+  - first:
+      213: 7202534175596457334
+    second: Elite_OniAlpha_death_4
+  - first:
+      213: 698746766522616847
+    second: Elite_OniAlpha_death_5
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 7
+  spritePivot: {x: 0.5, y: 0}
+  spritePixelsToUnits: 56
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Elite_OniAlpha_turn_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 530
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c65e17ecd03d836632fe4013bdc65498
+      internalID: 2459268401418648293
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_turn_1
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 530
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43b6de212747e692fe505263b66c0283
+      internalID: 1756525392300619692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_turn_2
+      rect:
+        serializedVersion: 2
+        x: 244
+        y: 530
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 763f3b59f99f59db0f3be751b7da859c
+      internalID: 6479026062254552144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_idle_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 424
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19527ba38706f6d61d3c0c62ef05d1b9
+      internalID: 6995483492538674087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_idle_1
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 424
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23501928178e36b414ac78d747460b91
+      internalID: 5853201030323146483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_idle_2
+      rect:
+        serializedVersion: 2
+        x: 244
+        y: 424
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c00b35b1273029701ce34b96c900cec
+      internalID: 9093810475841761887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_idle_3
+      rect:
+        serializedVersion: 2
+        x: 366
+        y: 424
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 93ad5958b0ac46eefeaf5c74bb832686
+      internalID: 2726911684140368829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_walk_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 318
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa99f5dc116d2eab601570d5c2f9b5b9
+      internalID: 4312026279606857890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_walk_1
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 318
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f3ed90bd3c49b8f7d33f04bba5070f0
+      internalID: 2596692100458824825
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_walk_2
+      rect:
+        serializedVersion: 2
+        x: 244
+        y: 318
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec4131e968b110ada64042c5e0e6da48
+      internalID: 3957831810045402884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_walk_3
+      rect:
+        serializedVersion: 2
+        x: 366
+        y: 318
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 153be3e8b3e443408ac26b8b1a2482ae
+      internalID: 6307361944484210059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_walk_4
+      rect:
+        serializedVersion: 2
+        x: 488
+        y: 318
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee7fe938cd52991b9f9886296221617e
+      internalID: 2107449466780383759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_walk_5
+      rect:
+        serializedVersion: 2
+        x: 610
+        y: 318
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8274d8b8d16b6d4d9952a75f6ce896c9
+      internalID: 5526546367277773323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_attack_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 212
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ab03ede711f7e0261a823ecf424f7a6
+      internalID: 5462134870598661408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_attack_1
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 212
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c140ee7b468c764adf701ac7315fc7ae
+      internalID: 4339887037036422924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_attack_2
+      rect:
+        serializedVersion: 2
+        x: 244
+        y: 212
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3543ed83a69bee396f48445868dd823
+      internalID: 5570180488287353627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_attack_3
+      rect:
+        serializedVersion: 2
+        x: 366
+        y: 212
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97756e822b7234d8877b0ae25a646e92
+      internalID: 2991193500288829361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_attack_4
+      rect:
+        serializedVersion: 2
+        x: 488
+        y: 212
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2fd71ec0440a4763bc7a1cdb185ec502
+      internalID: 6485102813285071934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_attack_5
+      rect:
+        serializedVersion: 2
+        x: 610
+        y: 212
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b09bc001d330ab5c3df6f1b14efbe29
+      internalID: 8059141382790677085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_hurt_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 106
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3a59e50d739ac8f9a3afbd3414be55c
+      internalID: 4358270332644722469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_hurt_1
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 106
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e11e992be51b5eb878a14a2628b9ec0f
+      internalID: 9130854362989538376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_death_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df0269fcc21eb462c612bba10279416a
+      internalID: 8137157756101516090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_death_1
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 0
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4505898a586758cf743ecd751576b45d
+      internalID: 9012956771381014033
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_death_2
+      rect:
+        serializedVersion: 2
+        x: 244
+        y: 0
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34364a665b04bc8bf070b0a640ca6b8b
+      internalID: 5862779191397322695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_death_3
+      rect:
+        serializedVersion: 2
+        x: 366
+        y: 0
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f1e6210cea310d97f86cf31c537a9c3
+      internalID: 4237029965804199112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_death_4
+      rect:
+        serializedVersion: 2
+        x: 488
+        y: 0
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e52a4aa082cc1ee68695362cb67dda3c
+      internalID: 7202534175596457334
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Elite_OniAlpha_death_5
+      rect:
+        serializedVersion: 2
+        x: 610
+        y: 0
+        width: 122
+        height: 106
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5f4948c4f5f240434512fcda4f8a9a3
+      internalID: 698746766522616847
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Elite_OniAlpha_turn_0: 2459268401418648293
+      Elite_OniAlpha_turn_1: 1756525392300619692
+      Elite_OniAlpha_turn_2: 6479026062254552144
+      Elite_OniAlpha_idle_0: 6995483492538674087
+      Elite_OniAlpha_idle_1: 5853201030323146483
+      Elite_OniAlpha_idle_2: 9093810475841761887
+      Elite_OniAlpha_idle_3: 2726911684140368829
+      Elite_OniAlpha_walk_0: 4312026279606857890
+      Elite_OniAlpha_walk_1: 2596692100458824825
+      Elite_OniAlpha_walk_2: 3957831810045402884
+      Elite_OniAlpha_walk_3: 6307361944484210059
+      Elite_OniAlpha_walk_4: 2107449466780383759
+      Elite_OniAlpha_walk_5: 5526546367277773323
+      Elite_OniAlpha_attack_0: 5462134870598661408
+      Elite_OniAlpha_attack_1: 4339887037036422924
+      Elite_OniAlpha_attack_2: 5570180488287353627
+      Elite_OniAlpha_attack_3: 2991193500288829361
+      Elite_OniAlpha_attack_4: 6485102813285071934
+      Elite_OniAlpha_attack_5: 8059141382790677085
+      Elite_OniAlpha_hurt_0: 4358270332644722469
+      Elite_OniAlpha_hurt_1: 9130854362989538376
+      Elite_OniAlpha_death_0: 8137157756101516090
+      Elite_OniAlpha_death_1: 9012956771381014033
+      Elite_OniAlpha_death_2: 5862779191397322695
+      Elite_OniAlpha_death_3: 4237029965804199112
+      Elite_OniAlpha_death_4: 7202534175596457334
+      Elite_OniAlpha_death_5: 698746766522616847
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

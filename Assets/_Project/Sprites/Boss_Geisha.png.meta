@@ -1,0 +1,858 @@
+fileFormatVersion: 2
+guid: 969c7369e01b8033c620f51a0af3048a
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1951303629259604939
+    second: Boss_Geisha_turn_0
+  - first:
+      213: 6504320345868079015
+    second: Boss_Geisha_turn_1
+  - first:
+      213: 2067946560153662595
+    second: Boss_Geisha_turn_2
+  - first:
+      213: 1855701312930463570
+    second: Boss_Geisha_idle_0
+  - first:
+      213: 1459074139081661792
+    second: Boss_Geisha_idle_1
+  - first:
+      213: 2579000897509122258
+    second: Boss_Geisha_idle_2
+  - first:
+      213: 8999252084626714164
+    second: Boss_Geisha_idle_3
+  - first:
+      213: 69675328476553970
+    second: Boss_Geisha_walk_0
+  - first:
+      213: 8808961871649208052
+    second: Boss_Geisha_walk_1
+  - first:
+      213: 336093669397605293
+    second: Boss_Geisha_walk_2
+  - first:
+      213: 5166647532700028837
+    second: Boss_Geisha_walk_3
+  - first:
+      213: 8740012873828093484
+    second: Boss_Geisha_walk_4
+  - first:
+      213: 856053528716750862
+    second: Boss_Geisha_walk_5
+  - first:
+      213: 5417256685724397616
+    second: Boss_Geisha_walk_6
+  - first:
+      213: 2168193862550863670
+    second: Boss_Geisha_attack_0
+  - first:
+      213: 3298044273443254693
+    second: Boss_Geisha_attack_1
+  - first:
+      213: 1732967924493814685
+    second: Boss_Geisha_attack_2
+  - first:
+      213: 7506061239770845174
+    second: Boss_Geisha_attack_3
+  - first:
+      213: 5094010641246394458
+    second: Boss_Geisha_attack_4
+  - first:
+      213: 6360283742565369040
+    second: Boss_Geisha_attack_5
+  - first:
+      213: 7502415678275614842
+    second: Boss_Geisha_hurt_0
+  - first:
+      213: 411208544752045816
+    second: Boss_Geisha_hurt_1
+  - first:
+      213: 6191225294735239231
+    second: Boss_Geisha_death_0
+  - first:
+      213: 4211467648113039241
+    second: Boss_Geisha_death_1
+  - first:
+      213: 4366252795055546309
+    second: Boss_Geisha_death_2
+  - first:
+      213: 3923168853646421894
+    second: Boss_Geisha_death_3
+  - first:
+      213: 8790371892461856747
+    second: Boss_Geisha_death_4
+  - first:
+      213: 7667823100667796037
+    second: Boss_Geisha_death_5
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 7
+  spritePivot: {x: 0.5, y: 0}
+  spritePixelsToUnits: 56
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Boss_Geisha_turn_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 520
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42a6d22dceb2375f1ae1f43f4d946ad4
+      internalID: 1951303629259604939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_turn_1
+      rect:
+        serializedVersion: 2
+        x: 206
+        y: 520
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 649617081926f65872d0e5dc67d01448
+      internalID: 6504320345868079015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_turn_2
+      rect:
+        serializedVersion: 2
+        x: 412
+        y: 520
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 351ec035c906fc44fbc5ff8c1b83233e
+      internalID: 2067946560153662595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_idle_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 416
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 855b5e036b1cd96798ada7c7f5700f0c
+      internalID: 1855701312930463570
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_idle_1
+      rect:
+        serializedVersion: 2
+        x: 206
+        y: 416
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 53a36a3eb5f376b0cf77301c6492f748
+      internalID: 1459074139081661792
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_idle_2
+      rect:
+        serializedVersion: 2
+        x: 412
+        y: 416
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b53423da44949ebfb6e704c99a674b8
+      internalID: 2579000897509122258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_idle_3
+      rect:
+        serializedVersion: 2
+        x: 618
+        y: 416
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8664c3c55266e70002a5c70425b78808
+      internalID: 8999252084626714164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_walk_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 312
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f8c755e624c92e839865647374e454e
+      internalID: 69675328476553970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_walk_1
+      rect:
+        serializedVersion: 2
+        x: 206
+        y: 312
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c18bf09baf5ad8792019f733157b70b
+      internalID: 8808961871649208052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_walk_2
+      rect:
+        serializedVersion: 2
+        x: 412
+        y: 312
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4dedc870efe3c5bda1655c416ab001df
+      internalID: 336093669397605293
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_walk_3
+      rect:
+        serializedVersion: 2
+        x: 618
+        y: 312
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2071846c7f3cbf1aea6d820453df48a3
+      internalID: 5166647532700028837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_walk_4
+      rect:
+        serializedVersion: 2
+        x: 824
+        y: 312
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1fcc743d6841077f0df4fde1e4adf7e
+      internalID: 8740012873828093484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_walk_5
+      rect:
+        serializedVersion: 2
+        x: 1030
+        y: 312
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1bb10811c17acd102a3a287ad07d834
+      internalID: 856053528716750862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_walk_6
+      rect:
+        serializedVersion: 2
+        x: 1236
+        y: 312
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85fd2cdaa92470d19cf1ac42bb7c9b48
+      internalID: 5417256685724397616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_attack_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 208
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: daae1bac648236d26a0b0434f8eb8b77
+      internalID: 2168193862550863670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_attack_1
+      rect:
+        serializedVersion: 2
+        x: 206
+        y: 208
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4cc311705fb90b94dee1d45fecbc0d3a
+      internalID: 3298044273443254693
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_attack_2
+      rect:
+        serializedVersion: 2
+        x: 412
+        y: 208
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ff236dda4da26b412c3c1c44a36400d
+      internalID: 1732967924493814685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_attack_3
+      rect:
+        serializedVersion: 2
+        x: 618
+        y: 208
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6eaed55e0312551efb4fdd647661f84
+      internalID: 7506061239770845174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_attack_4
+      rect:
+        serializedVersion: 2
+        x: 824
+        y: 208
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2fa85a5c617ea49af53013c4717e1b1
+      internalID: 5094010641246394458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_attack_5
+      rect:
+        serializedVersion: 2
+        x: 1030
+        y: 208
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 906068d45ce8ee1fa90f0b820df20d2f
+      internalID: 6360283742565369040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_hurt_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 104
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 272640f3a7eeb29645a0117ebc1f0f92
+      internalID: 7502415678275614842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_hurt_1
+      rect:
+        serializedVersion: 2
+        x: 206
+        y: 104
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ca77c49dcb737d0013c322d6f119aa5
+      internalID: 411208544752045816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_death_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa9f359a6c6e0bb151075aaf85c7ac6b
+      internalID: 6191225294735239231
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_death_1
+      rect:
+        serializedVersion: 2
+        x: 206
+        y: 0
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da5cd7a480412d07872b3c4da54d72f4
+      internalID: 4211467648113039241
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_death_2
+      rect:
+        serializedVersion: 2
+        x: 412
+        y: 0
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 752cbce66741f5b4921616bc99c092eb
+      internalID: 4366252795055546309
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_death_3
+      rect:
+        serializedVersion: 2
+        x: 618
+        y: 0
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 850041fdd0ac1a4532ab3a191ea0ca09
+      internalID: 3923168853646421894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_death_4
+      rect:
+        serializedVersion: 2
+        x: 824
+        y: 0
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 93959e7ddf4d4905e5d70917361cd550
+      internalID: 8790371892461856747
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Geisha_death_5
+      rect:
+        serializedVersion: 2
+        x: 1030
+        y: 0
+        width: 206
+        height: 104
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23bf55a9d097706d597fa968b16790b3
+      internalID: 7667823100667796037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Boss_Geisha_turn_0: 1951303629259604939
+      Boss_Geisha_turn_1: 6504320345868079015
+      Boss_Geisha_turn_2: 2067946560153662595
+      Boss_Geisha_idle_0: 1855701312930463570
+      Boss_Geisha_idle_1: 1459074139081661792
+      Boss_Geisha_idle_2: 2579000897509122258
+      Boss_Geisha_idle_3: 8999252084626714164
+      Boss_Geisha_walk_0: 69675328476553970
+      Boss_Geisha_walk_1: 8808961871649208052
+      Boss_Geisha_walk_2: 336093669397605293
+      Boss_Geisha_walk_3: 5166647532700028837
+      Boss_Geisha_walk_4: 8740012873828093484
+      Boss_Geisha_walk_5: 856053528716750862
+      Boss_Geisha_walk_6: 5417256685724397616
+      Boss_Geisha_attack_0: 2168193862550863670
+      Boss_Geisha_attack_1: 3298044273443254693
+      Boss_Geisha_attack_2: 1732967924493814685
+      Boss_Geisha_attack_3: 7506061239770845174
+      Boss_Geisha_attack_4: 5094010641246394458
+      Boss_Geisha_attack_5: 6360283742565369040
+      Boss_Geisha_hurt_0: 7502415678275614842
+      Boss_Geisha_hurt_1: 411208544752045816
+      Boss_Geisha_death_0: 6191225294735239231
+      Boss_Geisha_death_1: 4211467648113039241
+      Boss_Geisha_death_2: 4366252795055546309
+      Boss_Geisha_death_3: 3923168853646421894
+      Boss_Geisha_death_4: 8790371892461856747
+      Boss_Geisha_death_5: 7667823100667796037
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

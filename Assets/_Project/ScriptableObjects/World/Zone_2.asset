@@ -18,11 +18,9 @@ MonoBehaviour:
   enemyHealthMultiplier: 1.6
   elites:
   - {fileID: 11400000, guid: 9146143b318d62641ae24c941bf59fe8, type: 2}
-  - {fileID: 11400000, guid: fdd33b1a500bf6942ab09e2b7b6a9ea9, type: 2}
   firstEliteTime: 60
   eliteInterval: 90
   maxElitesPerWave: 3
   guardianOptions:
   - {fileID: 11400000, guid: c7654e81aa63e724cb04557192ab8506, type: 2}
-  - {fileID: 11400000, guid: 608f2b753310255469e1a7eaedfaf969, type: 2}
   callGuardianAfter: 60

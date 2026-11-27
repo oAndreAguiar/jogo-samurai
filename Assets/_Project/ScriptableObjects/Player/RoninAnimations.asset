@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32833106536e95df40b2d002cc92d33d, type: 3}
+  m_Name: RoninAnimations
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationSet
+  idle:
+    frames:
+    - {fileID: 410707261306977580, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    - {fileID: 7347969802529420581, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    - {fileID: 9084875944577497001, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    - {fileID: 8093483716598746131, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    fps: 6
+    loop: 1
+  walk:
+    frames:
+    - {fileID: 4290362853143600095, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    - {fileID: 8688296208538970966, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    - {fileID: 7007696244607218407, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    - {fileID: 3915804363766208686, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    - {fileID: 7726032508207032726, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    - {fileID: 2271587280215621823, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    fps: 10
+    loop: 1
+  attack:
+    frames:
+    - {fileID: 7371850891875814778, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    - {fileID: 9654239190579137, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    - {fileID: 5180886607764496593, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    - {fileID: 532968560062338387, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    - {fileID: 1306226565239532793, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    - {fileID: 4178222429709621429, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    fps: 18
+    loop: 0
+  hurt:
+    frames:
+    - {fileID: 8106628357294074216, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    - {fileID: 6978224483382395644, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    fps: 10
+    loop: 0
+  death:
+    frames:
+    - {fileID: 9203495300974493237, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    - {fileID: 6497713008222592926, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    - {fileID: 8361859955329737490, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    - {fileID: 3251053431357049843, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    - {fileID: 2311779579967855848, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    - {fileID: 697690598296228428, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+    fps: 8
+    loop: 0
+  portrait: {fileID: 2343150368727960353, guid: f3c95789ace1a9542c5d6baed2eac902, type: 3}
+  walkThreshold: 0.2

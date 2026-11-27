@@ -36,6 +36,9 @@ public class PlayerLoadout : MonoBehaviour
     // Fusão feita no altar
     public event Action<FusionRecipe> FusionPerformed;
 
+    // Golpe de katana (para a animação de ataque do personagem)
+    public event Action Attacked;
+
     public PlayerModifiers Modifiers { get; } = new PlayerModifiers();
     public HordeSpawner Spawner => spawner;
     public ProjectileSystem Projectiles => projectiles;
@@ -47,6 +50,12 @@ public class PlayerLoadout : MonoBehaviour
         {
             Apply(new UpgradeOffer { Definition = settings.startingAbility, NextLevel = 1 });
         }
+    }
+
+    /// <summary>Chamado pelas habilidades de golpe para tocar a animação de ataque.</summary>
+    public void NotifyAttack()
+    {
+        Attacked?.Invoke();
     }
 
     public int GetLevel(UpgradeDefinition definition)

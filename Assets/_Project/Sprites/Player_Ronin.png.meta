@@ -1,0 +1,832 @@
+fileFormatVersion: 2
+guid: f3c95789ace1a9542c5d6baed2eac902
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 410707261306977580
+    second: Ronin_idle_0
+  - first:
+      213: 7347969802529420581
+    second: Ronin_idle_1
+  - first:
+      213: 9084875944577497001
+    second: Ronin_idle_2
+  - first:
+      213: 8093483716598746131
+    second: Ronin_idle_3
+  - first:
+      213: 4290362853143600095
+    second: Ronin_walk_0
+  - first:
+      213: 8688296208538970966
+    second: Ronin_walk_1
+  - first:
+      213: 7007696244607218407
+    second: Ronin_walk_2
+  - first:
+      213: 3915804363766208686
+    second: Ronin_walk_3
+  - first:
+      213: 7726032508207032726
+    second: Ronin_walk_4
+  - first:
+      213: 2271587280215621823
+    second: Ronin_walk_5
+  - first:
+      213: 7371850891875814778
+    second: Ronin_attack_0
+  - first:
+      213: 9654239190579137
+    second: Ronin_attack_1
+  - first:
+      213: 5180886607764496593
+    second: Ronin_attack_2
+  - first:
+      213: 532968560062338387
+    second: Ronin_attack_3
+  - first:
+      213: 1306226565239532793
+    second: Ronin_attack_4
+  - first:
+      213: 4178222429709621429
+    second: Ronin_attack_5
+  - first:
+      213: 8106628357294074216
+    second: Ronin_hurt_0
+  - first:
+      213: 6978224483382395644
+    second: Ronin_hurt_1
+  - first:
+      213: 9203495300974493237
+    second: Ronin_death_0
+  - first:
+      213: 6497713008222592926
+    second: Ronin_death_1
+  - first:
+      213: 8361859955329737490
+    second: Ronin_death_2
+  - first:
+      213: 3251053431357049843
+    second: Ronin_death_3
+  - first:
+      213: 2311779579967855848
+    second: Ronin_death_4
+  - first:
+      213: 697690598296228428
+    second: Ronin_death_5
+  - first:
+      213: 2343150368727960353
+    second: Ronin_turn_0
+  - first:
+      213: 5941686743285234770
+    second: Ronin_turn_1
+  - first:
+      213: 4150328019538033275
+    second: Ronin_turn_2
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 7
+  spritePivot: {x: 0.5, y: 0}
+  spritePixelsToUnits: 44
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Ronin_idle_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 420
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a569ee452a5d423bdfaef428c7d7431
+      internalID: 410707261306977580
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_idle_1
+      rect:
+        serializedVersion: 2
+        x: 106
+        y: 420
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac59157196f119be4260ce86ca96fd78
+      internalID: 7347969802529420581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_idle_2
+      rect:
+        serializedVersion: 2
+        x: 212
+        y: 420
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce1f39485d23d1f344e767f743bb3898
+      internalID: 9084875944577497001
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_idle_3
+      rect:
+        serializedVersion: 2
+        x: 318
+        y: 420
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55d0c57b811008b723cc390c9354d0e3
+      internalID: 8093483716598746131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_walk_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 336
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26e144cf0b4152c84d1dd7de07c1837b
+      internalID: 4290362853143600095
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_walk_1
+      rect:
+        serializedVersion: 2
+        x: 106
+        y: 336
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 48ba29b1f8223c0806f3179fec433ae0
+      internalID: 8688296208538970966
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_walk_2
+      rect:
+        serializedVersion: 2
+        x: 212
+        y: 336
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c867119277832f1dc78165de8458320c
+      internalID: 7007696244607218407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_walk_3
+      rect:
+        serializedVersion: 2
+        x: 318
+        y: 336
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bcc3323c673940a87aa1caa066de2e96
+      internalID: 3915804363766208686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_walk_4
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 336
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d7af233a7ffb08883f11b2d9bbc0685
+      internalID: 7726032508207032726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_walk_5
+      rect:
+        serializedVersion: 2
+        x: 530
+        y: 336
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 312d1e51dd71029e510adc2735aa850a
+      internalID: 2271587280215621823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_attack_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 252
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1fa057702e2677a6d9a3ce9ecbc12674
+      internalID: 7371850891875814778
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_attack_1
+      rect:
+        serializedVersion: 2
+        x: 106
+        y: 252
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7dcb161ad81d3a39d4e9fa633313f3f0
+      internalID: 9654239190579137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_attack_2
+      rect:
+        serializedVersion: 2
+        x: 212
+        y: 252
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bda40df5317bbb1465ae2ffda43641f3
+      internalID: 5180886607764496593
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_attack_3
+      rect:
+        serializedVersion: 2
+        x: 318
+        y: 252
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2aa60f386a9bb2c4138b0edce0120388
+      internalID: 532968560062338387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_attack_4
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 252
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e5deaa1ef2cd05a98067601e537eaea
+      internalID: 1306226565239532793
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_attack_5
+      rect:
+        serializedVersion: 2
+        x: 530
+        y: 252
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7614c6aa1bfc22ea7cefd5c56385d768
+      internalID: 4178222429709621429
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_hurt_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 168
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eebdc582c1ca746a7b9ea66e083b5317
+      internalID: 8106628357294074216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_hurt_1
+      rect:
+        serializedVersion: 2
+        x: 106
+        y: 168
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb09000ac1286e4f9200a15f69ff0a7b
+      internalID: 6978224483382395644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_death_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 84
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: defc114008a8d6b118c5fb11deddc4dc
+      internalID: 9203495300974493237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_death_1
+      rect:
+        serializedVersion: 2
+        x: 106
+        y: 84
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d260d6e8e9a8013370325fc7dc2f7f1
+      internalID: 6497713008222592926
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_death_2
+      rect:
+        serializedVersion: 2
+        x: 212
+        y: 84
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 248e90b3abc782392a8323407e9a92dd
+      internalID: 8361859955329737490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_death_3
+      rect:
+        serializedVersion: 2
+        x: 318
+        y: 84
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce4ef56377c3d00dbc4b3fceffa3bda6
+      internalID: 3251053431357049843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_death_4
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 84
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43360d8b08f2c42952e200a0aefdce41
+      internalID: 2311779579967855848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_death_5
+      rect:
+        serializedVersion: 2
+        x: 530
+        y: 84
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a85585462987f1a673e8eb9d8b9a79e
+      internalID: 697690598296228428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_turn_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 536c62aea2acfe1e801ea395f30609b3
+      internalID: 2343150368727960353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_turn_1
+      rect:
+        serializedVersion: 2
+        x: 106
+        y: 0
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16df7dfa0223878416cb6ae49545c468
+      internalID: 5941686743285234770
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ronin_turn_2
+      rect:
+        serializedVersion: 2
+        x: 212
+        y: 0
+        width: 106
+        height: 84
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4656a1258c37e876d757a0a7238c7822
+      internalID: 4150328019538033275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Ronin_idle_0: 410707261306977580
+      Ronin_idle_1: 7347969802529420581
+      Ronin_idle_2: 9084875944577497001
+      Ronin_idle_3: 8093483716598746131
+      Ronin_walk_0: 4290362853143600095
+      Ronin_walk_1: 8688296208538970966
+      Ronin_walk_2: 7007696244607218407
+      Ronin_walk_3: 3915804363766208686
+      Ronin_walk_4: 7726032508207032726
+      Ronin_walk_5: 2271587280215621823
+      Ronin_attack_0: 7371850891875814778
+      Ronin_attack_1: 9654239190579137
+      Ronin_attack_2: 5180886607764496593
+      Ronin_attack_3: 532968560062338387
+      Ronin_attack_4: 1306226565239532793
+      Ronin_attack_5: 4178222429709621429
+      Ronin_hurt_0: 8106628357294074216
+      Ronin_hurt_1: 6978224483382395644
+      Ronin_death_0: 9203495300974493237
+      Ronin_death_1: 6497713008222592926
+      Ronin_death_2: 8361859955329737490
+      Ronin_death_3: 3251053431357049843
+      Ronin_death_4: 2311779579967855848
+      Ronin_death_5: 697690598296228428
+      Ronin_turn_0: 2343150368727960353
+      Ronin_turn_1: 5941686743285234770
+      Ronin_turn_2: 4150328019538033275
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -14,13 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   displayName: Oni Vermelho
   description: Oni veterano coberto de cicatrizes. Bate forte e demora a cair.
-  sprite: {fileID: 21300000, guid: 85843e50eee7d1d4aac30542c6265f40, type: 3}
+  sprite: {fileID: 2459268401418648293, guid: 7cda88850c132ce6e682d19ea5488eeb, type: 3}
+  animations: {fileID: 11400000, guid: 40fd3582608464ae20f23ac81c4cd999, type: 2}
   rank: 1
   scale: 1.8
-  tint: {r: 1, g: 0.45, b: 0.35, a: 1}
+  tint: {r: 1, g: 1, b: 1, a: 1}
   moveSpeed: 2.3
   spawnWeight: 0
-  spriteHeight: 0.6
+  spriteHeight: 0.72
   maxHealth: 220
   contactDamage: 18
   xpValue: 15

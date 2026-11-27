@@ -126,7 +126,9 @@ public static class ProjectSetup
         ramp.transform.rotation = Quaternion.Euler(0f, 0f, 14f); // sobe até o bloco de 1 m
 
         // Jogador: CharacterController + movimento + sprite com Billboard
-        Sprite playerSprite = CreatePlayerSprite();
+        // Sprite do ronin (spritesheet animado); se não existir, usa o provisório
+        PlayerAnimationSet roninAnimations = LoadRoninAnimations();
+        Sprite playerSprite = roninAnimations != null ? roninAnimations.idle.frames[0] : CreatePlayerSprite();
         GameObject player = new GameObject("Player");
         player.transform.position = Vector3.zero;
         CharacterController cc = player.AddComponent<CharacterController>();
@@ -138,7 +140,8 @@ public static class ProjectSetup
 
         GameObject visual = new GameObject("Sprite");
         visual.transform.SetParent(player.transform, false);
-        visual.transform.localPosition = new Vector3(0f, 0.8f, 0f);
+        // O ronin tem o pivô nos pés; o provisório tem o pivô no centro
+        visual.transform.localPosition = new Vector3(0f, roninAnimations != null ? 0f : 0.8f, 0f);
         SpriteRenderer sr = visual.AddComponent<SpriteRenderer>();
         sr.sprite = playerSprite;
         visual.AddComponent<Billboard>();
@@ -146,7 +149,6 @@ public static class ProjectSetup
         PlayerMovement movement = player.AddComponent<PlayerMovement>();
         SerializedObject so = new SerializedObject(movement);
         so.FindProperty("settings").objectReferenceValue = GetOrCreateMovementSettings();
-        so.FindProperty("spriteRenderer").objectReferenceValue = sr;
         so.ApplyModifiedPropertiesWithoutUndo();
 
         // Câmera principal (quem move é o Cinemachine)
@@ -512,6 +514,16 @@ public static class ProjectSetup
         SetRefs(experience, ("settings", settings));
         SetRefs(player.GetComponent<PlayerMovement>(), ("loadout", loadout));
 
+        // Animação do sprite (idle, andar, ataque, dano, morte)
+        PlayerAnimationSet roninAnimations = LoadRoninAnimations();
+        Transform spriteTransform = player.transform.Find("Sprite");
+        if (roninAnimations != null && spriteTransform != null)
+        {
+            PlayerSpriteAnimator animator = spriteTransform.gameObject.AddComponent<PlayerSpriteAnimator>();
+            SetRefs(animator, ("animations", roninAnimations), ("spriteRenderer", spriteTransform.GetComponent<SpriteRenderer>()),
+                ("movement", player.GetComponent<PlayerMovement>()), ("health", health), ("loadout", loadout));
+        }
+
         GameObject progressionGo = new GameObject("Progression");
         ExperienceGemSystem gemSystem = progressionGo.AddComponent<ExperienceGemSystem>();
         SetRefs(gemSystem, ("settings", settings), ("spawner", spawner), ("experience", experience), ("loadout", loadout));
@@ -658,9 +670,9 @@ public static class ProjectSetup
 
         var zoneList = new System.Collections.Generic.List<ZoneData>
         {
-            CreateZone(worldDir + "/Zone_1.asset", "Bosque de Bambu", horde1, 1f, new[] { redOni, goldFlame }, new[] { bigOni, flameKing }),
-            CreateZone(worldDir + "/Zone_2.asset", "Trilha dos Lampiões", horde2, 1.6f, new[] { redOni, goldFlame }, new[] { bigOni, flameKing }),
-            CreateZone(worldDir + "/Zone_3.asset", "Portão do Templo", horde3, 2.4f, new[] { redOni, goldFlame }, new[] { bigOni, flameKing }),
+            CreateZone(worldDir + "/Zone_1.asset", "Bosque de Bambu", horde1, 1f, new[] { redOni }, new[] { bigOni }),
+            CreateZone(worldDir + "/Zone_2.asset", "Trilha dos Lampiões", horde2, 1.6f, new[] { redOni }, new[] { bigOni }),
+            CreateZone(worldDir + "/Zone_3.asset", "Portão do Templo", horde3, 2.4f, new[] { redOni }, new[] { bigOni }),
         };
 
         GameObject zoneGo = new GameObject("Zones");
@@ -841,7 +853,7 @@ public static class ProjectSetup
         runLevel.fontStyle = FontStyle.Bold;
         PlayerInfoHUD info = infoPanel.AddComponent<PlayerInfoHUD>();
         SetRefs(info, ("experience", experience), ("portrait", portrait), ("nameText", nameText), ("accountLevelText", accountText),
-            ("runLevelText", runLevel), ("portraitSprite", playerSprite.sprite));
+            ("runLevelText", runLevel), ("portraitSprite", PlayerPortrait(playerSprite.sprite)));
 
         // O nível agora fica no painel; a barra de XP não precisa mais do texto
         Transform xpLevel = canvas.Find("ExperienceBar/Level");
@@ -1278,9 +1290,9 @@ public static class ProjectSetup
         Text profile = CreateText(main.transform, "Profile", "", 30, new Color(0.75f, 0.75f, 0.8f), new Vector2(0f, -460f));
 
         // Sprites decorativos dos lados
-        AddSprite(main.transform, "DecoPlayer", AssetDatabase.LoadAssetAtPath<Sprite>(Root + "/Sprites/Player_Placeholder.png"), new Vector2(-640f, -230f), 260f);
-        AddSprite(main.transform, "DecoOni", AssetDatabase.LoadAssetAtPath<Sprite>(Root + "/Sprites/Enemy_Oni.png"), new Vector2(640f, -250f), 200f);
-        AddSprite(main.transform, "DecoFlame", AssetDatabase.LoadAssetAtPath<Sprite>(Root + "/Sprites/Enemy_Hitodama.png"), new Vector2(800f, -120f), 130f);
+        AddSprite(main.transform, "DecoPlayer", PlayerPortrait(AssetDatabase.LoadAssetAtPath<Sprite>(Root + "/Sprites/Player_Placeholder.png")), new Vector2(-640f, -230f), 260f);
+        AddSprite(main.transform, "DecoOni", CreaturePortrait("Enemy_Oni", Root + "/Sprites/Enemy_Oni.png"), new Vector2(640f, -250f), 200f);
+        AddSprite(main.transform, "DecoFlame", CreaturePortrait("Enemy_Hitodama", Root + "/Sprites/Enemy_Hitodama.png"), new Vector2(800f, -120f), 130f);
 
         // ---- Páginas de coleção ----
         CollectionPage creaturesPage = CreateCollectionPage(root, "CreaturesPage", "Manual de Criaturas", CollectionPage.Mode.Creatures, catalog);
@@ -1412,9 +1424,8 @@ public static class ProjectSetup
             ("Enemy_Oni", "Ogro youkai das montanhas. Lento, mas aguenta pancada."),
             ("Enemy_Hitodama", "Chama errante de uma alma perdida. Rápida e frágil."),
             ("Elite_RedOni", "Oni veterano coberto de cicatrizes. Bate forte e demora a cair."),
-            ("Elite_GoldHitodama", "Chama rara que brilha como ouro. Corre muito e vale muita experiência."),
+            // Hitodama Dourada e Onibi-Ō ficam fora até terem arte própria (decisão de 26/11/2026)
             ("Guardian_OOni", "O grande oni que guarda as trilhas da floresta. Um dos guardiões possíveis das zonas."),
-            ("Guardian_OnibiO", "Rei das chamas fantasmas. Arde sem parar. Um dos guardiões possíveis das zonas."),
             ("Boss_KageOni", "Senhor das sombras do templo e chefe da Floresta de Bambu. Solta ondas de choque e fica furioso quando ferido."),
         };
 
@@ -1668,7 +1679,11 @@ public static class ProjectSetup
     {
         bool isNew = AssetDatabase.LoadAssetAtPath<EnemyData>(path) == null;
         EnemyData data = GetOrCreateAsset<EnemyData>(path);
-        data.sprite = sprite;
+        // Inimigo com spritesheet animado mantém o retrato dele
+        if (data.animations == null)
+        {
+            data.sprite = sprite;
+        }
         if (isNew)
         {
             data.displayName = displayName;
@@ -1970,7 +1985,11 @@ public static class ProjectSetup
             data.spriteHeight = height;
             AssetDatabase.CreateAsset(data, path);
         }
-        data.sprite = sprite;
+        // Inimigo com spritesheet animado mantém o retrato dele
+        if (data.animations == null)
+        {
+            data.sprite = sprite;
+        }
         EditorUtility.SetDirty(data);
         return data;
     }
@@ -2154,6 +2173,25 @@ public static class ProjectSetup
     }
 
     // Sprite provisório 32x32 de um "samurai": corpo vermelho, faixa dourada e cabeça
+    // Retrato do inimigo (sprite do EnemyData); cai no PNG antigo se o asset não existir
+    private static Sprite CreaturePortrait(string assetName, string fallbackPath)
+    {
+        EnemyData data = AssetDatabase.LoadAssetAtPath<EnemyData>(Root + "/ScriptableObjects/Enemies/" + assetName + ".asset");
+        return data != null && data.sprite != null ? data.sprite : AssetDatabase.LoadAssetAtPath<Sprite>(fallbackPath);
+    }
+
+    private static PlayerAnimationSet LoadRoninAnimations()
+    {
+        return AssetDatabase.LoadAssetAtPath<PlayerAnimationSet>(Root + "/ScriptableObjects/Player/RoninAnimations.asset");
+    }
+
+    // Retrato de frente do ronin (HUD e menu); cai no sprite dado se não houver
+    private static Sprite PlayerPortrait(Sprite fallback)
+    {
+        PlayerAnimationSet anims = LoadRoninAnimations();
+        return anims != null && anims.portrait != null ? anims.portrait : fallback;
+    }
+
     private static Sprite CreatePlayerSprite()
     {
         string path = Root + "/Sprites/Player_Placeholder.png";

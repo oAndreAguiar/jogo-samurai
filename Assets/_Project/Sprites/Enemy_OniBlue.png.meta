@@ -1,0 +1,832 @@
+fileFormatVersion: 2
+guid: 8652ac3605826c50a28517cfd8155940
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2540231799161185078
+    second: Enemy_OniBlue_turn_0
+  - first:
+      213: 5247598418975828031
+    second: Enemy_OniBlue_turn_1
+  - first:
+      213: 465718232984160944
+    second: Enemy_OniBlue_turn_2
+  - first:
+      213: 596691368419531649
+    second: Enemy_OniBlue_idle_0
+  - first:
+      213: 8911048346721100858
+    second: Enemy_OniBlue_idle_1
+  - first:
+      213: 8349357884831360945
+    second: Enemy_OniBlue_idle_2
+  - first:
+      213: 6605517300552609089
+    second: Enemy_OniBlue_idle_3
+  - first:
+      213: 8720602160146298434
+    second: Enemy_OniBlue_walk_0
+  - first:
+      213: 3568662203886142600
+    second: Enemy_OniBlue_walk_1
+  - first:
+      213: 6364262793367101332
+    second: Enemy_OniBlue_walk_2
+  - first:
+      213: 5696584464201762034
+    second: Enemy_OniBlue_walk_3
+  - first:
+      213: 5725493674517310567
+    second: Enemy_OniBlue_walk_4
+  - first:
+      213: 1476056913321808140
+    second: Enemy_OniBlue_walk_5
+  - first:
+      213: 2285117243523381342
+    second: Enemy_OniBlue_attack_0
+  - first:
+      213: 8826959426642411239
+    second: Enemy_OniBlue_attack_1
+  - first:
+      213: 9090074224731439526
+    second: Enemy_OniBlue_attack_2
+  - first:
+      213: 4009229403616953302
+    second: Enemy_OniBlue_attack_3
+  - first:
+      213: 3217408905654697350
+    second: Enemy_OniBlue_attack_4
+  - first:
+      213: 1391667900077231018
+    second: Enemy_OniBlue_attack_5
+  - first:
+      213: 559290475477727201
+    second: Enemy_OniBlue_hurt_0
+  - first:
+      213: 1782321763051308062
+    second: Enemy_OniBlue_hurt_1
+  - first:
+      213: 6929556113365854357
+    second: Enemy_OniBlue_death_0
+  - first:
+      213: 372733952062158698
+    second: Enemy_OniBlue_death_1
+  - first:
+      213: 5339632206494469609
+    second: Enemy_OniBlue_death_2
+  - first:
+      213: 8352128254082482741
+    second: Enemy_OniBlue_death_3
+  - first:
+      213: 4724132999047354722
+    second: Enemy_OniBlue_death_4
+  - first:
+      213: 2600710193183775114
+    second: Enemy_OniBlue_death_5
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 7
+  spritePivot: {x: 0.5, y: 0}
+  spritePixelsToUnits: 49
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Enemy_OniBlue_turn_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 550
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 93a1021edf09365b25b7645c1ff7ef96
+      internalID: 2540231799161185078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_turn_1
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 550
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 245c77155ac54d3262b9ed428b78f7b8
+      internalID: 5247598418975828031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_turn_2
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 550
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 191f79758ae8b318642937c6b54c93af
+      internalID: 465718232984160944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_idle_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 440
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5c4547990e2cc0c3d72625dd18bb531
+      internalID: 596691368419531649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_idle_1
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 440
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff7fb17994b523b72f21dea2f59d12ec
+      internalID: 8911048346721100858
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_idle_2
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 440
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2237c613781ea1cd14897e95f14a51c0
+      internalID: 8349357884831360945
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_idle_3
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 440
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60ede211972c7c795b85bb38293d2d22
+      internalID: 6605517300552609089
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_walk_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 330
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e380581b7cc2aa1fbfeed0792f48bbe8
+      internalID: 8720602160146298434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_walk_1
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 330
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9dd3c6d7ff4437c201949062cff0620
+      internalID: 3568662203886142600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_walk_2
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 330
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b20fbdcb7c2b4e2b9e5cc95a33dc79e
+      internalID: 6364262793367101332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_walk_3
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 330
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4618dd9001132b2cb242ed3c07a95d1
+      internalID: 5696584464201762034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_walk_4
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 330
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df518e0351e0bb5cc4b4fb19372feecb
+      internalID: 5725493674517310567
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_walk_5
+      rect:
+        serializedVersion: 2
+        x: 490
+        y: 330
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 548dc8ff2029128d396698e4e8cafab9
+      internalID: 1476056913321808140
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_attack_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 220
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f84efe6b54911aab7b929b50fc11aad
+      internalID: 2285117243523381342
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_attack_1
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 220
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd07857ebdeb17fb54ac721796a2c948
+      internalID: 8826959426642411239
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_attack_2
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 220
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79e3ee5b0cef4a71e6b3cb0e49a09cff
+      internalID: 9090074224731439526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_attack_3
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 220
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61d0ba6edf150b026f517b27d634be35
+      internalID: 4009229403616953302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_attack_4
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 220
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ff204b6ef5bc17a408cba71470a905f
+      internalID: 3217408905654697350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_attack_5
+      rect:
+        serializedVersion: 2
+        x: 490
+        y: 220
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7837e7a1e1d737ab16a31941888ee694
+      internalID: 1391667900077231018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_hurt_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 110
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8fdf2f48ec68eeb00f706b0e01b8457
+      internalID: 559290475477727201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_hurt_1
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 110
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8daad488a6cfc65daf18ec9994299e40
+      internalID: 1782321763051308062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_death_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1952f6be896f86d7eafd69d757b67d45
+      internalID: 6929556113365854357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_death_1
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 0
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a3fdd2a13c9c691de9e622c0aa5c142
+      internalID: 372733952062158698
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_death_2
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 0
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01274aca2edddcb26e14a6db5027be2f
+      internalID: 5339632206494469609
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_death_3
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 0
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 337b4a5f02cbfd20cc476549810952f9
+      internalID: 8352128254082482741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_death_4
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 0
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99111e52ab08899491f2d4724e8440bc
+      internalID: 4724132999047354722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_OniBlue_death_5
+      rect:
+        serializedVersion: 2
+        x: 490
+        y: 0
+        width: 98
+        height: 110
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa9c4f6df5754761c4d3ef3da54c83b4
+      internalID: 2600710193183775114
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Enemy_OniBlue_turn_0: 2540231799161185078
+      Enemy_OniBlue_turn_1: 5247598418975828031
+      Enemy_OniBlue_turn_2: 465718232984160944
+      Enemy_OniBlue_idle_0: 596691368419531649
+      Enemy_OniBlue_idle_1: 8911048346721100858
+      Enemy_OniBlue_idle_2: 8349357884831360945
+      Enemy_OniBlue_idle_3: 6605517300552609089
+      Enemy_OniBlue_walk_0: 8720602160146298434
+      Enemy_OniBlue_walk_1: 3568662203886142600
+      Enemy_OniBlue_walk_2: 6364262793367101332
+      Enemy_OniBlue_walk_3: 5696584464201762034
+      Enemy_OniBlue_walk_4: 5725493674517310567
+      Enemy_OniBlue_walk_5: 1476056913321808140
+      Enemy_OniBlue_attack_0: 2285117243523381342
+      Enemy_OniBlue_attack_1: 8826959426642411239
+      Enemy_OniBlue_attack_2: 9090074224731439526
+      Enemy_OniBlue_attack_3: 4009229403616953302
+      Enemy_OniBlue_attack_4: 3217408905654697350
+      Enemy_OniBlue_attack_5: 1391667900077231018
+      Enemy_OniBlue_hurt_0: 559290475477727201
+      Enemy_OniBlue_hurt_1: 1782321763051308062
+      Enemy_OniBlue_death_0: 6929556113365854357
+      Enemy_OniBlue_death_1: 372733952062158698
+      Enemy_OniBlue_death_2: 5339632206494469609
+      Enemy_OniBlue_death_3: 8352128254082482741
+      Enemy_OniBlue_death_4: 4724132999047354722
+      Enemy_OniBlue_death_5: 2600710193183775114
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

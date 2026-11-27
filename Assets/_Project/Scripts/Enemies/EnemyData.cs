@@ -23,8 +23,11 @@ public class EnemyData : ScriptableObject
     [TextArea(2, 4)]
     public string description = "";
 
-    [Tooltip("Sprite em pixel art do inimigo.")]
+    [Tooltip("Sprite em pixel art do inimigo (retrato no Manual e visual quando não há animação).")]
     public Sprite sprite;
+
+    [Tooltip("Opcional: animações (andar, ataque, dano, morte). Com elas, o sprite fica com o pivô nos pés.")]
+    public EnemyAnimationSet animations;
 
     public EnemyRank rank = EnemyRank.Common;
 
@@ -40,7 +43,7 @@ public class EnemyData : ScriptableObject
     [Tooltip("Chance relativa de nascer. Peso 3 nasce 3x mais que peso 1.")]
     public float spawnWeight = 1f;
 
-    [Tooltip("Altura do centro do sprite em relação ao chão, em metros.")]
+    [Tooltip("Altura do centro do sprite em relação ao chão, em metros (por unidade de escala).")]
     public float spriteHeight = 0.6f;
 
     [Header("Combate")]

@@ -110,6 +110,7 @@ public class BossAttack : MonoBehaviour
 
     private void Strike()
     {
+        boss.PlayAttack();
         Vector3 offset = playerHealth.transform.position - attackCenter;
         offset.y = 0f;
         if (offset.magnitude <= region.bossAttackRadius)

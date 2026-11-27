@@ -1,0 +1,17 @@
+Use as imagens anexadas como referência de estilo, roupa, cores e personalidade. Crie uma folha de personagem (character sheet) para um jogo 2D top-down estilo survivors, com temática do Japão feudal.
+
+Personagem [ex. samurai jovem com katana, armadura leve vermelha e preta, faixa branca na cabeça].
+Estilo pixel art [64x64] com contorno escuro, silhueta clara e legível em tamanho pequeno, sombreamento simples de 3 tons.
+Paleta limitada a [12] cores, baseada nas referências.
+
+Gere em fundo totalmente transparente (ou verde chroma #00FF00 sólido), sem cenário, sem texto, sem sombra no chão
+1. Turnaround frente, lado (direita) e costas, mesma pose neutra, mesmo tamanho e alinhamento.
+2. Spritesheet em grade, cada quadro do mesmo tamanho e com o personagem centralizado
+   - Parado (idle) 4 quadros
+   - Andando 6 quadros
+     - Ataque: 6 quadros, usando a arma ou o poder principal que aparece nas referências (se não houver arma, um golpe corpo a corpo). Antecipação nos quadros 1-2, golpe nos quadros 3-4, retorno à pose nos quadros 5-6.
+   - Levando dano 2 quadros
+   - Morte 6 quadros
+3. Uma linha separada com a paleta de cores usada.
+
+Mantenha proporções, cores e detalhes idênticos entre todos os quadros. Visão levemente de cima (34 top-down).

@@ -12,15 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87633ce54fbaaa24ab4a42720df7f048, type: 3}
   m_Name: Enemy_Hitodama
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  displayName: Hitodama
-  description: "Chama errante de uma alma perdida. R\xE1pida e fr\xE1gil."
-  sprite: {fileID: 21300000, guid: 3f9f6599579d39d49a5c21c51d267ebd, type: 3}
+  displayName: Oni Azul
+  description: "Oni \xE1gil de cabelos brancos que ataca com duas adagas. R\xE1pida e fr\xE1gil."
+  sprite: {fileID: 2540231799161185078, guid: 8652ac3605826c50a28517cfd8155940, type: 3}
+  animations: {fileID: 11400000, guid: 53254f431214f1e829e3207affcd8576, type: 2}
   rank: 0
   scale: 1
   tint: {r: 1, g: 1, b: 1, a: 1}
   moveSpeed: 4
   spawnWeight: 1
-  spriteHeight: 0.7
+  spriteHeight: 0.8
   maxHealth: 10
   contactDamage: 6
   xpValue: 1
